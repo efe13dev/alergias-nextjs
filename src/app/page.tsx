@@ -1,103 +1,344 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { Calendar } from "@/components/ui/calendar";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import DayEditor from "./components/day-editor";
+
+// Tipos para nuestros datos
+type SymptomLevel = "green" | "yellow" | "orange" | "red" | null;
+type Medication = "Bilaxten" | "Relvar" | "Ventolin" | "Sniffer";
+type DayData = {
+	date: string; // formato ISO
+	symptomLevel: SymptomLevel;
+	medications: Medication[];
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+	// Estado para almacenar los datos de los días
+	const [dayData, setDayData] = useState<DayData[]>([]);
+	const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+		new Date(),
+	);
+	const [currentMonth, setCurrentMonth] = useState<Date>(
+		new Date(new Date().getFullYear(), 3, 1),
+	); // Abril (mes 3)
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [initialSetupDone, setInitialSetupDone] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+	// Meses que queremos mostrar
+	const months = [
+		new Date(new Date().getFullYear(), 3, 1), // Abril (mes 3)
+		new Date(new Date().getFullYear(), 4, 1), // Mayo (mes 4)
+		new Date(new Date().getFullYear(), 5, 1), // Junio (mes 5)
+		new Date(new Date().getFullYear(), 6, 1), // Julio (mes 6)
+		new Date(new Date().getFullYear(), 7, 1), // Agosto (mes 7)
+	];
+
+	// Cargar datos del localStorage al iniciar
+	useEffect(() => {
+		const savedData = localStorage.getItem("allergyTrackerData");
+		if (savedData) {
+			setDayData(JSON.parse(savedData));
+		}
+		setInitialSetupDone(true);
+	}, []);
+
+	// Guardar datos en localStorage cuando cambian
+	useEffect(() => {
+		if (initialSetupDone) {
+			localStorage.setItem("allergyTrackerData", JSON.stringify(dayData));
+		}
+	}, [dayData, initialSetupDone]);
+
+	// Función para actualizar los datos de un día
+	const updateDayData = (
+		date: Date,
+		symptomLevel: SymptomLevel,
+		medications: Medication[],
+	) => {
+		const dateString = date.toISOString();
+
+		setDayData((prevData) => {
+			// Buscar si ya existe un registro para este día
+			const existingIndex = prevData.findIndex(
+				(item) => new Date(item.date).toDateString() === date.toDateString(),
+			);
+
+			if (existingIndex >= 0) {
+				// Actualizar registro existente
+				const newData = [...prevData];
+				newData[existingIndex] = {
+					date: dateString,
+					symptomLevel,
+					medications,
+				};
+				return newData;
+			}
+			// Crear nuevo registro
+			return [
+				...prevData,
+				{
+					date: dateString,
+					symptomLevel,
+					medications,
+				},
+			];
+		});
+
+		setIsDialogOpen(false);
+	};
+
+	// Función para obtener los datos de un día específico
+	const getDayData = (date: Date): DayData | undefined => {
+		return dayData.find(
+			(item) => new Date(item.date).toDateString() === date.toDateString(),
+		);
+	};
+
+	// Función para obtener el color de un día
+	const getDayColor = (date: Date): string => {
+		const data = getDayData(date);
+		if (!data || !data.symptomLevel) return "";
+
+		switch (data.symptomLevel) {
+			case "green":
+				return "bg-green-200 hover:bg-green-300";
+			case "yellow":
+				return "bg-yellow-200 hover:bg-yellow-300";
+			case "orange":
+				return "bg-orange-200 hover:bg-orange-300";
+			case "red":
+				return "bg-red-200 hover:bg-red-300";
+			default:
+				return "";
+		}
+	};
+
+	// Función para obtener el nombre del mes actual
+	const getCurrentMonthName = () => {
+		return format(currentMonth, "MMMM yyyy", { locale: es });
+	};
+
+	// Función para manejar el clic en un día
+	const handleDayClick = (date: Date) => {
+		setSelectedDate(date);
+		setIsDialogOpen(true);
+	};
+
+	return (
+		<main className="container mx-auto py-6 px-4">
+			<Card className="mb-6">
+				<CardHeader>
+					<CardTitle className="text-2xl">Seguimiento de Alergia</CardTitle>
+					<CardDescription>
+						Registra tus síntomas y medicamentos para abril, mayo, junio, julio y
+						agosto
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<Alert className="mb-4">
+						<AlertCircle className="h-4 w-4" />
+						<AlertTitle>Información</AlertTitle>
+						<AlertDescription>
+							Selecciona un día en el calendario para registrar tus síntomas y
+							medicamentos.
+						</AlertDescription>
+					</Alert>
+
+					<div className="flex items-center gap-2 mb-4 flex-wrap">
+						<Badge className="bg-green-500">Verde: Sin síntomas</Badge>
+						<Badge className="bg-yellow-500">Amarillo: Síntomas leves</Badge>
+						<Badge className="bg-orange-500">Naranja: Síntomas moderados</Badge>
+						<Badge className="bg-red-500">Rojo: Síntomas graves</Badge>
+					</div>
+
+					<div className="flex items-center gap-2 mb-4 flex-wrap">
+						<span className="text-xs px-1 bg-blue-100 rounded-sm border border-blue-200">
+							B
+						</span>
+						<span className="text-sm">Bilaxten</span>
+						<span className="text-xs px-1 bg-purple-100 rounded-sm border border-purple-200">
+							R
+						</span>
+						<span className="text-sm">Relvar</span>
+						<span className="text-xs px-1 bg-teal-100 rounded-sm border border-teal-200">
+							V
+						</span>
+						<span className="text-sm">Ventolin</span>
+						<span className="text-xs px-1 bg-pink-100 rounded-sm border border-pink-200">
+							S
+						</span>
+						<span className="text-sm">Sniffer</span>
+					</div>
+
+					<Tabs defaultValue={format(months[0], "MMM")} className="w-full">
+						<TabsList className="grid grid-cols-5 mb-4">
+							{months.map((month, index) => (
+								<TabsTrigger
+									key={index}
+									value={format(month, "MMM")}
+									onClick={() => setCurrentMonth(month)}
+								>
+									{format(month, "MMMM", { locale: es })}
+								</TabsTrigger>
+							))}
+						</TabsList>
+
+						{months.map((month, index) => (
+							<TabsContent
+								key={index}
+								value={format(month, "MMM")}
+								className="mt-0"
+							>
+								<Card>
+									<CardHeader>
+										<CardTitle className="capitalize">
+											{format(month, "MMMM yyyy", { locale: es })}
+										</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<Calendar
+											mode="single"
+											month={month}
+											onDayClick={handleDayClick}
+											className="rounded-md border w-full"
+											weekStartsOn={1}
+											classNames={{
+												month: "space-y-4",
+												table: "w-full border-collapse",
+												head_row: "flex",
+												head_cell:
+													"text-muted-foreground rounded-md w-full font-normal text-[0.8rem] p-0 text-center",
+												row: "flex w-full",
+												cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
+												day: "h-16 w-16 p-0 font-normal aria-selected:opacity-100",
+												day_range_end: "day-range-end",
+												day_selected:
+													"bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+												day_today: "bg-accent text-accent-foreground",
+												day_outside:
+													"day-outside text-muted-foreground opacity-50",
+												day_disabled: "text-muted-foreground opacity-50",
+												day_range_middle:
+													"aria-selected:bg-accent aria-selected:text-accent-foreground",
+												day_hidden: "invisible",
+											}}
+											modifiers={{
+												booked: (date) =>
+													dayData.some(
+														(d) =>
+															new Date(d.date).toDateString() ===
+															date.toDateString(),
+													),
+											}}
+											modifiersClassNames={{
+												booked: "font-bold",
+											}}
+											components={{
+												Day: ({ date, ...props }) => {
+													const dayColor = getDayColor(date);
+													const dayMeds = getDayData(date)?.medications || [];
+
+													return (
+														<button
+															onClick={() => handleDayClick(date)}
+															onKeyDown={(e) => {
+																if (e.key === 'Enter' || e.key === ' ') {
+																	handleDayClick(date);
+																}
+															}}
+															className={`relative cursor-pointer rounded-md flex flex-col items-center p-1 font-normal aria-selected:opacity-100 ${dayColor} min-h-[70px] min-w-[70px]`}
+															type="button"
+														>
+															<span className="font-medium mb-1">
+																{date.getDate()}
+															</span>
+															{dayMeds.length > 0 && (
+																<div className="flex flex-wrap gap-1 justify-center">
+																	{dayMeds.includes("Bilaxten") && (
+																		<span
+																			className="text-[10px] px-1 bg-blue-100 rounded-sm"
+																			title="Bilaxten"
+																		>
+																			B
+																		</span>
+																	)}
+																	{dayMeds.includes("Relvar") && (
+																		<span
+																			className="text-[10px] px-1 bg-purple-100 rounded-sm"
+																			title="Relvar"
+																		>
+																			R
+																		</span>
+																	)}
+																	{dayMeds.includes("Ventolin") && (
+																		<span
+																			className="text-[10px] px-1 bg-teal-100 rounded-sm"
+																			title="Ventolin"
+																		>
+																			V
+																		</span>
+																	)}
+																	{dayMeds.includes("Sniffer") && (
+																		<span
+																			className="text-[10px] px-1 bg-pink-100 rounded-sm"
+																			title="Sniffer"
+																		>
+																			S
+																		</span>
+																	)}
+																</div>
+															)}
+														</button>
+													);
+												},
+											}}
+										/>
+									</CardContent>
+								</Card>
+							</TabsContent>
+						))}
+					</Tabs>
+				</CardContent>
+			</Card>
+
+			{selectedDate && (
+				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+					<DialogContent className="sm:max-w-md">
+						<DialogHeader>
+							<DialogTitle>
+								{selectedDate
+									? format(selectedDate, "d 'de' MMMM, yyyy", { locale: es })
+									: "Selecciona un día"}
+							</DialogTitle>
+						</DialogHeader>
+						<DayEditor
+							date={selectedDate}
+							initialData={getDayData(selectedDate)}
+							onSave={updateDayData}
+						/>
+					</DialogContent>
+				</Dialog>
+			)}
+		</main>
+	);
 }
