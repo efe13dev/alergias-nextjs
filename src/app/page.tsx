@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar";
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { Calendar } from '@/components/ui/calendar';
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-} from "@/components/ui/dialog";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import DayEditor from "./components/day-editor";
+} from '@/components/ui/dialog';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import DayEditor from '../components/day-editor';
 
 // Tipos para nuestros datos
-type SymptomLevel = "green" | "yellow" | "orange" | "red" | null;
-type Medication = "Bilaxten" | "Relvar" | "Ventolin" | "Sniffer";
+type SymptomLevel = 'green' | 'yellow' | 'orange' | 'red' | null;
+type Medication = 'Bilaxten' | 'Relvar' | 'Ventolin' | 'Dymista';
 type DayData = {
 	date: string; // formato ISO
 	symptomLevel: SymptomLevel;
@@ -55,7 +55,7 @@ export default function Home() {
 
 	// Cargar datos del localStorage al iniciar
 	useEffect(() => {
-		const savedData = localStorage.getItem("allergyTrackerData");
+		const savedData = localStorage.getItem('allergyTrackerData');
 		if (savedData) {
 			setDayData(JSON.parse(savedData));
 		}
@@ -65,7 +65,7 @@ export default function Home() {
 	// Guardar datos en localStorage cuando cambian
 	useEffect(() => {
 		if (initialSetupDone) {
-			localStorage.setItem("allergyTrackerData", JSON.stringify(dayData));
+			localStorage.setItem('allergyTrackerData', JSON.stringify(dayData));
 		}
 	}, [dayData, initialSetupDone]);
 
@@ -117,25 +117,25 @@ export default function Home() {
 	// Función para obtener el color de un día
 	const getDayColor = (date: Date): string => {
 		const data = getDayData(date);
-		if (!data || !data.symptomLevel) return "";
+		if (!data || !data.symptomLevel) return '';
 
 		switch (data.symptomLevel) {
-			case "green":
-				return "bg-green-200 hover:bg-green-300";
-			case "yellow":
-				return "bg-yellow-200 hover:bg-yellow-300";
-			case "orange":
-				return "bg-orange-200 hover:bg-orange-300";
-			case "red":
-				return "bg-red-200 hover:bg-red-300";
+			case 'green':
+				return 'bg-green-200 hover:bg-green-300';
+			case 'yellow':
+				return 'bg-yellow-200 hover:bg-yellow-300';
+			case 'orange':
+				return 'bg-orange-200 hover:bg-orange-300';
+			case 'red':
+				return 'bg-red-200 hover:bg-red-300';
 			default:
-				return "";
+				return '';
 		}
 	};
 
 	// Función para obtener el nombre del mes actual
 	const getCurrentMonthName = () => {
-		return format(currentMonth, "MMMM yyyy", { locale: es });
+		return format(currentMonth, 'MMMM yyyy', { locale: es });
 	};
 
 	// Función para manejar el clic en un día
@@ -150,8 +150,8 @@ export default function Home() {
 				<CardHeader>
 					<CardTitle className="text-2xl">Seguimiento de Alergia</CardTitle>
 					<CardDescription>
-						Registra tus síntomas y medicamentos para abril, mayo, junio, julio y
-						agosto
+						Registra tus síntomas y medicamentos para abril, mayo, junio, julio
+						y agosto
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -185,34 +185,34 @@ export default function Home() {
 						</span>
 						<span className="text-sm">Ventolin</span>
 						<span className="text-xs px-1 bg-pink-100 rounded-sm border border-pink-200">
-							S
+							D
 						</span>
-						<span className="text-sm">Sniffer</span>
+						<span className="text-sm">Dymista</span>
 					</div>
 
-					<Tabs defaultValue={format(months[0], "MMM")} className="w-full">
+					<Tabs defaultValue={format(months[0], 'MMM')} className="w-full">
 						<TabsList className="grid grid-cols-5 mb-4">
 							{months.map((month, index) => (
 								<TabsTrigger
-									key={index}
-									value={format(month, "MMM")}
+									key={month.toISOString()}
+									value={format(month, 'MMM')}
 									onClick={() => setCurrentMonth(month)}
 								>
-									{format(month, "MMMM", { locale: es })}
+									{format(month, 'MMMM', { locale: es })}
 								</TabsTrigger>
 							))}
 						</TabsList>
 
 						{months.map((month, index) => (
 							<TabsContent
-								key={index}
-								value={format(month, "MMM")}
+								key={month.toISOString()}
+								value={format(month, 'MMM')}
 								className="mt-0"
 							>
 								<Card>
 									<CardHeader>
 										<CardTitle className="capitalize">
-											{format(month, "MMMM yyyy", { locale: es })}
+											{format(month, 'MMMM yyyy', { locale: es })}
 										</CardTitle>
 									</CardHeader>
 									<CardContent>
@@ -223,24 +223,24 @@ export default function Home() {
 											className="rounded-md border w-full"
 											weekStartsOn={1}
 											classNames={{
-												month: "space-y-4",
-												table: "w-full border-collapse",
-												head_row: "flex",
+												month: 'space-y-4',
+												table: 'w-full border-collapse',
+												head_row: 'flex',
 												head_cell:
-													"text-muted-foreground rounded-md w-full font-normal text-[0.8rem] p-0 text-center",
-												row: "flex w-full",
-												cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
-												day: "h-16 w-16 p-0 font-normal aria-selected:opacity-100",
-												day_range_end: "day-range-end",
+													'text-muted-foreground rounded-md w-full font-normal text-[0.8rem] p-0 text-center',
+												row: 'flex w-full',
+												cell: 'relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md',
+												day: 'h-16 w-16 p-0 font-normal aria-selected:opacity-100',
+												day_range_end: 'day-range-end',
 												day_selected:
-													"bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-												day_today: "bg-accent text-accent-foreground",
+													'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+												day_today: 'bg-accent text-accent-foreground',
 												day_outside:
-													"day-outside text-muted-foreground opacity-50",
-												day_disabled: "text-muted-foreground opacity-50",
+													'day-outside text-muted-foreground opacity-50',
+												day_disabled: 'text-muted-foreground opacity-50',
 												day_range_middle:
-													"aria-selected:bg-accent aria-selected:text-accent-foreground",
-												day_hidden: "invisible",
+													'aria-selected:bg-accent aria-selected:text-accent-foreground',
+												day_hidden: 'invisible',
 											}}
 											modifiers={{
 												booked: (date) =>
@@ -251,7 +251,7 @@ export default function Home() {
 													),
 											}}
 											modifiersClassNames={{
-												booked: "font-bold",
+												booked: 'font-bold',
 											}}
 											components={{
 												Day: ({ date, ...props }) => {
@@ -273,38 +273,47 @@ export default function Home() {
 																{date.getDate()}
 															</span>
 															{dayMeds.length > 0 && (
-																<div className="flex flex-wrap gap-1 justify-center">
-																	{dayMeds.includes("Bilaxten") && (
-																		<span
-																			className="text-[10px] px-1 bg-blue-100 rounded-sm"
-																			title="Bilaxten"
-																		>
-																			B
-																		</span>
-																	)}
-																	{dayMeds.includes("Relvar") && (
-																		<span
-																			className="text-[10px] px-1 bg-purple-100 rounded-sm"
-																			title="Relvar"
-																		>
-																			R
-																		</span>
-																	)}
-																	{dayMeds.includes("Ventolin") && (
-																		<span
-																			className="text-[10px] px-1 bg-teal-100 rounded-sm"
-																			title="Ventolin"
-																		>
-																			V
-																		</span>
-																	)}
-																	{dayMeds.includes("Sniffer") && (
-																		<span
-																			className="text-[10px] px-1 bg-pink-100 rounded-sm"
-																			title="Sniffer"
-																		>
-																			S
-																		</span>
+																<div className="flex flex-col gap-1 justify-center items-center">
+																	{/* Dividir los medicamentos en dos filas de máximo 2 elementos cada una */}
+																	<div className="flex gap-1 justify-center">
+																		{dayMeds.slice(0, 2).map((med) => (
+																			<span
+																				key={med}
+																				className={
+																					med === 'Bilaxten'
+																						? 'text-[10px] px-1 bg-blue-100 rounded-sm'
+																					: med === 'Relvar'
+																					? 'text-[10px] px-1 bg-purple-100 rounded-sm'
+																					: med === 'Ventolin'
+																					? 'text-[10px] px-1 bg-teal-100 rounded-sm'
+																					: 'text-[10px] px-1 bg-pink-100 rounded-sm'
+																				}
+																				title={med}
+																			>
+																				{med[0]}
+																			</span>
+																		))}
+																	</div>
+																	{dayMeds.length > 2 && (
+																		<div className="flex gap-1 justify-center mt-1">
+																			{dayMeds.slice(2, 4).map((med) => (
+																				<span
+																					key={med}
+																					className={
+																						med === 'Bilaxten'
+																							? 'text-[10px] px-1 bg-blue-100 rounded-sm'
+																						: med === 'Relvar'
+																						? 'text-[10px] px-1 bg-purple-100 rounded-sm'
+																						: med === 'Ventolin'
+																						? 'text-[10px] px-1 bg-teal-100 rounded-sm'
+																						: 'text-[10px] px-1 bg-pink-100 rounded-sm'
+																					}
+																					title={med}
+																				>
+																					{med[0]}
+																				</span>
+																			))}
+																		</div>
 																	)}
 																</div>
 															)}
@@ -328,7 +337,7 @@ export default function Home() {
 							<DialogTitle>
 								{selectedDate
 									? format(selectedDate, "d 'de' MMMM, yyyy", { locale: es })
-									: "Selecciona un día"}
+									: 'Selecciona un día'}
 							</DialogTitle>
 						</DialogHeader>
 						<DayEditor
