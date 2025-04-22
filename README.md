@@ -10,6 +10,8 @@ Esta aplicación te ayuda a llevar un registro diario de síntomas de alergia y 
 - Interfaz moderna y fácil de usar.
 - Accesibilidad mejorada.
 
+![Vista previa de la app](./src/assets/alergias.jpg)
+
 ## Instalación y ejecución
 
 1. Clona el repositorio:
