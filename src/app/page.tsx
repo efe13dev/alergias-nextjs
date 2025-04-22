@@ -220,7 +220,7 @@ export default function Home() {
 											mode="single"
 											month={month}
 											onDayClick={handleDayClick}
-											className="rounded-md border w-full"
+											className="rounded-md border w-full min-h-[484px]"
 											weekStartsOn={1}
 											classNames={{
 												month: 'space-y-4',
@@ -282,11 +282,11 @@ export default function Home() {
 																				className={
 																					med === 'Bilaxten'
 																						? 'text-[10px] px-1 bg-blue-100 rounded-sm'
-																					: med === 'Relvar'
-																					? 'text-[10px] px-1 bg-purple-100 rounded-sm'
-																					: med === 'Ventolin'
-																					? 'text-[10px] px-1 bg-teal-100 rounded-sm'
-																					: 'text-[10px] px-1 bg-pink-100 rounded-sm'
+																						: med === 'Relvar'
+																							? 'text-[10px] px-1 bg-purple-100 rounded-sm'
+																							: med === 'Ventolin'
+																								? 'text-[10px] px-1 bg-teal-100 rounded-sm'
+																								: 'text-[10px] px-1 bg-pink-100 rounded-sm'
 																				}
 																				title={med}
 																			>
@@ -302,11 +302,11 @@ export default function Home() {
 																					className={
 																						med === 'Bilaxten'
 																							? 'text-[10px] px-1 bg-blue-100 rounded-sm'
-																						: med === 'Relvar'
-																						? 'text-[10px] px-1 bg-purple-100 rounded-sm'
-																						: med === 'Ventolin'
-																						? 'text-[10px] px-1 bg-teal-100 rounded-sm'
-																						: 'text-[10px] px-1 bg-pink-100 rounded-sm'
+																							: med === 'Relvar'
+																								? 'text-[10px] px-1 bg-purple-100 rounded-sm'
+																								: med === 'Ventolin'
+																									? 'text-[10px] px-1 bg-teal-100 rounded-sm'
+																									: 'text-[10px] px-1 bg-pink-100 rounded-sm'
 																					}
 																					title={med}
 																				>
