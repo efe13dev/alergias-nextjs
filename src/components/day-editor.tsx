@@ -97,6 +97,17 @@ export default function DayEditor({
 							Rojo (Síntomas graves)
 						</Label>
 					</div>
+					{/* Botón para eliminar el color (dejar por defecto) */}
+					<div className="flex items-center space-x-2">
+						<Button
+							variant="outline"
+							onClick={() => setSymptomLevel(null)}
+							type="button"
+							size="sm"
+						>
+							Quitar color
+						</Button>
+					</div>
 				</RadioGroup>
 			</div>
 
