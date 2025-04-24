@@ -32,6 +32,14 @@ type DayData = {
 	medications: Medication[];
 };
 
+// Extensión de la interfaz Window para evitar el uso de 'any' en window
+declare global {
+  interface Window {
+    html2canvas?: (element: HTMLElement, options?: Record<string, unknown>) => Promise<HTMLCanvasElement>;
+    jsPDF?: typeof import('jspdf').jsPDF; // Usamos el tipo correcto de jsPDF
+  }
+}
+
 export default function Home() {
 	// Estado para almacenar los datos de los días
 	const [dayData, setDayData] = useState<DayData[]>([]);
@@ -144,6 +152,67 @@ export default function Home() {
 		setIsDialogOpen(true);
 	};
 
+	// Función para exportar datos a PDF
+	const exportToPDF = async (visibleCard: HTMLElement | null) => {
+    if (!visibleCard) return;
+    try {
+      let html2canvas: (element: HTMLElement, options?: Record<string, unknown>) => Promise<HTMLCanvasElement>;
+      if (window.html2canvas) {
+        html2canvas = window.html2canvas;
+      } else {
+        const importedModule = await import('html2canvas-pro');
+        // Verificar si es una importación ESM o CommonJS
+        html2canvas = typeof importedModule === 'function' 
+          ? importedModule 
+          : importedModule.default || importedModule;
+      }
+      
+      // Modificamos cómo obtenemos jsPDF
+      let jsPDFClass: typeof import('jspdf').jsPDF;
+      if (window.jsPDF) {
+        jsPDFClass = window.jsPDF;
+      } else {
+        const jspdfModule = await import('jspdf');
+        jsPDFClass = jspdfModule.default;
+      }
+      
+      const canvas = await html2canvas(visibleCard, { backgroundColor: '#fff', scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDFClass({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgProps = { width: canvas.width, height: canvas.height };
+      const ratio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
+      const imgWidth = imgProps.width * ratio;
+      const imgHeight = imgProps.height * ratio;
+      const x = (pageWidth - imgWidth) / 2;
+      const y = 32;
+      pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+      pdf.save('CalendarioAlergia.pdf');
+    } catch (error) {
+      console.error('Error al exportar a PDF:', error);
+    }
+  };
+
+	// Función para exportar datos a PDF
+	const exportarPDF = async () => {
+    const calendarCards = document.querySelectorAll('.calendar-export-card');
+    let visibleCard: HTMLElement | null = null;
+    
+    for (const card of calendarCards) {
+      if ((card as HTMLElement).style.display !== 'none') {
+        visibleCard = card as HTMLElement;
+      }
+    }
+    
+    if (!visibleCard) {
+      console.error('No se encontró ninguna tarjeta visible para exportar');
+      return;
+    }
+    
+    await exportToPDF(visibleCard);
+  };
+
 	return (
 		<main className="container mx-auto py-6 px-4">
 			<Card className="mb-6">
@@ -155,13 +224,23 @@ export default function Home() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<Alert className="mb-4">
-						<AlertCircle className="h-4 w-4" />
-						<AlertTitle>Información</AlertTitle>
-						<AlertDescription>
-							Selecciona un día en el calendario para registrar tus síntomas y
-							medicamentos.
-						</AlertDescription>
+					<Alert className="mb-4 flex items-center justify-between gap-4">
+						<div className="flex items-center gap-2">
+							<AlertCircle className="h-4 w-4" />
+							<div>
+								<AlertTitle>Información</AlertTitle>
+								<AlertDescription>
+									Selecciona un día en el calendario para registrar tus síntomas y medicamentos.
+								</AlertDescription>
+							</div>
+						</div>
+						<button
+							onClick={exportarPDF}
+							type="button"
+							className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow whitespace-nowrap"
+						>
+							Exportar
+						</button>
 					</Alert>
 
 					<div className="flex items-center gap-2 mb-4 flex-wrap">
@@ -209,7 +288,7 @@ export default function Home() {
 								value={format(month, 'MMM')}
 								className="mt-0"
 							>
-								<Card>
+								<Card className="calendar-export-card">
 									<CardHeader>
 										<CardTitle className="capitalize">
 											{format(month, 'MMMM yyyy', { locale: es })}
