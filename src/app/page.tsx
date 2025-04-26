@@ -19,10 +19,11 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
+import html2canvaspro from 'html2canvas-pro';
+
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import DayEditor from '../components/day-editor';
-import html2canvaspro from 'html2canvas-pro';
 
 // Tipos para nuestros datos
 type SymptomLevel = 'green' | 'yellow' | 'orange' | 'red' | null;
@@ -32,16 +33,6 @@ type DayData = {
 	symptomLevel: SymptomLevel;
 	medications: Medication[];
 };
-
-// Extensión de la interfaz Window para evitar el uso de 'any' en window
-declare global {
-	interface Window {
-		html2canvas?: (
-			element: HTMLElement,
-			options?: Record<string, unknown>,
-		) => Promise<HTMLCanvasElement>;
-	}
-}
 
 export default function Home() {
 	// Estado para almacenar los datos de los días
@@ -144,11 +135,6 @@ export default function Home() {
 		}
 	};
 
-	// Función para obtener el nombre del mes actual
-	const getCurrentMonthName = () => {
-		return format(currentMonth, 'MMMM yyyy', { locale: es });
-	};
-
 	// Función para manejar el clic en un día
 	const handleDayClick = (date: Date) => {
 		setSelectedDate(date);
@@ -158,7 +144,7 @@ export default function Home() {
 	// Función para exportar la vista como imagen JPG
 	const handleExportJPG = async () => {
 		const coloredDays = document.querySelectorAll(
-			'button.bg-yellow-200, button.bg-yellow-300, button.bg-orange-200, button.bg-orange-300, button.bg-green-200, button.bg-red-200'
+			'button.bg-yellow-200, button.bg-yellow-300, button.bg-orange-200, button.bg-orange-300, button.bg-green-200, button.bg-red-200',
 		);
 		const originalBackgrounds: string[] = [];
 		const originalBorders: string[] = [];
@@ -169,20 +155,26 @@ export default function Home() {
 			originalBorders[idx] = (el as HTMLElement).style.border;
 			originalRadii[idx] = (el as HTMLElement).style.borderRadius;
 
-			if (el.classList.contains('bg-yellow-200')) (el as HTMLElement).style.backgroundColor = '#fef08a';
-			if (el.classList.contains('bg-yellow-300')) (el as HTMLElement).style.backgroundColor = '#fde047';
-			if (el.classList.contains('bg-orange-200')) (el as HTMLElement).style.backgroundColor = '#fed7aa';
-			if (el.classList.contains('bg-orange-300')) (el as HTMLElement).style.backgroundColor = '#fdba74';
-			if (el.classList.contains('bg-green-200')) (el as HTMLElement).style.backgroundColor = '#bbf7d0';
-			if (el.classList.contains('bg-red-200')) (el as HTMLElement).style.backgroundColor = '#fecaca';
+			if (el.classList.contains('bg-yellow-200'))
+				(el as HTMLElement).style.backgroundColor = '#fef08a';
+			if (el.classList.contains('bg-orange-200'))
+				(el as HTMLElement).style.backgroundColor = '#fed7aa';
+			if (el.classList.contains('bg-green-200'))
+				(el as HTMLElement).style.backgroundColor = '#bbf7d0';
+			if (el.classList.contains('bg-red-200'))
+				(el as HTMLElement).style.backgroundColor = '#fecaca';
 
 			// Forzar borde y border-radius
-			(el as HTMLElement).style.border = '2px solid #e5e7eb';
+			(el as HTMLElement).style.border = '1px solid #e5e7eb';
 			(el as HTMLElement).style.borderRadius = '0.5rem';
 		});
 
 		const body = document.body;
 		if (body) {
+			// Obtener el nombre del mes actual en español
+			const mesActual = format(currentMonth, 'MMMM', { locale: es });
+			const nombreArchivo = `alergia-captura-${mesActual}.jpg`;
+
 			const canvas = await html2canvaspro(body, {
 				useCORS: true,
 				windowWidth: window.innerWidth,
@@ -193,7 +185,7 @@ export default function Home() {
 			const imgData = canvas.toDataURL('image/jpeg');
 			const link = document.createElement('a');
 			link.href = imgData;
-			link.download = 'captura.jpg';
+			link.download = nombreArchivo;
 			link.click();
 		}
 
@@ -251,7 +243,7 @@ export default function Home() {
 						<span className="text-xs px-1 bg-purple-100 rounded-sm border border-purple-200">
 							R
 						</span>
-						<span className="text-sm">Relvar</span>
+						<span className="text-sm ">Relvar</span>
 						<span className="text-xs px-1 bg-teal-100 rounded-sm border border-teal-200">
 							V
 						</span>
@@ -353,12 +345,12 @@ export default function Home() {
 																				key={med}
 																				className={
 																					med === 'Bilaxten'
-																						? 'text-[10px] px-1 bg-blue-100 rounded-sm'
+																						? 'text-[10px] px-1 bg-blue-100 font-semibold rounded-sm'
 																						: med === 'Relvar'
-																							? 'text-[10px] px-1 bg-purple-100 rounded-sm'
+																							? 'text-[10px] px-1 bg-purple-100 font-semibold rounded-sm'
 																							: med === 'Ventolin'
-																								? 'text-[10px] px-1 bg-teal-100 rounded-sm'
-																								: 'text-[10px] px-1 bg-pink-100 rounded-sm'
+																								? 'text-[10px] px-1 bg-teal-100 font-semibold rounded-sm'
+																								: 'text-[10px] px-1 bg-pink-100 font-semibold rounded-sm'
 																				}
 																				title={med}
 																			>
@@ -373,12 +365,12 @@ export default function Home() {
 																					key={med}
 																					className={
 																						med === 'Bilaxten'
-																							? 'text-[10px] px-1 bg-blue-100 rounded-sm'
+																							? 'text-[10px] px-1 bg-blue-100 font-semibold rounded-sm'
 																							: med === 'Relvar'
-																								? 'text-[10px] px-1 bg-purple-100 rounded-sm'
+																								? 'text-[10px] px-1 bg-purple-100 font-semibold rounded-sm'
 																								: med === 'Ventolin'
-																									? 'text-[10px] px-1 bg-teal-100 rounded-sm'
-																									: 'text-[10px] px-1 bg-pink-100 rounded-sm'
+																									? 'text-[10px] px-1 bg-teal-100 font-semibold rounded-sm'
+																									: 'text-[10px] px-1 bg-pink-100 font-semibold rounded-sm'
 																					}
 																					title={med}
 																				>
