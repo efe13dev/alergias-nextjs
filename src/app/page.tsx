@@ -22,6 +22,7 @@ import {
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import DayEditor from '../components/day-editor';
+import html2canvaspro from 'html2canvas-pro';
 
 // Tipos para nuestros datos
 type SymptomLevel = 'green' | 'yellow' | 'orange' | 'red' | null;
@@ -34,10 +35,12 @@ type DayData = {
 
 // Extensión de la interfaz Window para evitar el uso de 'any' en window
 declare global {
-  interface Window {
-    html2canvas?: (element: HTMLElement, options?: Record<string, unknown>) => Promise<HTMLCanvasElement>;
-    jsPDF?: typeof import('jspdf').jsPDF; // Usamos el tipo correcto de jsPDF
-  }
+	interface Window {
+		html2canvas?: (
+			element: HTMLElement,
+			options?: Record<string, unknown>,
+		) => Promise<HTMLCanvasElement>;
+	}
 }
 
 export default function Home() {
@@ -152,66 +155,55 @@ export default function Home() {
 		setIsDialogOpen(true);
 	};
 
-	// Función para exportar datos a PDF
-	const exportToPDF = async (visibleCard: HTMLElement | null) => {
-    if (!visibleCard) return;
-    try {
-      let html2canvas: (element: HTMLElement, options?: Record<string, unknown>) => Promise<HTMLCanvasElement>;
-      if (window.html2canvas) {
-        html2canvas = window.html2canvas;
-      } else {
-        const importedModule = await import('html2canvas-pro');
-        // Verificar si es una importación ESM o CommonJS
-        html2canvas = typeof importedModule === 'function' 
-          ? importedModule 
-          : importedModule.default || importedModule;
-      }
-      
-      // Modificamos cómo obtenemos jsPDF
-      let jsPDFClass: typeof import('jspdf').jsPDF;
-      if (window.jsPDF) {
-        jsPDFClass = window.jsPDF;
-      } else {
-        const jspdfModule = await import('jspdf');
-        jsPDFClass = jspdfModule.default;
-      }
-      
-      const canvas = await html2canvas(visibleCard, { backgroundColor: '#fff', scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDFClass({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgProps = { width: canvas.width, height: canvas.height };
-      const ratio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
-      const imgWidth = imgProps.width * ratio;
-      const imgHeight = imgProps.height * ratio;
-      const x = (pageWidth - imgWidth) / 2;
-      const y = 32;
-      pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-      pdf.save('CalendarioAlergia.pdf');
-    } catch (error) {
-      console.error('Error al exportar a PDF:', error);
-    }
-  };
+	// Función para exportar la vista como imagen JPG
+	const handleExportJPG = async () => {
+		const coloredDays = document.querySelectorAll(
+			'button.bg-yellow-200, button.bg-yellow-300, button.bg-orange-200, button.bg-orange-300, button.bg-green-200, button.bg-red-200'
+		);
+		const originalBackgrounds: string[] = [];
+		const originalBorders: string[] = [];
+		const originalRadii: string[] = [];
 
-	// Función para exportar datos a PDF
-	const exportarPDF = async () => {
-    const calendarCards = document.querySelectorAll('.calendar-export-card');
-    let visibleCard: HTMLElement | null = null;
-    
-    for (const card of calendarCards) {
-      if ((card as HTMLElement).style.display !== 'none') {
-        visibleCard = card as HTMLElement;
-      }
-    }
-    
-    if (!visibleCard) {
-      console.error('No se encontró ninguna tarjeta visible para exportar');
-      return;
-    }
-    
-    await exportToPDF(visibleCard);
-  };
+		coloredDays.forEach((el, idx) => {
+			originalBackgrounds[idx] = (el as HTMLElement).style.backgroundColor;
+			originalBorders[idx] = (el as HTMLElement).style.border;
+			originalRadii[idx] = (el as HTMLElement).style.borderRadius;
+
+			if (el.classList.contains('bg-yellow-200')) (el as HTMLElement).style.backgroundColor = '#fef08a';
+			if (el.classList.contains('bg-yellow-300')) (el as HTMLElement).style.backgroundColor = '#fde047';
+			if (el.classList.contains('bg-orange-200')) (el as HTMLElement).style.backgroundColor = '#fed7aa';
+			if (el.classList.contains('bg-orange-300')) (el as HTMLElement).style.backgroundColor = '#fdba74';
+			if (el.classList.contains('bg-green-200')) (el as HTMLElement).style.backgroundColor = '#bbf7d0';
+			if (el.classList.contains('bg-red-200')) (el as HTMLElement).style.backgroundColor = '#fecaca';
+
+			// Forzar borde y border-radius
+			(el as HTMLElement).style.border = '2px solid #e5e7eb';
+			(el as HTMLElement).style.borderRadius = '0.5rem';
+		});
+
+		const body = document.body;
+		if (body) {
+			const canvas = await html2canvaspro(body, {
+				useCORS: true,
+				windowWidth: window.innerWidth,
+				windowHeight: window.innerHeight,
+				scrollX: 0,
+				scrollY: 0,
+			});
+			const imgData = canvas.toDataURL('image/jpeg');
+			const link = document.createElement('a');
+			link.href = imgData;
+			link.download = 'captura.jpg';
+			link.click();
+		}
+
+		// Restaurar estilos originales
+		coloredDays.forEach((el, idx) => {
+			(el as HTMLElement).style.backgroundColor = originalBackgrounds[idx];
+			(el as HTMLElement).style.border = originalBorders[idx];
+			(el as HTMLElement).style.borderRadius = originalRadii[idx];
+		});
+	};
 
 	return (
 		<main className="container mx-auto py-6 px-4">
@@ -230,16 +222,17 @@ export default function Home() {
 							<div>
 								<AlertTitle>Información</AlertTitle>
 								<AlertDescription>
-									Selecciona un día en el calendario para registrar tus síntomas y medicamentos.
+									Selecciona un día en el calendario para registrar tus síntomas
+									y medicamentos.
 								</AlertDescription>
 							</div>
 						</div>
 						<button
-							onClick={exportarPDF}
+							onClick={handleExportJPG}
 							type="button"
 							className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow whitespace-nowrap"
 						>
-							Exportar
+							Exportar como JPG
 						</button>
 					</Alert>
 
