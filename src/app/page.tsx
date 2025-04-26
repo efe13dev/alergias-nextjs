@@ -256,7 +256,7 @@ export default function Home() {
 
 					<Tabs defaultValue={format(months[0], 'MMM')} className="w-full">
 						<TabsList className="grid grid-cols-5 mb-4">
-							{months.map((month, index) => (
+							{months.map((month) => (
 								<TabsTrigger
 									key={month.toISOString()}
 									value={format(month, 'MMM')}
@@ -267,7 +267,7 @@ export default function Home() {
 							))}
 						</TabsList>
 
-						{months.map((month, index) => (
+						{months.map((month) => (
 							<TabsContent
 								key={month.toISOString()}
 								value={format(month, 'MMM')}
