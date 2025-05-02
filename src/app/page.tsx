@@ -20,10 +20,10 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog';
 import html2canvaspro from 'html2canvas-pro';
-
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import DayEditor from '../components/day-editor';
+import { getDayColorBySymptomLevel } from '@/lib/utils';
 
 // Tipos para nuestros datos
 type SymptomLevel = 'green' | 'yellow' | 'orange' | 'red' | null;
@@ -54,6 +54,18 @@ export default function Home() {
 		new Date(new Date().getFullYear(), 6, 1), // Julio (mes 6)
 		new Date(new Date().getFullYear(), 7, 1), // Agosto (mes 7)
 	];
+
+	// Calcular el valor por defecto del mes actual
+	const currentMonthFormatted = format(new Date(), 'MMM');
+	const defaultMonth = months.find(
+		(month) => format(month, 'MMM') === currentMonthFormatted,
+	);
+	const defaultTabValue = defaultMonth
+		? format(defaultMonth, 'MMM')
+		: format(months[0], 'MMM');
+
+	// Estado para la pestaña seleccionada
+	const [selectedTab, setSelectedTab] = useState<string>(defaultTabValue);
 
 	// Cargar datos del localStorage al iniciar
 	useEffect(() => {
@@ -119,20 +131,7 @@ export default function Home() {
 	// Función para obtener el color de un día
 	const getDayColor = (date: Date): string => {
 		const data = getDayData(date);
-		if (!data || !data.symptomLevel) return '';
-
-		switch (data.symptomLevel) {
-			case 'green':
-				return 'bg-green-200 hover:bg-green-300';
-			case 'yellow':
-				return 'bg-yellow-200 hover:bg-yellow-300';
-			case 'orange':
-				return 'bg-orange-200 hover:bg-orange-300';
-			case 'red':
-				return 'bg-red-200 hover:bg-red-300';
-			default:
-				return '';
-		}
+		return getDayColorBySymptomLevel(data?.symptomLevel);
 	};
 
 	// Función para manejar el clic en un día
@@ -171,8 +170,13 @@ export default function Home() {
 
 		const body = document.body;
 		if (body) {
-			// Obtener el nombre del mes actual en español
-			const mesActual = format(currentMonth, 'MMMM', { locale: es });
+			// Obtener el mes seleccionado desde selectedTab
+			const selectedMonthObj = months.find(
+				(month) => format(month, 'MMM') === selectedTab
+			);
+			const mesActual = selectedMonthObj
+				? format(selectedMonthObj, 'MMMM', { locale: es })
+				: format(months[0], 'MMMM', { locale: es });
 			const nombreArchivo = `alergia-captura-${mesActual}.jpg`;
 
 			const canvas = await html2canvaspro(body, {
@@ -254,7 +258,12 @@ export default function Home() {
 						<span className="text-sm">Dymista</span>
 					</div>
 
-					<Tabs defaultValue={format(months[0], 'MMM')} className="w-full">
+					<Tabs
+						defaultValue={defaultTabValue}
+						value={selectedTab}
+						onValueChange={setSelectedTab}
+						className="w-full"
+					>
 						<TabsList className="grid grid-cols-5 mb-4">
 							{months.map((month) => (
 								<TabsTrigger
