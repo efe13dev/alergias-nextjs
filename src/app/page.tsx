@@ -24,6 +24,7 @@ import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import DayEditor from '../components/day-editor';
 import { getDayColorBySymptomLevel } from '@/lib/utils';
+import { CalendarDayButton } from '../components/CalendarDayButton';
 
 // Tipos para nuestros datos
 type SymptomLevel = 'green' | 'yellow' | 'orange' | 'red' | null;
@@ -172,7 +173,7 @@ export default function Home() {
 		if (body) {
 			// Obtener el mes seleccionado desde selectedTab
 			const selectedMonthObj = months.find(
-				(month) => format(month, 'MMM') === selectedTab
+				(month) => format(month, 'MMM') === selectedTab,
 			);
 			const mesActual = selectedMonthObj
 				? format(selectedMonthObj, 'MMMM', { locale: es })
@@ -327,72 +328,13 @@ export default function Home() {
 												booked: 'font-bold',
 											}}
 											components={{
-												Day: ({ date, ...props }) => {
-													const dayColor = getDayColor(date);
-													const dayMeds = getDayData(date)?.medications || [];
-
-													return (
-														<button
-															onClick={() => handleDayClick(date)}
-															onKeyDown={(e) => {
-																if (e.key === 'Enter' || e.key === ' ') {
-																	handleDayClick(date);
-																}
-															}}
-															className={`relative cursor-pointer rounded-md flex flex-col items-center p-1 font-normal aria-selected:opacity-100 ${dayColor} min-h-[70px] min-w-[70px]`}
-															type="button"
-														>
-															<span className="font-medium mb-1">
-																{date.getDate()}
-															</span>
-															{dayMeds.length > 0 && (
-																<div className="flex flex-col gap-1 justify-center items-center">
-																	{/* Dividir los medicamentos en dos filas de máximo 2 elementos cada una */}
-																	<div className="flex gap-1 justify-center">
-																		{dayMeds.slice(0, 2).map((med) => (
-																			<span
-																				key={med}
-																				className={
-																					med === 'Bilaxten'
-																						? 'text-[10px] px-1 bg-blue-100 font-semibold rounded-sm'
-																						: med === 'Relvar'
-																							? 'text-[10px] px-1 bg-purple-100 font-semibold rounded-sm'
-																							: med === 'Ventolin'
-																								? 'text-[10px] px-1 bg-teal-100 font-semibold rounded-sm'
-																								: 'text-[10px] px-1 bg-pink-100 font-semibold rounded-sm'
-																				}
-																				title={med}
-																			>
-																				{med[0]}
-																			</span>
-																		))}
-																	</div>
-																	{dayMeds.length > 2 && (
-																		<div className="flex gap-1 justify-center mt-1">
-																			{dayMeds.slice(2, 4).map((med) => (
-																				<span
-																					key={med}
-																					className={
-																						med === 'Bilaxten'
-																							? 'text-[10px] px-1 bg-blue-100 font-semibold rounded-sm'
-																							: med === 'Relvar'
-																								? 'text-[10px] px-1 bg-purple-100 font-semibold rounded-sm'
-																								: med === 'Ventolin'
-																									? 'text-[10px] px-1 bg-teal-100 font-semibold rounded-sm'
-																									: 'text-[10px] px-1 bg-pink-100 font-semibold rounded-sm'
-																					}
-																					title={med}
-																				>
-																					{med[0]}
-																				</span>
-																			))}
-																		</div>
-																	)}
-																</div>
-															)}
-														</button>
-													);
-												},
+												Day: ({ date, ...props }) => (
+													<CalendarDayButton
+														date={date}
+														dayData={getDayData(date)}
+														onClick={handleDayClick}
+													/>
+												),
 											}}
 										/>
 									</CardContent>
