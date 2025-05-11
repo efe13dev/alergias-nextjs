@@ -25,19 +25,21 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import DayEditor from '../components/day-editor';
 import { getDayColorBySymptomLevel } from '@/lib/utils';
 import { CalendarDayButton } from '../components/CalendarDayButton';
+import AppointmentManager from '../components/AppointmentManager';
 
 // Tipos para nuestros datos
-type SymptomLevel = 'green' | 'yellow' | 'orange' | 'red' | null;
-type Medication = 'Bilaxten' | 'Relvar' | 'Ventolin' | 'Dymista';
-type DayData = {
-	date: string; // formato ISO
-	symptomLevel: SymptomLevel;
-	medications: Medication[];
-};
+import type { SymptomLevel, Medication, DayData, Appointment } from './types';
 
 export default function Home() {
 	// Estado para almacenar los datos de los días
 	const [dayData, setDayData] = useState<DayData[]>([]);
+	// Estado para almacenar las citas pendientes
+	const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>(
+		[],
+	);
+	// Estado para mostrar solo las citas pendientes
+	const [showPendingAppointments, setShowPendingAppointments] =
+		useState<boolean>(false);
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(
 		new Date(),
 	);
@@ -74,6 +76,10 @@ export default function Home() {
 		if (savedData) {
 			setDayData(JSON.parse(savedData));
 		}
+		const savedAppointments = localStorage.getItem('pendingAppointments');
+		if (savedAppointments) {
+			setPendingAppointments(JSON.parse(savedAppointments));
+		}
 		setInitialSetupDone(true);
 	}, []);
 
@@ -83,6 +89,16 @@ export default function Home() {
 			localStorage.setItem('allergyTrackerData', JSON.stringify(dayData));
 		}
 	}, [dayData, initialSetupDone]);
+
+	// Guardar citas pendientes en localStorage cuando cambian
+	useEffect(() => {
+		if (initialSetupDone) {
+			localStorage.setItem(
+				'pendingAppointments',
+				JSON.stringify(pendingAppointments),
+			);
+		}
+	}, [pendingAppointments, initialSetupDone]);
 
 	// Función para actualizar los datos de un día
 	const updateDayData = (
@@ -238,9 +254,10 @@ export default function Home() {
 						<Badge className="bg-yellow-500">Amarillo: Síntomas leves</Badge>
 						<Badge className="bg-orange-500">Naranja: Síntomas moderados</Badge>
 						<Badge className="bg-red-500">Rojo: Síntomas graves</Badge>
+						<Badge className="bg-blue-500">Azul: Cita pendiente</Badge>
 					</div>
 
-					<div className="flex items-center gap-2 mb-4 flex-wrap">
+					<div className="flex items-center gap-2 mb-4 flex-wrap w-full">
 						<span className="text-xs px-1 bg-blue-100 rounded-sm border border-blue-200">
 							B
 						</span>
@@ -248,7 +265,7 @@ export default function Home() {
 						<span className="text-xs px-1 bg-purple-100 rounded-sm border border-purple-200">
 							R
 						</span>
-						<span className="text-sm ">Relvar</span>
+						<span className="text-sm">Relvar</span>
 						<span className="text-xs px-1 bg-teal-100 rounded-sm border border-teal-200">
 							V
 						</span>
@@ -257,6 +274,29 @@ export default function Home() {
 							D
 						</span>
 						<span className="text-sm">Dymista</span>
+						<button
+							onClick={() => setShowPendingAppointments(true)}
+							type="button"
+							className="ml-auto mr-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4  rounded shadow whitespace-nowrap flex items-center gap-2 text-sm"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-5 w-5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								aria-label="Añadir cita pendiente"
+							>
+								<title>Añadir cita pendiente</title>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M12 4v16m8-8H4"
+								/>
+							</svg>
+							Citas pendientes
+						</button>
 					</div>
 
 					<Tabs
@@ -323,18 +363,35 @@ export default function Home() {
 															new Date(d.date).toDateString() ===
 															date.toDateString(),
 													),
+												appointment: (date) =>
+													pendingAppointments.some(
+														(app) =>
+															app.status === 'pendiente' &&
+															new Date(app.date).toDateString() ===
+																date.toDateString(),
+													),
 											}}
 											modifiersClassNames={{
 												booked: 'font-bold',
+												appointment: 'bg-blue-400 text-white',
 											}}
 											components={{
-												Day: ({ date, ...props }) => (
-													<CalendarDayButton
-														date={date}
-														dayData={getDayData(date)}
-														onClick={handleDayClick}
-													/>
-												),
+												Day: ({ date, ...props }) => {
+													const appointment = pendingAppointments.find(
+														(app) =>
+															app.status === 'pendiente' &&
+															new Date(app.date).toDateString() ===
+																date.toDateString(),
+													);
+													return (
+														<CalendarDayButton
+															date={date}
+															dayData={getDayData(date)}
+															onClick={handleDayClick}
+															appointment={appointment}
+														/>
+													);
+												},
 											}}
 										/>
 									</CardContent>
@@ -363,6 +420,22 @@ export default function Home() {
 					</DialogContent>
 				</Dialog>
 			)}
+
+			{/* Modal de gestión de citas */}
+			<Dialog
+				open={showPendingAppointments}
+				onOpenChange={setShowPendingAppointments}
+			>
+				<DialogContent className="sm:max-w-lg w-full">
+					<DialogHeader>
+						<DialogTitle>Gestión de citas pendientes</DialogTitle>
+					</DialogHeader>
+					<AppointmentManager
+						appointments={pendingAppointments}
+						setAppointments={setPendingAppointments}
+					/>
+				</DialogContent>
+			</Dialog>
 		</main>
 	);
 }

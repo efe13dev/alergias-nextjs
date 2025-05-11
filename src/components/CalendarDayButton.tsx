@@ -3,6 +3,8 @@ import { getDayColorBySymptomLevel } from '@/lib/utils';
 
 type Medication = 'Bilaxten' | 'Relvar' | 'Ventolin' | 'Dymista';
 
+import type { Appointment } from '@/app/types';
+
 type Props = {
 	date: Date;
 	dayData:
@@ -13,15 +15,18 @@ type Props = {
 		  }
 		| undefined;
 	onClick: (date: Date) => void;
+	appointment?: Appointment;
 };
 
 export const CalendarDayButton: React.FC<Props> = ({
 	date,
 	dayData,
 	onClick,
+	appointment,
 }) => {
 	const dayColor = getDayColorBySymptomLevel(dayData?.symptomLevel);
 	const dayMeds = dayData?.medications || [];
+	const isAppointment = appointment && appointment.status === 'pendiente';
 
 	return (
 		<button
@@ -31,7 +36,7 @@ export const CalendarDayButton: React.FC<Props> = ({
 					onClick(date);
 				}
 			}}
-			className={`relative cursor-pointer rounded-md flex flex-col items-center p-1 font-normal aria-selected:opacity-100 ${dayColor} min-h-[70px] min-w-[70px]`}
+			className={`relative cursor-pointer rounded-md flex flex-col items-center p-1 font-normal aria-selected:opacity-100 ${isAppointment ? 'bg-blue-400 text-white' : dayColor} min-h-[70px] min-w-[70px]`}
 			type="button"
 		>
 			<span className="font-medium mb-1">{date.getDate()}</span>
