@@ -1,7 +1,7 @@
 import type { Appointment } from "@/app/types";
 import type React from "react";
 
-import { getDayColorBySymptomLevel } from "@/lib/utils";
+import { getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
 
 type Medication = "Bilaxten" | "Relvar" | "Ventolin" | "Dymista";
 
@@ -20,6 +20,7 @@ type Props = {
 
 export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, appointment }) => {
   const dayColor = getDayColorBySymptomLevel(dayData?.symptomLevel);
+  const accentClass = getDayAccentBySymptomLevel(dayData?.symptomLevel);
   const dayMeds = dayData?.medications || [];
   const isAppointment = appointment && appointment.status === "pendiente";
 
@@ -31,12 +32,16 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
           onClick(date);
         }
       }}
-      className={`relative flex cursor-pointer flex-col items-center rounded-md p-1 font-normal aria-selected:opacity-100 ${isAppointment ? "bg-blue-400 text-white" : dayColor} min-h-[70px] min-w-[70px]`}
+      className={`relative flex cursor-pointer flex-col items-center rounded-md p-1 font-normal aria-selected:opacity-100 ${
+        isAppointment
+          ? "text-foreground border border-sky-300 bg-sky-200 hover:bg-sky-300 dark:border-sky-500/60 dark:bg-sky-900/25 dark:hover:bg-sky-900/40"
+          : dayColor
+      } min-h-[70px] min-w-[70px]`}
       type="button"
     >
       <span className="mb-1 font-medium">{date.getDate()}</span>
       {dayMeds.length > 0 && (
-        <div className="flex flex-col items-center justify-center gap-1">
+        <div className="z-10 flex flex-col items-center justify-center gap-0.5">
           {/* Dividir los medicamentos en dos filas de máximo 2 elementos cada una */}
           <div className="flex justify-center gap-1">
             {dayMeds.slice(0, 2).map((med) => (
@@ -44,12 +49,12 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
                 key={med}
                 className={
                   med === "Bilaxten"
-                    ? "rounded-sm bg-blue-100 px-1 text-[10px] font-semibold"
+                    ? "text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-[10px] font-semibold dark:border-sky-500/80 dark:bg-sky-900/50"
                     : med === "Relvar"
-                      ? "rounded-sm bg-purple-100 px-1 text-[10px] font-semibold"
+                      ? "text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-[10px] font-semibold dark:border-violet-500/80 dark:bg-violet-900/50"
                       : med === "Ventolin"
-                        ? "rounded-sm bg-teal-100 px-1 text-[10px] font-semibold"
-                        : "rounded-sm bg-pink-100 px-1 text-[10px] font-semibold"
+                        ? "text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-[10px] font-semibold dark:border-teal-500/80 dark:bg-teal-900/50"
+                        : "text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-[10px] font-semibold dark:border-rose-500/80 dark:bg-rose-900/50"
                 }
                 title={med}
               >
@@ -58,18 +63,18 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
             ))}
           </div>
           {dayMeds.length > 2 && (
-            <div className="mt-1 flex justify-center gap-1">
+            <div className="mt-0 flex justify-center gap-1">
               {dayMeds.slice(2, 4).map((med) => (
                 <span
                   key={med}
                   className={
                     med === "Bilaxten"
-                      ? "rounded-sm bg-blue-100 px-1 text-[10px] font-semibold"
+                      ? "text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-[10px] font-semibold dark:border-sky-500/60 dark:bg-sky-900/30"
                       : med === "Relvar"
-                        ? "rounded-sm bg-purple-100 px-1 text-[10px] font-semibold"
+                        ? "text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-[10px] font-semibold dark:border-violet-500/60 dark:bg-violet-900/30"
                         : med === "Ventolin"
-                          ? "rounded-sm bg-teal-100 px-1 text-[10px] font-semibold"
-                          : "rounded-sm bg-pink-100 px-1 text-[10px] font-semibold"
+                          ? "text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-[10px] font-semibold dark:border-teal-500/60 dark:bg-teal-900/30"
+                          : "text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-[10px] font-semibold dark:border-rose-500/60 dark:bg-rose-900/30"
                   }
                   title={med}
                 >
@@ -79,6 +84,12 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
             </div>
           )}
         </div>
+      )}
+      {accentClass && (
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute right-0 bottom-0 left-0 z-0 h-1.5 rounded-b ${accentClass}`}
+        />
       )}
     </button>
   );

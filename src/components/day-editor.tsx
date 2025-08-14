@@ -45,30 +45,46 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
           className="flex flex-col space-y-2"
         >
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="green" id="green" className="border-green-500" />
+            <RadioGroupItem
+              value="green"
+              id="green"
+              className="border-green-300 dark:border-emerald-500/60"
+            />
             <Label htmlFor="green" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full bg-green-500" />
+              <span className="mr-2 h-4 w-4 rounded-full border border-green-300 bg-green-200 dark:border-emerald-500/60 dark:bg-emerald-900/30" />
               Verde (Sin síntomas)
             </Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="yellow" id="yellow" className="border-yellow-500" />
+            <RadioGroupItem
+              value="yellow"
+              id="yellow"
+              className="border-yellow-300 dark:border-amber-500/60"
+            />
             <Label htmlFor="yellow" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full bg-yellow-500" />
+              <span className="mr-2 h-4 w-4 rounded-full border border-yellow-300 bg-yellow-200 dark:border-amber-500/60 dark:bg-amber-900/25" />
               Amarillo (Síntomas leves)
             </Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="orange" id="orange" className="border-orange-500" />
+            <RadioGroupItem
+              value="orange"
+              id="orange"
+              className="border-orange-300 dark:border-orange-500/70"
+            />
             <Label htmlFor="orange" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full bg-orange-500" />
+              <span className="mr-2 h-4 w-4 rounded-full border border-orange-300 bg-orange-200 dark:border-orange-500/60 dark:bg-orange-900/25" />
               Naranja (Síntomas moderados)
             </Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="red" id="red" className="border-red-500" />
+            <RadioGroupItem
+              value="red"
+              id="red"
+              className="border-red-300 dark:border-rose-500/60"
+            />
             <Label htmlFor="red" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full bg-red-500" />
+              <span className="mr-2 h-4 w-4 rounded-full border border-red-300 bg-red-200 dark:border-rose-500/60 dark:bg-rose-900/25" />
               Rojo (Síntomas graves)
             </Label>
           </div>

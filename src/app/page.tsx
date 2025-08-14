@@ -18,6 +18,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ThemeToggle from "@/components/ThemeToggle";
 
 // Tipos para nuestros datos
 
@@ -191,7 +192,10 @@ export default function Home() {
     <main className="container mx-auto px-4 py-6">
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-2xl">Seguimiento de Alergia</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl">Seguimiento de Alergia</CardTitle>
+            <ThemeToggle />
+          </div>
           <CardDescription>
             Registra tus síntomas y medicamentos para abril, mayo, junio, julio y agosto
           </CardDescription>
@@ -207,38 +211,56 @@ export default function Home() {
                 </AlertDescription>
               </div>
             </div>
-            <button
-              onClick={handleExportJPG}
-              type="button"
-              className="rounded bg-blue-600 px-4 py-2 font-bold whitespace-nowrap text-white shadow hover:bg-blue-700"
-            >
-              Exportar como JPG
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleExportJPG}
+                type="button"
+                className="text-foreground rounded border border-sky-400/30 bg-sky-700/40 px-4 py-2 font-bold whitespace-nowrap shadow hover:bg-sky-700/55"
+              >
+                Exportar como JPG
+              </button>
+            </div>
           </Alert>
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <Badge className="bg-green-500">Verde: Sin síntomas</Badge>
-            <Badge className="bg-yellow-500">Amarillo: Síntomas leves</Badge>
-            <Badge className="bg-orange-500">Naranja: Síntomas moderados</Badge>
-            <Badge className="bg-red-500">Rojo: Síntomas graves</Badge>
-            <Badge className="bg-blue-500">Azul: Cita pendiente</Badge>
+            <Badge className="text-foreground border border-emerald-300 bg-emerald-200 dark:border-emerald-500/60 dark:bg-emerald-900/30">
+              Verde: Sin síntomas
+            </Badge>
+            <Badge className="text-foreground border border-yellow-300 bg-yellow-200 dark:border-amber-500/60 dark:bg-amber-900/25">
+              Amarillo: Síntomas leves
+            </Badge>
+            <Badge className="text-foreground border border-orange-300 bg-orange-200 dark:border-orange-500/70 dark:bg-orange-900/25">
+              Naranja: Síntomas moderados
+            </Badge>
+            <Badge className="text-foreground border border-red-300 bg-red-200 dark:border-rose-500/60 dark:bg-rose-900/25">
+              Rojo: Síntomas graves
+            </Badge>
+            <Badge className="text-foreground border border-sky-300 bg-sky-200 dark:border-sky-500/60 dark:bg-sky-900/25">
+              Azul: Cita pendiente
+            </Badge>
           </div>
 
           <div className="mb-4 flex w-full flex-wrap items-center gap-2">
-            <span className="rounded-sm border border-blue-200 bg-blue-100 px-1 text-xs">B</span>
+            <span className="text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-xs dark:border-sky-500/60 dark:bg-sky-900/30">
+              B
+            </span>
             <span className="text-sm">Bilaxten</span>
-            <span className="rounded-sm border border-purple-200 bg-purple-100 px-1 text-xs">
+            <span className="text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-xs dark:border-violet-500/60 dark:bg-violet-900/30">
               R
             </span>
             <span className="text-sm">Relvar</span>
-            <span className="rounded-sm border border-teal-200 bg-teal-100 px-1 text-xs">V</span>
+            <span className="text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-xs dark:border-teal-500/60 dark:bg-teal-900/30">
+              V
+            </span>
             <span className="text-sm">Ventolin</span>
-            <span className="rounded-sm border border-pink-200 bg-pink-100 px-1 text-xs">D</span>
+            <span className="text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-xs dark:border-rose-500/60 dark:bg-rose-900/30">
+              D
+            </span>
             <span className="text-sm">Dymista</span>
             <button
               onClick={() => setShowPendingAppointments(true)}
               type="button"
-              className="mr-2 ml-auto flex items-center gap-2 rounded bg-blue-600 px-4 py-2 text-sm font-bold whitespace-nowrap text-white shadow hover:bg-blue-700"
+              className="text-foreground mr-2 ml-auto flex items-center gap-2 rounded border border-sky-300 bg-sky-200 px-4 py-2 text-sm font-bold whitespace-nowrap shadow hover:bg-sky-300 dark:border-sky-500/60 dark:bg-sky-900/25 dark:hover:bg-sky-900/40"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -317,7 +339,8 @@ export default function Home() {
                       }}
                       modifiersClassNames={{
                         booked: "font-bold",
-                        appointment: "bg-blue-400 text-white",
+                        appointment:
+                          "text-foreground border border-sky-300 bg-sky-200 dark:border-sky-500/60 dark:bg-sky-900/25",
                       }}
                       components={{
                         Day: ({ date }) => {

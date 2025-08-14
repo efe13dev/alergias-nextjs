@@ -77,11 +77,16 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
     <div className="space-y-4">
       <h3 className="mb-2 text-lg font-bold">Citas pendientes</h3>
       <ul className="max-h-64 space-y-2 overflow-y-auto">
-        {appointments.length === 0 && <li className="text-gray-500">No hay citas pendientes.</li>}
+        {appointments.length === 0 && (
+          <li className="text-muted-foreground">No hay citas pendientes.</li>
+        )}
         {appointments.map((app, idx) => (
-          <li key={app.id} className="relative flex flex-col gap-1 rounded border bg-blue-50 p-3">
+          <li
+            key={app.id}
+            className="text-foreground relative flex flex-col gap-1 rounded border border-sky-400/20 bg-sky-700/25 p-3"
+          >
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-blue-900">
+              <span className="font-semibold">
                 {new Date(app.date).toLocaleDateString()} - {app.description}
               </span>
               <div className="flex gap-1">
@@ -89,7 +94,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                   <>
                     <button
                       type="button"
-                      className="rounded bg-green-100 px-2 py-1 text-xs hover:bg-green-200"
+                      className="text-foreground rounded border border-emerald-400/30 bg-emerald-700/30 px-2 py-1 text-xs hover:bg-emerald-700/45"
                       onClick={() => handleComplete(idx)}
                       title="Marcar como completada"
                     >
@@ -97,7 +102,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                     </button>
                     <button
                       type="button"
-                      className="rounded bg-yellow-100 px-2 py-1 text-xs hover:bg-yellow-200"
+                      className="text-foreground rounded border border-amber-400/30 bg-amber-700/30 px-2 py-1 text-xs hover:bg-amber-700/45"
                       onClick={() => handleEdit(idx)}
                       title="Editar"
                     >
@@ -107,7 +112,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                 )}
                 <button
                   type="button"
-                  className="rounded bg-red-100 px-2 py-1 text-xs hover:bg-red-200"
+                  className="text-foreground rounded border border-rose-400/30 bg-rose-700/30 px-2 py-1 text-xs hover:bg-rose-700/45"
                   onClick={() => handleDelete(idx)}
                   title="Eliminar"
                 >
@@ -115,7 +120,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                 </button>
               </div>
             </div>
-            <span className="text-xs text-gray-600">Estado: {app.status}</span>
+            <span className="text-muted-foreground text-xs">Estado: {app.status}</span>
           </li>
         ))}
       </ul>
@@ -144,14 +149,14 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
               <>
                 <button
                   type="button"
-                  className="rounded bg-blue-600 px-4 py-1 text-white"
+                  className="text-foreground rounded border border-sky-400/30 bg-sky-700/40 px-4 py-1 hover:bg-sky-700/55"
                   onClick={handleSave}
                 >
                   Guardar
                 </button>
                 <button
                   type="button"
-                  className="rounded bg-gray-300 px-4 py-1"
+                  className="text-foreground border-foreground/10 bg-foreground/10 hover:bg-foreground/20 rounded border px-4 py-1"
                   onClick={() => {
                     setEditingIndex(null);
                     setForm(emptyAppointment);
@@ -163,7 +168,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
             ) : (
               <button
                 type="button"
-                className="rounded bg-blue-600 px-4 py-1 text-white"
+                className="text-foreground rounded border border-sky-400/30 bg-sky-700/40 px-4 py-1 hover:bg-sky-700/55"
                 onClick={handleAdd}
               >
                 Añadir cita
