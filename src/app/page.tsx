@@ -40,6 +40,7 @@ export default function Home() {
     new Date(new Date().getFullYear(), 5, 1), // Junio (mes 5)
     new Date(new Date().getFullYear(), 6, 1), // Julio (mes 6)
     new Date(new Date().getFullYear(), 7, 1), // Agosto (mes 7)
+    new Date(new Date().getFullYear(), 8, 1), // Septiembre (mes 8)
   ];
 
   // Calcular el valor por defecto del mes actual
@@ -197,7 +198,7 @@ export default function Home() {
             <ThemeToggle />
           </div>
           <CardDescription>
-            Registra tus síntomas y medicamentos para abril, mayo, junio, julio y agosto
+            Registra tus síntomas y medicamentos para abril, mayo, junio, julio, agosto y septiembre
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -283,7 +284,7 @@ export default function Home() {
           </div>
 
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="mb-4 grid grid-cols-5">
+            <TabsList className="mb-4 grid grid-cols-6">
               {months.map((month) => (
                 <TabsTrigger key={month.toISOString()} value={format(month, "MMM")}>
                   {format(month, "MMMM", { locale: es })}
