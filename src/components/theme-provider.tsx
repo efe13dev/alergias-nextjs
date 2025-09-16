@@ -28,9 +28,14 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   // Inicializa según localStorage o clase actual en <html>
   useEffect(() => {
     try {
+      // Lee cookie primero para mantener consistencia con SSR
+      const cookieMatch = document.cookie.match(/(?:^|; )theme=([^;]+)/);
+      const cookieTheme = (cookieMatch ? decodeURIComponent(cookieMatch[1]) : null) as
+        | Theme
+        | null;
       const stored = localStorage.getItem("theme") as Theme | null;
       const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
-      const initial = stored || current;
+      const initial = cookieTheme || stored || current;
 
       setThemeState(initial);
       applyThemeClass(initial);
@@ -41,6 +46,8 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     setThemeState(t);
     try {
       localStorage.setItem("theme", t);
+      // Sincroniza cookie (1 año)
+      document.cookie = `theme=${encodeURIComponent(t)}; path=/; max-age=${60 * 60 * 24 * 365}`;
     } catch {}
     applyThemeClass(t);
   }, []);

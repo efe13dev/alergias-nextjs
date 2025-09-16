@@ -28,15 +28,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <Script id="theme-init" strategy="beforeInteractive">
           {`
             (function(){
               try {
+                var m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
+                var cookieTheme = m ? decodeURIComponent(m[1]) : null;
                 var stored = localStorage.getItem('theme');
                 var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                var theme = stored || (systemDark ? 'dark' : 'light');
+                var theme = cookieTheme || stored || (systemDark ? 'dark' : 'light');
                 var root = document.documentElement;
                 if (theme === 'dark') root.classList.add('dark'); else root.classList.remove('dark');
               } catch(e) {}

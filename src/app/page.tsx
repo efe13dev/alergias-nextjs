@@ -12,13 +12,13 @@ import AppointmentManager from "../components/AppointmentManager";
 import { CalendarDayButton } from "../components/CalendarDayButton";
 import DayEditor from "../components/day-editor";
 
+import ThemeToggle from "@/components/ThemeToggle";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ThemeToggle from "@/components/ThemeToggle";
 
 // Tipos para nuestros datos
 
@@ -41,6 +41,7 @@ export default function Home() {
     new Date(new Date().getFullYear(), 6, 1), // Julio (mes 6)
     new Date(new Date().getFullYear(), 7, 1), // Agosto (mes 7)
     new Date(new Date().getFullYear(), 8, 1), // Septiembre (mes 8)
+    new Date(new Date().getFullYear(), 9, 1), // Octubre (mes 9)
   ];
 
   // Calcular el valor por defecto del mes actual
@@ -198,7 +199,8 @@ export default function Home() {
             <ThemeToggle />
           </div>
           <CardDescription>
-            Registra tus síntomas y medicamentos para abril, mayo, junio, julio, agosto y septiembre
+            Registra tus síntomas y medicamentos para abril, mayo, junio, julio, agosto, septiembre
+            y octubre
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -284,7 +286,7 @@ export default function Home() {
           </div>
 
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="mb-4 grid grid-cols-6">
+            <TabsList className="mb-4 grid grid-cols-7">
               {months.map((month) => (
                 <TabsTrigger key={month.toISOString()} value={format(month, "MMM")}>
                   {format(month, "MMMM", { locale: es })}
