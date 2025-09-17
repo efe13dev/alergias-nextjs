@@ -39,6 +39,11 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
       setThemeState(initial);
       applyThemeClass(initial);
+      // Retira el pre-estilo de primer paint para no bloquear cambios posteriores de tema
+      try {
+        const pre = document.getElementById("theme-prestyle");
+        if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+      } catch {}
     } catch {}
   }, []);
 
@@ -50,6 +55,11 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       document.cookie = `theme=${encodeURIComponent(t)}; path=/; max-age=${60 * 60 * 24 * 365}`;
     } catch {}
     applyThemeClass(t);
+    // Asegura que el pre-estilo no permanezca tras un cambio de tema
+    try {
+      const pre = document.getElementById("theme-prestyle");
+      if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+    } catch {}
   }, []);
 
   const toggle = useCallback(() => {
