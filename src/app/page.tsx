@@ -34,17 +34,18 @@ export default function Home() {
   const [initialSetupDone, setInitialSetupDone] = useState(false);
 
   // Meses que queremos mostrar
+  const trackingStartYear = 2025;
   const months = [
-    new Date(new Date().getFullYear(), 3, 1), // Abril (mes 3)
-    new Date(new Date().getFullYear(), 4, 1), // Mayo (mes 4)
-    new Date(new Date().getFullYear(), 5, 1), // Junio (mes 5)
-    new Date(new Date().getFullYear(), 6, 1), // Julio (mes 6)
-    new Date(new Date().getFullYear(), 7, 1), // Agosto (mes 7)
-    new Date(new Date().getFullYear(), 8, 1), // Septiembre (mes 8)
-    new Date(new Date().getFullYear(), 9, 1), // Octubre (mes 9)
-    new Date(new Date().getFullYear(), 10, 1), // Noviembre (mes 10)
-    new Date(new Date().getFullYear(), 11, 1), // Diciembre (mes 11)
-    new Date(new Date().getFullYear() + 1, 0, 1), // Enero (mes 0 del siguiente año)
+    new Date(trackingStartYear, 3, 1), // Abril (mes 3)
+    new Date(trackingStartYear, 4, 1), // Mayo (mes 4)
+    new Date(trackingStartYear, 5, 1), // Junio (mes 5)
+    new Date(trackingStartYear, 6, 1), // Julio (mes 6)
+    new Date(trackingStartYear, 7, 1), // Agosto (mes 7)
+    new Date(trackingStartYear, 8, 1), // Septiembre (mes 8)
+    new Date(trackingStartYear, 9, 1), // Octubre (mes 9)
+    new Date(trackingStartYear, 10, 1), // Noviembre (mes 10)
+    new Date(trackingStartYear, 11, 1), // Diciembre (mes 11)
+    new Date(trackingStartYear + 1, 0, 1), // Enero (mes 0 del siguiente año)
   ];
 
   // Calcular el valor por defecto del mes actual
