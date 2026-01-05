@@ -83,10 +83,12 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
         {appointments.map((app, idx) => (
           <li
             key={app.id}
-            className="text-foreground relative flex flex-col gap-1 rounded border border-sky-400/20 bg-sky-700/25 p-3"
+            className={`text-foreground relative flex flex-col gap-1 rounded border border-sky-400/20 bg-sky-700/25 p-3 ${
+              app.status === "completada" ? "opacity-50" : ""
+            }`}
           >
             <div className="flex items-center justify-between">
-              <span className="font-semibold">
+              <span className={`font-semibold ${app.status === "completada" ? "line-through" : ""}`}>
                 {new Date(app.date).toLocaleDateString()} - {app.description}
               </span>
               <div className="flex gap-1">
