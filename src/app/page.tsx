@@ -16,8 +16,19 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Tipos para nuestros datos
@@ -26,10 +37,15 @@ export default function Home() {
   // Estado para almacenar los datos de los días
   const [dayData, setDayData] = useState<DayData[]>([]);
   // Estado para almacenar las citas pendientes
-  const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>([]);
+  const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>(
+    [],
+  );
   // Estado para mostrar solo las citas pendientes
-  const [showPendingAppointments, setShowPendingAppointments] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [showPendingAppointments, setShowPendingAppointments] =
+    useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date(),
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [initialSetupDone, setInitialSetupDone] = useState(false);
 
@@ -46,12 +62,17 @@ export default function Home() {
     new Date(trackingStartYear, 10, 1), // Noviembre (mes 10)
     new Date(trackingStartYear, 11, 1), // Diciembre (mes 11)
     new Date(trackingStartYear + 1, 0, 1), // Enero (mes 0 del siguiente año)
+    new Date(trackingStartYear + 1, 1, 1), // Febrero (mes 1 del siguiente año)
   ];
 
   // Calcular el valor por defecto del mes actual
   const currentMonthFormatted = format(new Date(), "MMM");
-  const defaultMonth = months.find((month) => format(month, "MMM") === currentMonthFormatted);
-  const defaultTabValue = defaultMonth ? format(defaultMonth, "MMM") : format(months[0], "MMM");
+  const defaultMonth = months.find(
+    (month) => format(month, "MMM") === currentMonthFormatted,
+  );
+  const defaultTabValue = defaultMonth
+    ? format(defaultMonth, "MMM")
+    : format(months[0], "MMM");
 
   // Estado para la pestaña seleccionada
   const [selectedTab, setSelectedTab] = useState<string>(defaultTabValue);
@@ -81,12 +102,19 @@ export default function Home() {
   // Guardar citas pendientes en localStorage cuando cambian
   useEffect(() => {
     if (initialSetupDone) {
-      localStorage.setItem("pendingAppointments", JSON.stringify(pendingAppointments));
+      localStorage.setItem(
+        "pendingAppointments",
+        JSON.stringify(pendingAppointments),
+      );
     }
   }, [pendingAppointments, initialSetupDone]);
 
   // Función para actualizar los datos de un día
-  const updateDayData = (date: Date, symptomLevel: SymptomLevel, medications: Medication[]) => {
+  const updateDayData = (
+    date: Date,
+    symptomLevel: SymptomLevel,
+    medications: Medication[],
+  ) => {
     const dateString = date.toISOString();
 
     setDayData((prevData) => {
@@ -124,7 +152,9 @@ export default function Home() {
 
   // Función para obtener los datos de un día específico
   const getDayData = (date: Date): DayData | undefined => {
-    return dayData.find((item) => new Date(item.date).toDateString() === date.toDateString());
+    return dayData.find(
+      (item) => new Date(item.date).toDateString() === date.toDateString(),
+    );
   };
 
   // Función para manejar el clic en un día
@@ -165,7 +195,9 @@ export default function Home() {
 
     if (body) {
       // Obtener el mes seleccionado desde selectedTab
-      const selectedMonthObj = months.find((month) => format(month, "MMM") === selectedTab);
+      const selectedMonthObj = months.find(
+        (month) => format(month, "MMM") === selectedTab,
+      );
       const mesActual = selectedMonthObj
         ? format(selectedMonthObj, "MMMM", { locale: es })
         : format(months[0], "MMMM", { locale: es });
@@ -203,8 +235,8 @@ export default function Home() {
             <ThemeToggle />
           </div>
           <CardDescription>
-            Registra tus síntomas y medicamentos para abril, mayo, junio, julio, agosto, septiembre,
-            octubre, noviembre, diciembre y enero
+            Registra tus síntomas y medicamentos para abril, mayo, junio, julio,
+            agosto, septiembre, octubre, noviembre, diciembre, enero y febrero
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -214,7 +246,8 @@ export default function Home() {
               <div>
                 <AlertTitle>Información</AlertTitle>
                 <AlertDescription>
-                  Selecciona un día en el calendario para registrar tus síntomas y medicamentos.
+                  Selecciona un día en el calendario para registrar tus síntomas
+                  y medicamentos.
                 </AlertDescription>
               </div>
             </div>
@@ -289,17 +322,28 @@ export default function Home() {
             </button>
           </div>
 
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="mb-4 grid grid-cols-10">
+          <Tabs
+            value={selectedTab}
+            onValueChange={setSelectedTab}
+            className="w-full"
+          >
+            <TabsList className="mb-4 grid grid-cols-11">
               {months.map((month) => (
-                <TabsTrigger key={month.toISOString()} value={format(month, "MMM")}>
+                <TabsTrigger
+                  key={month.toISOString()}
+                  value={format(month, "MMM")}
+                >
                   {format(month, "MMMM", { locale: es })}
                 </TabsTrigger>
               ))}
             </TabsList>
 
             {months.map((month) => (
-              <TabsContent key={month.toISOString()} value={format(month, "MMM")} className="mt-0">
+              <TabsContent
+                key={month.toISOString()}
+                value={format(month, "MMM")}
+                className="mt-0"
+              >
                 <Card className="calendar-export-card">
                   <CardHeader>
                     <CardTitle className="capitalize">
@@ -326,7 +370,8 @@ export default function Home() {
                         day_selected:
                           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                         day_today: "bg-accent text-accent-foreground",
-                        day_outside: "day-outside text-muted-foreground opacity-50",
+                        day_outside:
+                          "day-outside text-muted-foreground opacity-50",
                         day_disabled: "text-muted-foreground opacity-50",
                         day_range_middle:
                           "aria-selected:bg-accent aria-selected:text-accent-foreground",
@@ -335,13 +380,16 @@ export default function Home() {
                       modifiers={{
                         booked: (date) =>
                           dayData.some(
-                            (d) => new Date(d.date).toDateString() === date.toDateString(),
+                            (d) =>
+                              new Date(d.date).toDateString() ===
+                              date.toDateString(),
                           ),
                         appointment: (date) =>
                           pendingAppointments.some(
                             (app) =>
                               app.status === "pendiente" &&
-                              new Date(app.date).toDateString() === date.toDateString(),
+                              new Date(app.date).toDateString() ===
+                                date.toDateString(),
                           ),
                       }}
                       modifiersClassNames={{
@@ -354,7 +402,8 @@ export default function Home() {
                           const appointment = pendingAppointments.find(
                             (app) =>
                               app.status === "pendiente" &&
-                              new Date(app.date).toDateString() === date.toDateString(),
+                              new Date(app.date).toDateString() ===
+                                date.toDateString(),
                           );
 
                           return (
@@ -396,7 +445,10 @@ export default function Home() {
       )}
 
       {/* Modal de gestión de citas */}
-      <Dialog open={showPendingAppointments} onOpenChange={setShowPendingAppointments}>
+      <Dialog
+        open={showPendingAppointments}
+        onOpenChange={setShowPendingAppointments}
+      >
         <DialogContent className="w-full sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Gestión de citas pendientes</DialogTitle>
