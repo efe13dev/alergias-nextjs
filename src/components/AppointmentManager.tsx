@@ -75,15 +75,15 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
 
   return (
     <div className="space-y-4">
-      <h3 className="mb-2 text-lg font-bold">Citas pendientes</h3>
-      <ul className="max-h-64 space-y-2 overflow-y-auto">
+      <h3 className="mb-3 font-serif text-xl tracking-tight">Citas pendientes</h3>
+      <ul className="max-h-64 space-y-2.5 overflow-y-auto pr-1">
         {appointments.length === 0 && (
           <li className="text-muted-foreground">No hay citas pendientes.</li>
         )}
         {appointments.map((app, idx) => (
           <li
             key={app.id}
-            className={`text-foreground relative flex flex-col gap-1 rounded border border-sky-400/20 bg-sky-700/25 p-3 ${
+            className={`text-foreground relative flex flex-col gap-1.5 rounded-xl border border-sky-300/40 bg-sky-50/80 p-3.5 transition-all dark:border-sky-500/20 dark:bg-sky-900/15 ${
               app.status === "completada" ? "opacity-50" : ""
             }`}
           >
@@ -96,7 +96,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                   <>
                     <button
                       type="button"
-                      className="text-foreground rounded border border-emerald-400/30 bg-emerald-700/30 px-2 py-1 text-xs hover:bg-emerald-700/45"
+                      className="text-foreground rounded-lg border border-emerald-300/50 bg-emerald-100/80 px-2.5 py-1 text-xs transition-colors hover:bg-emerald-200 dark:border-emerald-500/30 dark:bg-emerald-900/25 dark:hover:bg-emerald-900/40"
                       onClick={() => handleComplete(idx)}
                       title="Marcar como completada"
                     >
@@ -104,7 +104,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                     </button>
                     <button
                       type="button"
-                      className="text-foreground rounded border border-amber-400/30 bg-amber-700/30 px-2 py-1 text-xs hover:bg-amber-700/45"
+                      className="text-foreground rounded-lg border border-amber-300/50 bg-amber-100/80 px-2.5 py-1 text-xs transition-colors hover:bg-amber-200 dark:border-amber-500/30 dark:bg-amber-900/25 dark:hover:bg-amber-900/40"
                       onClick={() => handleEdit(idx)}
                       title="Editar"
                     >
@@ -114,7 +114,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                 )}
                 <button
                   type="button"
-                  className="text-foreground rounded border border-rose-400/30 bg-rose-700/30 px-2 py-1 text-xs hover:bg-rose-700/45"
+                  className="text-foreground rounded-lg border border-rose-300/50 bg-rose-100/80 px-2.5 py-1 text-xs transition-colors hover:bg-rose-200 dark:border-rose-500/30 dark:bg-rose-900/25 dark:hover:bg-rose-900/40"
                   onClick={() => handleDelete(idx)}
                   title="Eliminar"
                 >
@@ -127,21 +127,21 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
         ))}
       </ul>
 
-      <div className="mt-4 border-t pt-4">
-        <h4 className="mb-2 font-semibold">
+      <div className="mt-4 border-t border-border/50 pt-4">
+        <h4 className="mb-3 font-serif text-base tracking-tight">
           {editingIndex !== null ? "Editar cita" : "Nueva cita"}
         </h4>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           <input
             type="date"
             name="date"
-            className="rounded border px-2 py-1"
+            className="rounded-lg border border-border/80 bg-muted/30 px-3 py-2 text-sm transition-colors focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
             value={form.date}
             onChange={handleChange}
           />
           <textarea
             name="description"
-            className="rounded border px-2 py-1"
+            className="rounded-lg border border-border/80 bg-muted/30 px-3 py-2 text-sm transition-colors focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
             placeholder="Descripción de la cita"
             value={form.description}
             onChange={handleChange}
@@ -151,14 +151,14 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
               <>
                 <button
                   type="button"
-                  className="text-foreground rounded border border-sky-400/30 bg-sky-700/40 px-4 py-1 hover:bg-sky-700/55"
+                  className="text-primary-foreground rounded-lg bg-primary px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-primary/90"
                   onClick={handleSave}
                 >
                   Guardar
                 </button>
                 <button
                   type="button"
-                  className="text-foreground border-foreground/10 bg-foreground/10 hover:bg-foreground/20 rounded border px-4 py-1"
+                  className="text-foreground rounded-lg border border-border/80 bg-muted/50 px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
                   onClick={() => {
                     setEditingIndex(null);
                     setForm(emptyAppointment);
@@ -170,7 +170,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
             ) : (
               <button
                 type="button"
-                className="text-foreground rounded border border-sky-400/30 bg-sky-700/40 px-4 py-1 hover:bg-sky-700/55"
+                className="text-primary-foreground rounded-lg bg-primary px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-primary/90"
                 onClick={handleAdd}
               >
                 Añadir cita

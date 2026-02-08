@@ -36,9 +36,9 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
   };
 
   return (
-    <div className="space-y-4 py-2">
-      <div className="space-y-2">
-        <h3 className="font-medium">Nivel de síntomas</h3>
+    <div className="space-y-5 py-2">
+      <div className="space-y-3">
+        <h3 className="font-serif text-lg tracking-tight">Nivel de síntomas</h3>
         <RadioGroup
           value={symptomLevel || ""}
           onValueChange={(value) => setSymptomLevel(value as SymptomLevel)}
@@ -97,8 +97,8 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
         </RadioGroup>
       </div>
 
-      <div className="space-y-2">
-        <h3 className="font-medium">Medicamentos tomados</h3>
+      <div className="space-y-3">
+        <h3 className="font-serif text-lg tracking-tight">Medicamentos tomados</h3>
         <div className="flex flex-col space-y-2">
           <div className="flex items-center space-x-2">
             <Checkbox
@@ -135,8 +135,8 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
         </div>
       </div>
 
-      <div className="flex justify-end pt-4">
-        <Button onClick={handleSave}>Guardar</Button>
+      <div className="flex justify-end border-t border-border/50 pt-4">
+        <Button onClick={handleSave} className="px-6 shadow-sm">Guardar</Button>
       </div>
     </div>
   );

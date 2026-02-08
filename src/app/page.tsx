@@ -5,7 +5,6 @@ import type { Appointment, DayData, Medication, SymptomLevel } from "./types";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import html2canvaspro from "html2canvas-pro";
-import { AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import AppointmentManager from "../components/AppointmentManager";
@@ -13,21 +12,20 @@ import { CalendarDayButton } from "../components/CalendarDayButton";
 import DayEditor from "../components/day-editor";
 
 import ThemeToggle from "@/components/ThemeToggle";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -227,99 +225,100 @@ export default function Home() {
   };
 
   return (
-    <main className="container mx-auto px-4 py-6">
-      <Card className="mb-6">
-        <CardHeader>
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <Card className="mb-8 overflow-hidden border-0 shadow-lg shadow-black/5 dark:shadow-black/20">
+        <CardHeader className="border-b border-border/50 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pb-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Seguimiento de Alergia</CardTitle>
-            <ThemeToggle />
-          </div>
-          <CardDescription>
-            Registra tus síntomas y medicamentos para abril, mayo, junio, julio,
-            agosto, septiembre, octubre, noviembre, diciembre, enero y febrero
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Alert className="mb-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4" />
-              <div>
-                <AlertTitle>Información</AlertTitle>
-                <AlertDescription>
-                  Selecciona un día en el calendario para registrar tus síntomas
-                  y medicamentos.
-                </AlertDescription>
-              </div>
+            <div>
+              <CardTitle className="font-serif text-3xl tracking-tight">Seguimiento de Alergia</CardTitle>
+              <CardDescription className="mt-1.5 text-sm">
+                Registra tus síntomas y medicamentos diarios
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={handleExportJPG}
                 type="button"
-                className="text-foreground rounded border border-sky-400/30 bg-sky-700/40 px-4 py-2 font-bold whitespace-nowrap shadow hover:bg-sky-700/55"
+                className="text-foreground inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors hover:bg-primary/20 dark:border-primary/30 dark:bg-primary/15 dark:hover:bg-primary/25"
               >
-                Exportar como JPG
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                Exportar JPG
               </button>
+              <ThemeToggle />
             </div>
-          </Alert>
-
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <Badge className="text-foreground border border-emerald-300 bg-emerald-200 dark:border-emerald-500/60 dark:bg-emerald-900/30">
-              Verde: Sin síntomas
-            </Badge>
-            <Badge className="text-foreground border border-yellow-300 bg-yellow-200 dark:border-amber-500/60 dark:bg-amber-900/25">
-              Amarillo: Síntomas leves
-            </Badge>
-            <Badge className="text-foreground border border-orange-300 bg-orange-200 dark:border-orange-500/70 dark:bg-orange-900/25">
-              Naranja: Síntomas moderados
-            </Badge>
-            <Badge className="text-foreground border border-red-300 bg-red-200 dark:border-rose-500/60 dark:bg-rose-900/25">
-              Rojo: Síntomas graves
-            </Badge>
-            <Badge className="text-foreground border border-sky-300 bg-sky-200 dark:border-sky-500/60 dark:bg-sky-900/25">
-              Azul: Cita pendiente
-            </Badge>
           </div>
-
-          <div className="mb-4 flex w-full flex-wrap items-center gap-2">
-            <span className="text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-xs dark:border-sky-500/60 dark:bg-sky-900/30">
-              B
-            </span>
-            <span className="text-sm">Bilaxten</span>
-            <span className="text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-xs dark:border-violet-500/60 dark:bg-violet-900/30">
-              R
-            </span>
-            <span className="text-sm">Relvar</span>
-            <span className="text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-xs dark:border-teal-500/60 dark:bg-teal-900/30">
-              V
-            </span>
-            <span className="text-sm">Ventolin</span>
-            <span className="text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-xs dark:border-rose-500/60 dark:bg-rose-900/30">
-              D
-            </span>
-            <span className="text-sm">Dymista</span>
-            <button
-              onClick={() => setShowPendingAppointments(true)}
-              type="button"
-              className="text-foreground mr-2 ml-auto flex items-center gap-2 rounded border border-sky-300 bg-sky-200 px-4 py-2 text-sm font-bold whitespace-nowrap shadow hover:bg-sky-300 dark:border-sky-500/60 dark:bg-sky-900/25 dark:hover:bg-sky-900/40"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-label="Añadir cita pendiente"
-              >
-                <title>Añadir cita pendiente</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Citas pendientes
-            </button>
+        </CardHeader>
+        <CardContent className="pt-5">
+          <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nivel de síntomas</p>
+              <div className="flex flex-wrap gap-1.5">
+                <Badge className="text-foreground border border-emerald-300/80 bg-emerald-100 text-xs font-medium dark:border-emerald-500/40 dark:bg-emerald-900/25">
+                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-400 dark:bg-emerald-400"></span>
+                  Sin síntomas
+                </Badge>
+                <Badge className="text-foreground border border-yellow-300/80 bg-yellow-100 text-xs font-medium dark:border-amber-500/40 dark:bg-amber-900/20">
+                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-yellow-400 dark:bg-amber-400"></span>
+                  Leves
+                </Badge>
+                <Badge className="text-foreground border border-orange-300/80 bg-orange-100 text-xs font-medium dark:border-orange-500/40 dark:bg-orange-900/20">
+                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-orange-400"></span>
+                  Moderados
+                </Badge>
+                <Badge className="text-foreground border border-red-300/80 bg-red-100 text-xs font-medium dark:border-rose-500/40 dark:bg-rose-900/20">
+                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-red-400 dark:bg-rose-400"></span>
+                  Graves
+                </Badge>
+                <Badge className="text-foreground border border-sky-300/80 bg-sky-100 text-xs font-medium dark:border-sky-500/40 dark:bg-sky-900/20">
+                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-sky-400"></span>
+                  Cita
+                </Badge>
+              </div>
+            </div>
+            <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
+              <div className="flex items-center justify-between">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Medicamentos</p>
+                <button
+                  onClick={() => setShowPendingAppointments(true)}
+                  type="button"
+                  className="text-foreground -mt-1 inline-flex items-center gap-1.5 rounded-lg border border-sky-300/60 bg-sky-100/80 px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-sky-200/80 dark:border-sky-500/30 dark:bg-sky-900/20 dark:hover:bg-sky-900/35"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-label="Añadir cita pendiente"
+                  >
+                    <title>Añadir cita pendiente</title>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Citas
+                </button>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-sky-300/70 bg-sky-100 px-1.5 py-0.5 text-xs font-medium dark:border-sky-500/40 dark:bg-sky-900/25">
+                  <span className="font-bold">B</span> Bilaxten
+                </span>
+                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-violet-300/70 bg-violet-100 px-1.5 py-0.5 text-xs font-medium dark:border-violet-500/40 dark:bg-violet-900/25">
+                  <span className="font-bold">R</span> Relvar
+                </span>
+                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-teal-300/70 bg-teal-100 px-1.5 py-0.5 text-xs font-medium dark:border-teal-500/40 dark:bg-teal-900/25">
+                  <span className="font-bold">V</span> Ventolin
+                </span>
+                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-rose-300/70 bg-rose-100 px-1.5 py-0.5 text-xs font-medium dark:border-rose-500/40 dark:bg-rose-900/25">
+                  <span className="font-bold">D</span> Dymista
+                </span>
+              </div>
+            </div>
           </div>
 
           <Tabs
@@ -327,7 +326,7 @@ export default function Home() {
             onValueChange={setSelectedTab}
             className="w-full"
           >
-            <TabsList className="mb-4 grid grid-cols-11">
+            <TabsList className="mb-5 flex w-full gap-1 overflow-x-auto rounded-xl bg-muted/50 p-1.5">
               {months.map((month) => (
                 <TabsTrigger
                   key={month.toISOString()}
@@ -344,9 +343,9 @@ export default function Home() {
                 value={format(month, "MMM")}
                 className="mt-0"
               >
-                <Card className="calendar-export-card">
-                  <CardHeader>
-                    <CardTitle className="capitalize">
+                <Card className="calendar-export-card border-0 shadow-md shadow-black/5 dark:shadow-black/15">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="font-serif text-xl capitalize tracking-tight">
                       {format(month, "MMMM yyyy", { locale: es })}
                     </CardTitle>
                   </CardHeader>
@@ -429,7 +428,7 @@ export default function Home() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="font-serif text-xl tracking-tight">
                 {selectedDate
                   ? format(selectedDate, "d 'de' MMMM, yyyy", { locale: es })
                   : "Selecciona un día"}
@@ -451,7 +450,7 @@ export default function Home() {
       >
         <DialogContent className="w-full sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Gestión de citas pendientes</DialogTitle>
+            <DialogTitle className="font-serif text-xl tracking-tight">Gestión de citas pendientes</DialogTitle>
           </DialogHeader>
           <AppointmentManager
             appointments={pendingAppointments}

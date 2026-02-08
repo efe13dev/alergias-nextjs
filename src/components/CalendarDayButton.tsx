@@ -32,9 +32,9 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
           onClick(date);
         }
       }}
-      className={`relative flex cursor-pointer flex-col items-center rounded-md p-1 font-normal aria-selected:opacity-100 ${
+      className={`relative flex cursor-pointer flex-col items-center rounded-lg p-1 font-normal transition-all duration-150 hover:scale-[1.03] hover:shadow-md aria-selected:opacity-100 ${
         isAppointment
-          ? "text-foreground border border-sky-300 bg-sky-200 hover:bg-sky-300 dark:border-sky-500/60 dark:bg-sky-900/25 dark:hover:bg-sky-900/40"
+          ? "text-foreground border border-sky-300/80 bg-sky-100 hover:bg-sky-200 dark:border-sky-500/40 dark:bg-sky-900/20 dark:hover:bg-sky-900/35"
           : dayColor
       } min-h-[70px] min-w-[70px]`}
       type="button"
