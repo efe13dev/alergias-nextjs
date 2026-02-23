@@ -59,10 +59,10 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
             <RadioGroupItem
               value="yellow"
               id="yellow"
-              className="border-yellow-300 dark:border-amber-500/60"
+              className="border-yellow-300 dark:border-yellow-500/70"
             />
             <Label htmlFor="yellow" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full border border-yellow-300 bg-yellow-200 dark:border-amber-500/60 dark:bg-amber-900/25" />
+              <span className="mr-2 h-4 w-4 rounded-full border border-yellow-300 bg-yellow-200 dark:border-yellow-500/70 dark:bg-yellow-900/35" />
               Amarillo (Síntomas leves)
             </Label>
           </div>
@@ -70,10 +70,10 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
             <RadioGroupItem
               value="orange"
               id="orange"
-              className="border-orange-300 dark:border-orange-500/70"
+              className="border-orange-300 dark:border-orange-500/80"
             />
             <Label htmlFor="orange" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full border border-orange-300 bg-orange-200 dark:border-orange-500/60 dark:bg-orange-900/25" />
+              <span className="mr-2 h-4 w-4 rounded-full border border-orange-300 bg-orange-200 dark:border-orange-500/80 dark:bg-orange-950/45" />
               Naranja (Síntomas moderados)
             </Label>
           </div>
@@ -135,8 +135,10 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
         </div>
       </div>
 
-      <div className="flex justify-end border-t border-border/50 pt-4">
-        <Button onClick={handleSave} className="px-6 shadow-sm">Guardar</Button>
+      <div className="border-border/50 flex justify-end border-t pt-4">
+        <Button onClick={handleSave} className="px-6 shadow-sm">
+          Guardar
+        </Button>
       </div>
     </div>
   );

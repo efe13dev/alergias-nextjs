@@ -30,9 +30,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     try {
       // Lee cookie primero para mantener consistencia con SSR
       const cookieMatch = document.cookie.match(/(?:^|; )theme=([^;]+)/);
-      const cookieTheme = (cookieMatch ? decodeURIComponent(cookieMatch[1]) : null) as
-        | Theme
-        | null;
+      const cookieTheme = (cookieMatch ? decodeURIComponent(cookieMatch[1]) : null) as Theme | null;
       const stored = localStorage.getItem("theme") as Theme | null;
       const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
       const initial = cookieTheme || stored || current;
@@ -42,6 +40,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       // Retira el pre-estilo de primer paint para no bloquear cambios posteriores de tema
       try {
         const pre = document.getElementById("theme-prestyle");
+
         if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
       } catch {}
     } catch {}
@@ -58,6 +57,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     // Asegura que el pre-estilo no permanezca tras un cambio de tema
     try {
       const pre = document.getElementById("theme-prestyle");
+
       if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
     } catch {}
   }, []);

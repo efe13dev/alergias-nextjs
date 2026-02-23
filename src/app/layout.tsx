@@ -37,6 +37,7 @@ export default async function RootLayout({
   const htmlClass = isDark === true ? "dark" : isDark === false ? "" : "dark"; // por defecto dark para evitar flash claro
   const preBg = isDark === false ? "oklch(1 0 0)" : "oklch(0.145 0 0)";
   const preFg = isDark === false ? "oklch(0.145 0 0)" : "oklch(0.985 0 0)";
+
   return (
     <html lang="en" className={htmlClass} suppressHydrationWarning>
       <head>

@@ -14,19 +14,8 @@ import DayEditor from "../components/day-editor";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Tipos para nuestros datos
@@ -35,17 +24,14 @@ export default function Home() {
   // Estado para almacenar los datos de los días
   const [dayData, setDayData] = useState<DayData[]>([]);
   // Estado para almacenar las citas pendientes
-  const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>(
-    [],
-  );
+  const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>([]);
   // Estado para mostrar solo las citas pendientes
-  const [showPendingAppointments, setShowPendingAppointments] =
-    useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date(),
-  );
+  const [showPendingAppointments, setShowPendingAppointments] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [initialSetupDone, setInitialSetupDone] = useState(false);
+
+  const getMonthKey = (date: Date) => format(date, "yyyy-MM");
 
   // Meses que queremos mostrar
   const trackingStartYear = 2025;
@@ -61,19 +47,74 @@ export default function Home() {
     new Date(trackingStartYear, 11, 1), // Diciembre (mes 11)
     new Date(trackingStartYear + 1, 0, 1), // Enero (mes 0 del siguiente año)
     new Date(trackingStartYear + 1, 1, 1), // Febrero (mes 1 del siguiente año)
+    new Date(trackingStartYear + 1, 2, 1), // Marzo (mes 2 del siguiente año)
+    new Date(trackingStartYear + 1, 3, 1), // Abril (mes 3 del siguiente año)
+    new Date(trackingStartYear + 1, 4, 1), // Mayo (mes 4 del siguiente año)
+    new Date(trackingStartYear + 1, 5, 1), // Junio (mes 5 del siguiente año)
+    new Date(trackingStartYear + 1, 6, 1), // Julio (mes 6 del siguiente año)
+    new Date(trackingStartYear + 1, 7, 1), // Agosto (mes 7 del siguiente año)
+    new Date(trackingStartYear + 1, 8, 1), // Septiembre (mes 8 del siguiente año)
   ];
 
+  const monthsByYear = months.reduce<Record<number, Date[]>>((acc, month) => {
+    const year = month.getFullYear();
+
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+
+    acc[year].push(month);
+
+    return acc;
+  }, {});
+  const years = Object.keys(monthsByYear)
+    .map(Number)
+    .sort((a, b) => a - b);
+
   // Calcular el valor por defecto del mes actual
-  const currentMonthFormatted = format(new Date(), "MMM");
-  const defaultMonth = months.find(
-    (month) => format(month, "MMM") === currentMonthFormatted,
-  );
-  const defaultTabValue = defaultMonth
-    ? format(defaultMonth, "MMM")
-    : format(months[0], "MMM");
+  const currentMonthKey = getMonthKey(new Date());
+  const defaultMonth = months.find((month) => getMonthKey(month) === currentMonthKey);
+  const defaultTabValue = defaultMonth ? getMonthKey(defaultMonth) : getMonthKey(months[0]);
+  const defaultYear = defaultMonth ? defaultMonth.getFullYear() : months[0].getFullYear();
 
   // Estado para la pestaña seleccionada
   const [selectedTab, setSelectedTab] = useState<string>(defaultTabValue);
+  const [selectedYear, setSelectedYear] = useState<number>(defaultYear);
+  const selectedYearMonths = monthsByYear[selectedYear] ?? [];
+
+  const handleMonthChange = (value: string) => {
+    setSelectedTab(value);
+    const month = months.find((item) => getMonthKey(item) === value);
+
+    if (month) {
+      setSelectedYear(month.getFullYear());
+    }
+  };
+
+  const handleYearSelect = (year: number) => {
+    setSelectedYear(year);
+
+    const yearMonths = monthsByYear[year] ?? [];
+
+    if (yearMonths.length === 0) return;
+
+    const selectedMonth = months.find((month) => getMonthKey(month) === selectedTab);
+    const sameMonthInSelectedYear = selectedMonth
+      ? yearMonths.find((month) => month.getMonth() === selectedMonth.getMonth())
+      : undefined;
+
+    if (sameMonthInSelectedYear) {
+      setSelectedTab(getMonthKey(sameMonthInSelectedYear));
+
+      return;
+    }
+
+    const hasSelectedMonthInYear = yearMonths.some((month) => getMonthKey(month) === selectedTab);
+
+    if (!hasSelectedMonthInYear) {
+      setSelectedTab(getMonthKey(yearMonths[0]));
+    }
+  };
 
   // Cargar datos del localStorage al iniciar
   useEffect(() => {
@@ -100,19 +141,12 @@ export default function Home() {
   // Guardar citas pendientes en localStorage cuando cambian
   useEffect(() => {
     if (initialSetupDone) {
-      localStorage.setItem(
-        "pendingAppointments",
-        JSON.stringify(pendingAppointments),
-      );
+      localStorage.setItem("pendingAppointments", JSON.stringify(pendingAppointments));
     }
   }, [pendingAppointments, initialSetupDone]);
 
   // Función para actualizar los datos de un día
-  const updateDayData = (
-    date: Date,
-    symptomLevel: SymptomLevel,
-    medications: Medication[],
-  ) => {
+  const updateDayData = (date: Date, symptomLevel: SymptomLevel, medications: Medication[]) => {
     const dateString = date.toISOString();
 
     setDayData((prevData) => {
@@ -150,9 +184,7 @@ export default function Home() {
 
   // Función para obtener los datos de un día específico
   const getDayData = (date: Date): DayData | undefined => {
-    return dayData.find(
-      (item) => new Date(item.date).toDateString() === date.toDateString(),
-    );
+    return dayData.find((item) => new Date(item.date).toDateString() === date.toDateString());
   };
 
   // Función para manejar el clic en un día
@@ -193,9 +225,7 @@ export default function Home() {
 
     if (body) {
       // Obtener el mes seleccionado desde selectedTab
-      const selectedMonthObj = months.find(
-        (month) => format(month, "MMM") === selectedTab,
-      );
+      const selectedMonthObj = months.find((month) => getMonthKey(month) === selectedTab);
       const mesActual = selectedMonthObj
         ? format(selectedMonthObj, "MMMM", { locale: es })
         : format(months[0], "MMMM", { locale: es });
@@ -227,10 +257,12 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       <Card className="mb-8 overflow-hidden border-0 shadow-lg shadow-black/5 dark:shadow-black/20">
-        <CardHeader className="border-b border-border/50 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pb-6">
+        <CardHeader className="border-border/50 from-primary/5 to-accent/5 border-b bg-gradient-to-r via-transparent pb-6">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="font-serif text-3xl tracking-tight">Seguimiento de Alergia</CardTitle>
+              <CardTitle className="font-serif text-3xl tracking-tight">
+                Seguimiento de Alergia
+              </CardTitle>
               <CardDescription className="mt-1.5 text-sm">
                 Registra tus síntomas y medicamentos diarios
               </CardDescription>
@@ -239,10 +271,22 @@ export default function Home() {
               <button
                 onClick={handleExportJPG}
                 type="button"
-                className="text-foreground inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors hover:bg-primary/20 dark:border-primary/30 dark:bg-primary/15 dark:hover:bg-primary/25"
+                className="text-foreground border-primary/20 bg-primary/10 hover:bg-primary/20 dark:border-primary/30 dark:bg-primary/15 dark:hover:bg-primary/25 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
+                  />
                 </svg>
                 Exportar JPG
               </button>
@@ -252,18 +296,20 @@ export default function Home() {
         </CardHeader>
         <CardContent className="pt-5">
           <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nivel de síntomas</p>
+            <div className="border-border/60 bg-muted/30 rounded-xl border p-3">
+              <p className="text-muted-foreground mb-2 text-xs font-semibold tracking-wider uppercase">
+                Nivel de síntomas
+              </p>
               <div className="flex flex-wrap gap-1.5">
                 <Badge className="text-foreground border border-emerald-300/80 bg-emerald-100 text-xs font-medium dark:border-emerald-500/40 dark:bg-emerald-900/25">
                   <span className="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-400 dark:bg-emerald-400"></span>
                   Sin síntomas
                 </Badge>
-                <Badge className="text-foreground border border-yellow-300/80 bg-yellow-100 text-xs font-medium dark:border-amber-500/40 dark:bg-amber-900/20">
-                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-yellow-400 dark:bg-amber-400"></span>
+                <Badge className="text-foreground border border-yellow-300/80 bg-yellow-100 text-xs font-medium dark:border-yellow-500/60 dark:bg-yellow-900/35">
+                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-yellow-400 dark:bg-yellow-300"></span>
                   Leves
                 </Badge>
-                <Badge className="text-foreground border border-orange-300/80 bg-orange-100 text-xs font-medium dark:border-orange-500/40 dark:bg-orange-900/20">
+                <Badge className="text-foreground border border-orange-300/80 bg-orange-100 text-xs font-medium dark:border-orange-500/70 dark:bg-orange-950/45">
                   <span className="mr-1 inline-block h-2 w-2 rounded-full bg-orange-400"></span>
                   Moderados
                 </Badge>
@@ -277,9 +323,11 @@ export default function Home() {
                 </Badge>
               </div>
             </div>
-            <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
+            <div className="border-border/60 bg-muted/30 rounded-xl border p-3">
               <div className="flex items-center justify-between">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Medicamentos</p>
+                <p className="text-muted-foreground mb-2 text-xs font-semibold tracking-wider uppercase">
+                  Medicamentos
+                </p>
                 <button
                   onClick={() => setShowPendingAppointments(true)}
                   type="button"
@@ -321,16 +369,30 @@ export default function Home() {
             </div>
           </div>
 
-          <Tabs
-            value={selectedTab}
-            onValueChange={setSelectedTab}
-            className="w-full"
-          >
-            <TabsList className="mb-5 flex w-full gap-1 overflow-x-auto rounded-xl bg-muted/50 p-1.5">
-              {months.map((month) => (
+          <Tabs value={selectedTab} onValueChange={handleMonthChange} className="w-full">
+            <div className="border-border/60 bg-muted/40 mb-3 inline-flex flex-wrap gap-1 rounded-xl border p-1">
+              {years.map((year) => (
+                <button
+                  key={year}
+                  type="button"
+                  onClick={() => handleYearSelect(year)}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all duration-200 ${
+                    selectedYear === year
+                      ? "border-primary/40 bg-primary text-primary-foreground shadow-primary/20 shadow-md"
+                      : "bg-background/80 text-muted-foreground hover:border-border/70 hover:bg-background hover:text-foreground border-transparent"
+                  }`}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
+
+            <TabsList className="border-border/60 bg-background/70 mb-5 flex h-auto w-full justify-start gap-1.5 overflow-x-auto rounded-xl border p-2">
+              {selectedYearMonths.map((month) => (
                 <TabsTrigger
                   key={month.toISOString()}
-                  value={format(month, "MMM")}
+                  value={getMonthKey(month)}
+                  className="h-9 flex-none px-3 text-xs sm:text-sm"
                 >
                   {format(month, "MMMM", { locale: es })}
                 </TabsTrigger>
@@ -338,14 +400,10 @@ export default function Home() {
             </TabsList>
 
             {months.map((month) => (
-              <TabsContent
-                key={month.toISOString()}
-                value={format(month, "MMM")}
-                className="mt-0"
-              >
+              <TabsContent key={month.toISOString()} value={getMonthKey(month)} className="mt-0">
                 <Card className="calendar-export-card border-0 shadow-md shadow-black/5 dark:shadow-black/15">
                   <CardHeader className="pb-2">
-                    <CardTitle className="font-serif text-xl capitalize tracking-tight">
+                    <CardTitle className="font-serif text-xl tracking-tight capitalize">
                       {format(month, "MMMM yyyy", { locale: es })}
                     </CardTitle>
                   </CardHeader>
@@ -369,8 +427,7 @@ export default function Home() {
                         day_selected:
                           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                         day_today: "bg-accent text-accent-foreground",
-                        day_outside:
-                          "day-outside text-muted-foreground opacity-50",
+                        day_outside: "day-outside text-muted-foreground opacity-50",
                         day_disabled: "text-muted-foreground opacity-50",
                         day_range_middle:
                           "aria-selected:bg-accent aria-selected:text-accent-foreground",
@@ -379,16 +436,13 @@ export default function Home() {
                       modifiers={{
                         booked: (date) =>
                           dayData.some(
-                            (d) =>
-                              new Date(d.date).toDateString() ===
-                              date.toDateString(),
+                            (d) => new Date(d.date).toDateString() === date.toDateString(),
                           ),
                         appointment: (date) =>
                           pendingAppointments.some(
                             (app) =>
                               app.status === "pendiente" &&
-                              new Date(app.date).toDateString() ===
-                                date.toDateString(),
+                              new Date(app.date).toDateString() === date.toDateString(),
                           ),
                       }}
                       modifiersClassNames={{
@@ -401,8 +455,7 @@ export default function Home() {
                           const appointment = pendingAppointments.find(
                             (app) =>
                               app.status === "pendiente" &&
-                              new Date(app.date).toDateString() ===
-                                date.toDateString(),
+                              new Date(app.date).toDateString() === date.toDateString(),
                           );
 
                           return (
@@ -444,13 +497,12 @@ export default function Home() {
       )}
 
       {/* Modal de gestión de citas */}
-      <Dialog
-        open={showPendingAppointments}
-        onOpenChange={setShowPendingAppointments}
-      >
+      <Dialog open={showPendingAppointments} onOpenChange={setShowPendingAppointments}>
         <DialogContent className="w-full sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle className="font-serif text-xl tracking-tight">Gestión de citas pendientes</DialogTitle>
+            <DialogTitle className="font-serif text-xl tracking-tight">
+              Gestión de citas pendientes
+            </DialogTitle>
           </DialogHeader>
           <AppointmentManager
             appointments={pendingAppointments}

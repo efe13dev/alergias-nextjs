@@ -88,7 +88,9 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className={`font-semibold ${app.status === "completada" ? "line-through" : ""}`}>
+              <span
+                className={`font-semibold ${app.status === "completada" ? "line-through" : ""}`}
+              >
                 {new Date(app.date).toLocaleDateString()} - {app.description}
               </span>
               <div className="flex gap-1">
@@ -127,7 +129,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
         ))}
       </ul>
 
-      <div className="mt-4 border-t border-border/50 pt-4">
+      <div className="border-border/50 mt-4 border-t pt-4">
         <h4 className="mb-3 font-serif text-base tracking-tight">
           {editingIndex !== null ? "Editar cita" : "Nueva cita"}
         </h4>
@@ -135,13 +137,13 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
           <input
             type="date"
             name="date"
-            className="rounded-lg border border-border/80 bg-muted/30 px-3 py-2 text-sm transition-colors focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
             value={form.date}
             onChange={handleChange}
           />
           <textarea
             name="description"
-            className="rounded-lg border border-border/80 bg-muted/30 px-3 py-2 text-sm transition-colors focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
             placeholder="Descripción de la cita"
             value={form.description}
             onChange={handleChange}
@@ -151,14 +153,14 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
               <>
                 <button
                   type="button"
-                  className="text-primary-foreground rounded-lg bg-primary px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-primary/90"
+                  className="text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-colors"
                   onClick={handleSave}
                 >
                   Guardar
                 </button>
                 <button
                   type="button"
-                  className="text-foreground rounded-lg border border-border/80 bg-muted/50 px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+                  className="text-foreground border-border/80 bg-muted/50 hover:bg-muted rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
                   onClick={() => {
                     setEditingIndex(null);
                     setForm(emptyAppointment);
@@ -170,7 +172,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
             ) : (
               <button
                 type="button"
-                className="text-primary-foreground rounded-lg bg-primary px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-primary/90"
+                className="text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-colors"
                 onClick={handleAdd}
               >
                 Añadir cita
