@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import type { Appointment } from "@/app/types";
+
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -18,12 +20,33 @@ type DayData = {
 interface DayEditorProps {
   date: Date;
   initialData?: DayData;
+  appointment?: Appointment;
   onSave: (date: Date, symptomLevel: SymptomLevel, medications: Medication[]) => void;
+  onUpsertAppointment: (date: Date, description: string) => void;
+  onRemoveAppointment: (date: Date) => void;
+  onCompleteAppointment: (date: Date) => void;
 }
 
-export default function DayEditor({ date, initialData, onSave }: DayEditorProps) {
+export default function DayEditor({
+  date,
+  initialData,
+  appointment,
+  onSave,
+  onUpsertAppointment,
+  onRemoveAppointment,
+  onCompleteAppointment,
+}: DayEditorProps) {
   const [symptomLevel, setSymptomLevel] = useState<SymptomLevel>(initialData?.symptomLevel || null);
   const [medications, setMedications] = useState<Medication[]>(initialData?.medications || []);
+  const [appointmentDescription, setAppointmentDescription] = useState(
+    appointment?.description ?? "",
+  );
+
+  useEffect(() => {
+    setSymptomLevel(initialData?.symptomLevel ?? null);
+    setMedications(initialData?.medications ?? []);
+    setAppointmentDescription(appointment?.description ?? "");
+  }, [initialData, appointment, date]);
 
   const handleMedicationToggle = (medication: Medication) => {
     setMedications((prev) =>
@@ -32,8 +55,17 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
   };
 
   const handleSave = () => {
+    const trimmedDescription = appointmentDescription.trim();
+
     onSave(date, symptomLevel, medications);
+
+    if (trimmedDescription) {
+      onUpsertAppointment(date, trimmedDescription);
+    }
   };
+
+  const hasAppointment = Boolean(appointment);
+  const isPendingAppointment = appointment?.status === "pendiente";
 
   return (
     <div className="space-y-5 py-2">
@@ -133,6 +165,52 @@ export default function DayEditor({ date, initialData, onSave }: DayEditorProps)
             <Label htmlFor="dymista">Dymista</Label>
           </div>
         </div>
+      </div>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-serif text-lg tracking-tight">Cita del día</h3>
+          {hasAppointment && (
+            <span
+              className={`rounded-md border px-2 py-0.5 text-xs font-medium ${
+                isPendingAppointment
+                  ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
+                  : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
+              }`}
+            >
+              {isPendingAppointment ? "Pendiente" : "Completada"}
+            </span>
+          )}
+        </div>
+        <textarea
+          name="appointmentDescription"
+          className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+          placeholder="Ej: Revisión con alergólogo a las 10:00"
+          value={appointmentDescription}
+          onChange={(e) => setAppointmentDescription(e.target.value)}
+        />
+        <p className="text-muted-foreground text-xs">
+          Mantén una única cita por día. Si guardas una descripción, se crea o actualiza.
+        </p>
+        {hasAppointment && (
+          <div className="flex flex-wrap gap-2">
+            {isPendingAppointment && (
+              <Button type="button" variant="outline" onClick={() => onCompleteAppointment(date)}>
+                Marcar como completada
+              </Button>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                onRemoveAppointment(date);
+                setAppointmentDescription("");
+              }}
+            >
+              Eliminar cita del día
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="border-border/50 flex justify-end border-t pt-4">

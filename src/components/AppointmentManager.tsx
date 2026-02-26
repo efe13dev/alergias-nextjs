@@ -16,6 +16,9 @@ const emptyAppointment: Appointment = {
   status: "pendiente",
 };
 
+const isSameDay = (a: string, b: string) =>
+  new Date(a).toDateString() === new Date(b).toDateString();
+
 export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointments }) => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [form, setForm] = useState<Appointment>(emptyAppointment);
@@ -29,6 +32,24 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
   // Al guardar una nueva cita, asigna un id único con uuidv4
   const handleAdd = () => {
     if (!form.date || !form.description) return;
+
+    const existingIndex = appointments.findIndex((app) => isSameDay(app.date, form.date));
+
+    if (existingIndex >= 0) {
+      const updated = [...appointments];
+
+      updated[existingIndex] = {
+        ...updated[existingIndex],
+        date: form.date,
+        description: form.description,
+        status: "pendiente",
+      };
+      setAppointments(updated);
+      setForm(emptyAppointment);
+
+      return;
+    }
+
     const newAppointment: Appointment = {
       ...form,
       id: uuidv4(),
@@ -48,7 +69,27 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
   // Guardar edición
   const handleSave = () => {
     if (editingIndex === null) return;
+
     const updated = [...appointments];
+
+    const duplicateIndex = updated.findIndex(
+      (app, idx) => idx !== editingIndex && isSameDay(app.date, form.date),
+    );
+
+    if (duplicateIndex >= 0) {
+      updated.splice(duplicateIndex, 1);
+      const adjustedEditingIndex = duplicateIndex < editingIndex ? editingIndex - 1 : editingIndex;
+
+      updated[adjustedEditingIndex] = {
+        ...updated[adjustedEditingIndex],
+        ...form,
+      };
+      setAppointments(updated);
+      setEditingIndex(null);
+      setForm(emptyAppointment);
+
+      return;
+    }
 
     updated[editingIndex] = form;
     setAppointments(updated);

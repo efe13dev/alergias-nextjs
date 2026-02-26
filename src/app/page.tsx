@@ -187,6 +187,70 @@ export default function Home() {
     return dayData.find((item) => new Date(item.date).toDateString() === date.toDateString());
   };
 
+  const getAppointmentByDate = (date: Date): Appointment | undefined => {
+    const appointmentsForDate = pendingAppointments.filter(
+      (item) => new Date(item.date).toDateString() === date.toDateString(),
+    );
+
+    return (
+      appointmentsForDate.find((item) => item.status === "pendiente") ?? appointmentsForDate[0]
+    );
+  };
+
+  const upsertAppointmentForDate = (date: Date, description: string) => {
+    const normalizedDescription = description.trim();
+
+    if (!normalizedDescription) return;
+
+    setPendingAppointments((prevData) => {
+      const existingIndex = prevData.findIndex(
+        (item) => new Date(item.date).toDateString() === date.toDateString(),
+      );
+
+      if (existingIndex >= 0) {
+        const updated = [...prevData];
+
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          date: date.toISOString(),
+          description: normalizedDescription,
+          status: "pendiente",
+        };
+
+        return updated;
+      }
+
+      return [
+        ...prevData,
+        {
+          id: crypto.randomUUID(),
+          date: date.toISOString(),
+          description: normalizedDescription,
+          status: "pendiente",
+        },
+      ];
+    });
+  };
+
+  const removeAppointmentForDate = (date: Date) => {
+    setPendingAppointments((prevData) =>
+      prevData.filter((item) => new Date(item.date).toDateString() !== date.toDateString()),
+    );
+  };
+
+  const completeAppointmentForDate = (date: Date) => {
+    setPendingAppointments((prevData) =>
+      prevData.map((item) =>
+        new Date(item.date).toDateString() === date.toDateString()
+          ? {
+              ...item,
+              status: "completada",
+            }
+          : item,
+      ),
+    );
+  };
+
   // Función para manejar el clic en un día
   const handleDayClick = (date: Date) => {
     setSelectedDate(date);
@@ -438,25 +502,15 @@ export default function Home() {
                           dayData.some(
                             (d) => new Date(d.date).toDateString() === date.toDateString(),
                           ),
-                        appointment: (date) =>
-                          pendingAppointments.some(
-                            (app) =>
-                              app.status === "pendiente" &&
-                              new Date(app.date).toDateString() === date.toDateString(),
-                          ),
+                        appointment: (date) => Boolean(getAppointmentByDate(date)),
                       }}
                       modifiersClassNames={{
                         booked: "font-bold",
-                        appointment:
-                          "text-foreground border border-sky-300 bg-sky-200 dark:border-sky-500/60 dark:bg-sky-900/25",
+                        appointment: "",
                       }}
                       components={{
                         Day: ({ date }) => {
-                          const appointment = pendingAppointments.find(
-                            (app) =>
-                              app.status === "pendiente" &&
-                              new Date(app.date).toDateString() === date.toDateString(),
-                          );
+                          const appointment = getAppointmentByDate(date);
 
                           return (
                             <CalendarDayButton
@@ -490,7 +544,11 @@ export default function Home() {
             <DayEditor
               date={selectedDate}
               initialData={getDayData(selectedDate)}
+              appointment={getAppointmentByDate(selectedDate)}
               onSave={updateDayData}
+              onUpsertAppointment={upsertAppointmentForDate}
+              onRemoveAppointment={removeAppointmentForDate}
+              onCompleteAppointment={completeAppointmentForDate}
             />
           </DialogContent>
         </Dialog>
