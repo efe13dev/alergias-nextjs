@@ -38,6 +38,7 @@ export default function DayEditor({
 }: DayEditorProps) {
   const [symptomLevel, setSymptomLevel] = useState<SymptomLevel>(initialData?.symptomLevel || null);
   const [medications, setMedications] = useState<Medication[]>(initialData?.medications || []);
+  const [isAppointmentExpanded, setIsAppointmentExpanded] = useState(false);
   const [appointmentDescription, setAppointmentDescription] = useState(
     appointment?.description ?? "",
   );
@@ -46,6 +47,7 @@ export default function DayEditor({
     setSymptomLevel(initialData?.symptomLevel ?? null);
     setMedications(initialData?.medications ?? []);
     setAppointmentDescription(appointment?.description ?? "");
+    setIsAppointmentExpanded(Boolean(appointment));
   }, [initialData, appointment, date]);
 
   const handleMedicationToggle = (medication: Medication) => {
@@ -167,48 +169,84 @@ export default function DayEditor({
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="font-serif text-lg tracking-tight">Cita del día</h3>
-          {hasAppointment && (
-            <span
-              className={`rounded-md border px-2 py-0.5 text-xs font-medium ${
-                isPendingAppointment
-                  ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
-                  : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
-              }`}
-            >
-              {isPendingAppointment ? "Pendiente" : "Completada"}
-            </span>
-          )}
-        </div>
-        <textarea
-          name="appointmentDescription"
-          className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
-          placeholder="Ej: Revisión con alergólogo a las 10:00"
-          value={appointmentDescription}
-          onChange={(e) => setAppointmentDescription(e.target.value)}
-        />
-        <p className="text-muted-foreground text-xs">
-          Mantén una única cita por día. Si guardas una descripción, se crea o actualiza.
-        </p>
-        {hasAppointment && (
-          <div className="flex flex-wrap gap-2">
-            {isPendingAppointment && (
-              <Button type="button" variant="outline" onClick={() => onCompleteAppointment(date)}>
-                Marcar como completada
-              </Button>
+      <div className="rounded-xl border border-slate-200/70 dark:border-slate-800/80">
+        <button
+          type="button"
+          className="hover:bg-muted/60 flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition-colors"
+          onClick={() => setIsAppointmentExpanded((prev) => !prev)}
+          aria-expanded={isAppointmentExpanded}
+        >
+          <span className="flex items-center gap-2">
+            <span className="font-serif text-base tracking-tight">Cita del día</span>
+            {hasAppointment && (
+              <span
+                className={`rounded-md border px-2 py-0.5 text-[11px] font-medium ${
+                  isPendingAppointment
+                    ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
+                    : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
+                }`}
+              >
+                {isPendingAppointment ? "Tiene cita" : "Cita completada"}
+              </span>
             )}
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                onRemoveAppointment(date);
-                setAppointmentDescription("");
-              }}
-            >
-              Eliminar cita del día
-            </Button>
+          </span>
+          <span className="text-muted-foreground text-xs">
+            {isAppointmentExpanded ? "Ocultar" : "Mostrar"}
+          </span>
+        </button>
+
+        {isAppointmentExpanded && (
+          <div className="space-y-3 px-3 pb-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Estado</p>
+              {hasAppointment && (
+                <span
+                  className={`rounded-md border px-2 py-0.5 text-xs font-medium ${
+                    isPendingAppointment
+                      ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
+                      : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
+                  }`}
+                >
+                  {isPendingAppointment ? "Pendiente" : "Completada"}
+                </span>
+              )}
+            </div>
+
+            <textarea
+              name="appointmentDescription"
+              className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+              placeholder="Ej: Revisión con alergólogo a las 10:00"
+              value={appointmentDescription}
+              onChange={(e) => setAppointmentDescription(e.target.value)}
+            />
+            <p className="text-muted-foreground text-xs">
+              Mantén una única cita por día. Si guardas una descripción, se crea o actualiza.
+            </p>
+            {hasAppointment && (
+              <div className="flex gap-2">
+                {isPendingAppointment && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => onCompleteAppointment(date)}
+                  >
+                    Marcar como completada
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    onRemoveAppointment(date);
+                    setAppointmentDescription("");
+                  }}
+                >
+                  Eliminar cita del día
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
