@@ -15,13 +15,19 @@ type DayData = {
   date: string; // formato ISO
   symptomLevel: SymptomLevel;
   medications: Medication[];
+  notes?: string;
 };
 
 interface DayEditorProps {
   date: Date;
   initialData?: DayData;
   appointment?: Appointment;
-  onSave: (date: Date, symptomLevel: SymptomLevel, medications: Medication[]) => void;
+  onSave: (
+    date: Date,
+    symptomLevel: SymptomLevel,
+    medications: Medication[],
+    notes: string,
+  ) => void;
   onUpsertAppointment: (date: Date, description: string) => void;
   onRemoveAppointment: (date: Date) => void;
   onCompleteAppointment: (date: Date) => void;
@@ -39,6 +45,8 @@ export default function DayEditor({
   const [symptomLevel, setSymptomLevel] = useState<SymptomLevel>(initialData?.symptomLevel || null);
   const [medications, setMedications] = useState<Medication[]>(initialData?.medications || []);
   const [isAppointmentExpanded, setIsAppointmentExpanded] = useState(false);
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [appointmentDescription, setAppointmentDescription] = useState(
     appointment?.description ?? "",
   );
@@ -46,8 +54,10 @@ export default function DayEditor({
   useEffect(() => {
     setSymptomLevel(initialData?.symptomLevel ?? null);
     setMedications(initialData?.medications ?? []);
+    setNotes(initialData?.notes ?? "");
     setAppointmentDescription(appointment?.description ?? "");
     setIsAppointmentExpanded(Boolean(appointment));
+    setIsNotesExpanded(Boolean(initialData?.notes?.trim()));
   }, [initialData, appointment, date]);
 
   const handleMedicationToggle = (medication: Medication) => {
@@ -59,7 +69,7 @@ export default function DayEditor({
   const handleSave = () => {
     const trimmedDescription = appointmentDescription.trim();
 
-    onSave(date, symptomLevel, medications);
+    onSave(date, symptomLevel, medications, notes);
 
     if (trimmedDescription) {
       onUpsertAppointment(date, trimmedDescription);
@@ -68,10 +78,11 @@ export default function DayEditor({
 
   const hasAppointment = Boolean(appointment);
   const isPendingAppointment = appointment?.status === "pendiente";
+  const hasNotes = Boolean(notes.trim());
 
   return (
-    <div className="space-y-5 py-2">
-      <div className="space-y-3">
+    <div className="space-y-4 py-1">
+      <div className="space-y-2.5">
         <h3 className="font-serif text-lg tracking-tight">Nivel de síntomas</h3>
         <RadioGroup
           value={symptomLevel || ""}
@@ -131,7 +142,7 @@ export default function DayEditor({
         </RadioGroup>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <h3 className="font-serif text-lg tracking-tight">Medicamentos tomados</h3>
         <div className="flex flex-col space-y-2">
           <div className="flex items-center space-x-2">
@@ -173,6 +184,45 @@ export default function DayEditor({
         <button
           type="button"
           className="hover:bg-muted/60 flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition-colors"
+          onClick={() => setIsNotesExpanded((prev) => !prev)}
+          aria-expanded={isNotesExpanded}
+        >
+          <span className="flex items-center gap-2">
+            <span className="font-serif text-base tracking-tight">Notas del día</span>
+            {hasNotes && (
+              <span className="rounded-md border border-amber-300/70 bg-amber-100 px-2 py-0.5 text-[11px] font-medium dark:border-amber-500/40 dark:bg-amber-900/25">
+                Tiene notas
+              </span>
+            )}
+          </span>
+          <span className="text-muted-foreground text-xs">
+            {isNotesExpanded ? "Ocultar" : hasNotes ? "Mostrar" : "Añadir"}
+          </span>
+        </button>
+
+        <div
+          className={`grid transition-all duration-300 ease-in-out ${
+            isNotesExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="space-y-3 px-3 pt-1 pb-3">
+              <textarea
+                name="dayNotes"
+                className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+                placeholder="Ej: Ese día había mucho polvo en el ambiente"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-slate-200/70 dark:border-slate-800/80">
+        <button
+          type="button"
+          className="hover:bg-muted/60 flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition-colors"
           onClick={() => setIsAppointmentExpanded((prev) => !prev)}
           aria-expanded={isAppointmentExpanded}
         >
@@ -191,64 +241,70 @@ export default function DayEditor({
             )}
           </span>
           <span className="text-muted-foreground text-xs">
-            {isAppointmentExpanded ? "Ocultar" : "Mostrar"}
+            {isAppointmentExpanded ? "Ocultar" : hasAppointment ? "Mostrar" : "Añadir"}
           </span>
         </button>
 
-        {isAppointmentExpanded && (
-          <div className="space-y-3 px-3 pb-3">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Estado</p>
-              {hasAppointment && (
-                <span
-                  className={`rounded-md border px-2 py-0.5 text-xs font-medium ${
-                    isPendingAppointment
-                      ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
-                      : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
-                  }`}
-                >
-                  {isPendingAppointment ? "Pendiente" : "Completada"}
-                </span>
-              )}
-            </div>
+        <div
+          className={`grid transition-all duration-300 ease-in-out ${
+            isAppointmentExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="space-y-3 px-3 pt-1 pb-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Estado</p>
+                {hasAppointment && (
+                  <span
+                    className={`rounded-md border px-2 py-0.5 text-xs font-medium ${
+                      isPendingAppointment
+                        ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
+                        : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
+                    }`}
+                  >
+                    {isPendingAppointment ? "Pendiente" : "Completada"}
+                  </span>
+                )}
+              </div>
 
-            <textarea
-              name="appointmentDescription"
-              className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
-              placeholder="Ej: Revisión con alergólogo a las 10:00"
-              value={appointmentDescription}
-              onChange={(e) => setAppointmentDescription(e.target.value)}
-            />
-            <p className="text-muted-foreground text-xs">
-              Mantén una única cita por día. Si guardas una descripción, se crea o actualiza.
-            </p>
-            {hasAppointment && (
-              <div className="flex gap-2">
-                {isPendingAppointment && (
+              <textarea
+                name="appointmentDescription"
+                className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+                placeholder="Ej: Revisión con alergólogo a las 10:00"
+                value={appointmentDescription}
+                onChange={(e) => setAppointmentDescription(e.target.value)}
+              />
+              <p className="text-muted-foreground text-xs">
+                Mantén una única cita por día. Si guardas una descripción, se crea o actualiza.
+              </p>
+              {hasAppointment && (
+                <div className="flex gap-2">
+                  {isPendingAppointment && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => onCompleteAppointment(date)}
+                    >
+                      Marcar como completada
+                    </Button>
+                  )}
                   <Button
                     type="button"
                     variant="outline"
                     className="flex-1"
-                    onClick={() => onCompleteAppointment(date)}
+                    onClick={() => {
+                      onRemoveAppointment(date);
+                      setAppointmentDescription("");
+                    }}
                   >
-                    Marcar como completada
+                    Eliminar cita del día
                   </Button>
-                )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => {
-                    onRemoveAppointment(date);
-                    setAppointmentDescription("");
-                  }}
-                >
-                  Eliminar cita del día
-                </Button>
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
       <div className="border-border/50 flex justify-end border-t pt-4">

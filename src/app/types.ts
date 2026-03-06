@@ -6,6 +6,7 @@ export type DayData = {
   date: string; // formato ISO
   symptomLevel: SymptomLevel;
   medications: Medication[];
+  notes?: string;
 };
 
 export type Appointment = {

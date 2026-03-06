@@ -146,8 +146,14 @@ export default function Home() {
   }, [pendingAppointments, initialSetupDone]);
 
   // Función para actualizar los datos de un día
-  const updateDayData = (date: Date, symptomLevel: SymptomLevel, medications: Medication[]) => {
+  const updateDayData = (
+    date: Date,
+    symptomLevel: SymptomLevel,
+    medications: Medication[],
+    notes: string,
+  ) => {
     const dateString = date.toISOString();
+    const trimmedNotes = notes.trim();
 
     setDayData((prevData) => {
       // Buscar si ya existe un registro para este día
@@ -163,6 +169,7 @@ export default function Home() {
           date: dateString,
           symptomLevel,
           medications,
+          notes: trimmedNotes,
         };
 
         return newData;
@@ -175,6 +182,7 @@ export default function Home() {
           date: dateString,
           symptomLevel,
           medications,
+          notes: trimmedNotes,
         },
       ];
     });
@@ -533,7 +541,7 @@ export default function Home() {
 
       {selectedDate && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-md md:max-h-none md:overflow-visible">
             <DialogHeader>
               <DialogTitle className="font-serif text-xl tracking-tight">
                 {selectedDate
