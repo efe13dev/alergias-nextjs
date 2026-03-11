@@ -12,6 +12,7 @@ type Props = {
         date: string;
         symptomLevel: string | null;
         medications: Medication[];
+        notes?: string;
       }
     | undefined;
   onClick: (date: Date) => void;
@@ -22,6 +23,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
   const dayColor = getDayColorBySymptomLevel(dayData?.symptomLevel);
   const accentClass = getDayAccentBySymptomLevel(dayData?.symptomLevel);
   const dayMeds = dayData?.medications || [];
+  const hasNotes = Boolean(dayData?.notes?.trim());
   const hasAppointment = Boolean(appointment);
   const isPendingAppointment = appointment?.status === "pendiente";
   const appointmentDateLabel = new Intl.DateTimeFormat("es-ES", {
@@ -43,13 +45,41 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
         className={`relative min-h-[70px] min-w-[70px] cursor-pointer flex-col items-center rounded-lg p-1 font-normal transition-all duration-150 hover:scale-[1.03] hover:shadow-md focus-visible:scale-[1.03] focus-visible:shadow-md aria-selected:opacity-100 ${dayColor} ${
           hasAppointment ? "ring-1 ring-sky-400/50" : ""
         } flex`}
-        aria-label={
+        aria-label={`${date.getDate()}${
           hasAppointment
-            ? `${date.getDate()} con cita ${isPendingAppointment ? "pendiente" : "completada"}: ${appointment?.description ?? ""}`
-            : `${date.getDate()} sin cita pendiente`
-        }
+            ? ` con cita ${isPendingAppointment ? "pendiente" : "completada"}: ${appointment?.description ?? ""}`
+            : " sin cita pendiente"
+        }${hasNotes ? " y con nota del día" : ""}`}
         type="button"
       >
+        {hasNotes && (
+          <span
+            aria-label="Tiene notas"
+            className="absolute top-0.5 left-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full border border-amber-400/70 bg-amber-200 dark:border-amber-500/60 dark:bg-amber-900/45"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="h-2.5 w-2.5"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+              />
+            </svg>
+          </span>
+        )}
+
         {hasAppointment && (
           <span
             aria-label="Cita pendiente"
@@ -73,7 +103,6 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
             </svg>
           </span>
         )}
-
         <span className="mb-1 font-medium">{date.getDate()}</span>
         {dayMeds.length > 0 && (
           <div className="z-10 flex flex-col items-center justify-center gap-0.5">
