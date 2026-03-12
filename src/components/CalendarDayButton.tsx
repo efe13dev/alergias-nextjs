@@ -30,7 +30,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
   const appointmentDescription = appointment?.description?.trim() ?? "";
 
   return (
-    <div className="group relative flex justify-center">
+    <div className="group relative z-0 flex justify-center focus-within:z-40 hover:z-40">
       <button
         onClick={() => onClick(date)}
         onKeyDown={(e) => {
