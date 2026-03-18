@@ -78,7 +78,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
             </span>
             <span className="bg-background/95 border-border/70 text-foreground pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border p-2 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/note:visible group-focus-within/note:opacity-100 group-hover/note:visible group-hover/note:opacity-100">
               <span className="block font-semibold text-amber-700 dark:text-amber-300">Nota:</span>
-              <span className="line-clamp-4 block">{noteText}</span>
+              <span className="block whitespace-pre-line">{noteText}</span>
             </span>
           </span>
         )}
@@ -116,7 +116,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
               >
                 Cita:
               </span>
-              <span className="mt-1 line-clamp-3 block">{appointmentDescription}</span>
+              <span className="mt-1 block whitespace-pre-line">{appointmentDescription}</span>
             </span>
           </span>
         )}
