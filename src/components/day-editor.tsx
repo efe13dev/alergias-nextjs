@@ -1,6 +1,6 @@
 "use client";
 
-import type { Appointment } from "@/app/types";
+import type { Appointment, DayData, Medication, SymptomLevel } from "@/app/types";
 
 import { useEffect, useState } from "react";
 
@@ -8,15 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-type SymptomLevel = "green" | "yellow" | "orange" | "red" | null;
-type Medication = "Bilaxten" | "Relvar" | "Ventolin" | "Dymista";
-type DayData = {
-  date: string; // formato ISO
-  symptomLevel: SymptomLevel;
-  medications: Medication[];
-  notes?: string;
-};
 
 interface DayEditorProps {
   date: Date;

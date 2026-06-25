@@ -1,11 +1,9 @@
 "use client";
 
-import type { Appointment, DayData, Medication, SymptomLevel } from "./types";
-
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import html2canvaspro from "html2canvas-pro";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import AppointmentManager from "../components/AppointmentManager";
 import { CalendarDayButton } from "../components/CalendarDayButton";
@@ -17,19 +15,24 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// Tipos para nuestros datos
+import { useAppointments } from "@/hooks/useAppointments";
+import { useDayData } from "@/hooks/useDayData";
 
 export default function Home() {
-  // Estado para almacenar los datos de los días
-  const [dayData, setDayData] = useState<DayData[]>([]);
-  // Estado para almacenar las citas pendientes
-  const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>([]);
+  const { dayData, getDayData, updateDayData } = useDayData();
+  const {
+    appointments: pendingAppointments,
+    setAppointments: setPendingAppointments,
+    getAppointmentByDate,
+    upsertAppointment: upsertAppointmentForDate,
+    removeAppointment: removeAppointmentForDate,
+    completeAppointment: completeAppointmentForDate,
+  } = useAppointments();
+
   // Estado para mostrar solo las citas pendientes
   const [showPendingAppointments, setShowPendingAppointments] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [initialSetupDone, setInitialSetupDone] = useState(false);
 
   const getMonthKey = (date: Date) => format(date, "yyyy-MM");
 
@@ -116,147 +119,9 @@ export default function Home() {
     }
   };
 
-  // Cargar datos del localStorage al iniciar
-  useEffect(() => {
-    const savedData = localStorage.getItem("allergyTrackerData");
-
-    if (savedData) {
-      setDayData(JSON.parse(savedData) as DayData[]);
-    }
-    const savedAppointments = localStorage.getItem("pendingAppointments");
-
-    if (savedAppointments) {
-      setPendingAppointments(JSON.parse(savedAppointments) as Appointment[]);
-    }
-    setInitialSetupDone(true);
-  }, []);
-
-  // Guardar datos en localStorage cuando cambian
-  useEffect(() => {
-    if (initialSetupDone) {
-      localStorage.setItem("allergyTrackerData", JSON.stringify(dayData));
-    }
-  }, [dayData, initialSetupDone]);
-
-  // Guardar citas pendientes en localStorage cuando cambian
-  useEffect(() => {
-    if (initialSetupDone) {
-      localStorage.setItem("pendingAppointments", JSON.stringify(pendingAppointments));
-    }
-  }, [pendingAppointments, initialSetupDone]);
-
-  // Función para actualizar los datos de un día
-  const updateDayData = (
-    date: Date,
-    symptomLevel: SymptomLevel,
-    medications: Medication[],
-    notes: string,
-  ) => {
-    const dateString = date.toISOString();
-    const trimmedNotes = notes.trim();
-
-    setDayData((prevData) => {
-      // Buscar si ya existe un registro para este día
-      const existingIndex = prevData.findIndex(
-        (item) => new Date(item.date).toDateString() === date.toDateString(),
-      );
-
-      if (existingIndex >= 0) {
-        // Actualizar registro existente
-        const newData = [...prevData];
-
-        newData[existingIndex] = {
-          date: dateString,
-          symptomLevel,
-          medications,
-          notes: trimmedNotes,
-        };
-
-        return newData;
-      }
-
-      // Crear nuevo registro
-      return [
-        ...prevData,
-        {
-          date: dateString,
-          symptomLevel,
-          medications,
-          notes: trimmedNotes,
-        },
-      ];
-    });
-
+  const handleSaveDayData: typeof updateDayData = (date, symptomLevel, medications, notes) => {
+    updateDayData(date, symptomLevel, medications, notes);
     setIsDialogOpen(false);
-  };
-
-  // Función para obtener los datos de un día específico
-  const getDayData = (date: Date): DayData | undefined => {
-    return dayData.find((item) => new Date(item.date).toDateString() === date.toDateString());
-  };
-
-  const getAppointmentByDate = (date: Date): Appointment | undefined => {
-    const appointmentsForDate = pendingAppointments.filter(
-      (item) => new Date(item.date).toDateString() === date.toDateString(),
-    );
-
-    return (
-      appointmentsForDate.find((item) => item.status === "pendiente") ?? appointmentsForDate[0]
-    );
-  };
-
-  const upsertAppointmentForDate = (date: Date, description: string) => {
-    const normalizedDescription = description.trim();
-
-    if (!normalizedDescription) return;
-
-    setPendingAppointments((prevData) => {
-      const existingIndex = prevData.findIndex(
-        (item) => new Date(item.date).toDateString() === date.toDateString(),
-      );
-
-      if (existingIndex >= 0) {
-        const updated = [...prevData];
-
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          date: date.toISOString(),
-          description: normalizedDescription,
-          status: "pendiente",
-        };
-
-        return updated;
-      }
-
-      return [
-        ...prevData,
-        {
-          id: crypto.randomUUID(),
-          date: date.toISOString(),
-          description: normalizedDescription,
-          status: "pendiente",
-        },
-      ];
-    });
-  };
-
-  const removeAppointmentForDate = (date: Date) => {
-    setPendingAppointments((prevData) =>
-      prevData.filter((item) => new Date(item.date).toDateString() !== date.toDateString()),
-    );
-  };
-
-  const completeAppointmentForDate = (date: Date) => {
-    setPendingAppointments((prevData) =>
-      prevData.map((item) =>
-        new Date(item.date).toDateString() === date.toDateString()
-          ? {
-              ...item,
-              status: "completada",
-            }
-          : item,
-      ),
-    );
   };
 
   // Función para manejar el clic en un día
@@ -553,7 +418,7 @@ export default function Home() {
               date={selectedDate}
               initialData={getDayData(selectedDate)}
               appointment={getAppointmentByDate(selectedDate)}
-              onSave={updateDayData}
+              onSave={handleSaveDayData}
               onUpsertAppointment={upsertAppointmentForDate}
               onRemoveAppointment={removeAppointmentForDate}
               onCompleteAppointment={completeAppointmentForDate}

@@ -1,20 +1,11 @@
-import type { Appointment } from "@/app/types";
+import type { Appointment, DayData } from "@/app/types";
 import type React from "react";
 
 import { getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
 
-type Medication = "Bilaxten" | "Relvar" | "Ventolin" | "Dymista";
-
 type Props = {
   date: Date;
-  dayData:
-    | {
-        date: string;
-        symptomLevel: string | null;
-        medications: Medication[];
-        notes?: string;
-      }
-    | undefined;
+  dayData: DayData | undefined;
   onClick: (date: Date) => void;
   appointment?: Appointment;
 };
