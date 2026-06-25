@@ -131,63 +131,24 @@ export default function Home() {
 
   // Función para exportar la vista como imagen JPG
   const handleExportJPG = async () => {
-    const coloredDays = document.querySelectorAll(
-      "button.bg-yellow-200, button.bg-yellow-300, button.bg-orange-200, button.bg-orange-300, button.bg-green-200, button.bg-red-200",
-    );
-    const originalBackgrounds: string[] = [];
-    const originalBorders: string[] = [];
-    const originalRadii: string[] = [];
+    const selectedMonthObj = months.find((month) => getMonthKey(month) === selectedTab);
+    const mesActual = selectedMonthObj
+      ? format(selectedMonthObj, "MMMM", { locale: es })
+      : format(months[0], "MMMM", { locale: es });
+    const nombreArchivo = `alergia-captura-${mesActual}.jpg`;
 
-    coloredDays.forEach((el, idx) => {
-      originalBackgrounds[idx] = (el as HTMLElement).style.backgroundColor;
-      originalBorders[idx] = (el as HTMLElement).style.border;
-      originalRadii[idx] = (el as HTMLElement).style.borderRadius;
-
-      if (el.classList.contains("bg-yellow-200"))
-        (el as HTMLElement).style.backgroundColor = "#fef08a";
-      if (el.classList.contains("bg-orange-200"))
-        (el as HTMLElement).style.backgroundColor = "#fed7aa";
-      if (el.classList.contains("bg-green-200"))
-        (el as HTMLElement).style.backgroundColor = "#bbf7d0";
-      if (el.classList.contains("bg-red-200"))
-        (el as HTMLElement).style.backgroundColor = "#fecaca";
-
-      // Forzar borde y border-radius
-      (el as HTMLElement).style.border = "1px solid #e5e7eb";
-      (el as HTMLElement).style.borderRadius = "0.5rem";
+    const canvas = await html2canvaspro(document.body, {
+      useCORS: true,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      scrollX: 0,
+      scrollY: 0,
     });
+    const link = document.createElement("a");
 
-    const body = document.body;
-
-    if (body) {
-      // Obtener el mes seleccionado desde selectedTab
-      const selectedMonthObj = months.find((month) => getMonthKey(month) === selectedTab);
-      const mesActual = selectedMonthObj
-        ? format(selectedMonthObj, "MMMM", { locale: es })
-        : format(months[0], "MMMM", { locale: es });
-      const nombreArchivo = `alergia-captura-${mesActual}.jpg`;
-
-      const canvas = await html2canvaspro(body, {
-        useCORS: true,
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
-        scrollX: 0,
-        scrollY: 0,
-      });
-      const imgData = canvas.toDataURL("image/jpeg");
-      const link = document.createElement("a");
-
-      link.href = imgData;
-      link.download = nombreArchivo;
-      link.click();
-    }
-
-    // Restaurar estilos originales
-    coloredDays.forEach((el, idx) => {
-      (el as HTMLElement).style.backgroundColor = originalBackgrounds[idx];
-      (el as HTMLElement).style.border = originalBorders[idx];
-      (el as HTMLElement).style.borderRadius = originalRadii[idx];
-    });
+    link.href = canvas.toDataURL("image/jpeg");
+    link.download = nombreArchivo;
+    link.click();
   };
 
   return (
@@ -239,10 +200,9 @@ export default function Home() {
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  { dot: "bg-emerald-400/80 dark:bg-emerald-500/70", label: "Sin síntomas" },
-                  { dot: "bg-yellow-400/80 dark:bg-yellow-400/70", label: "Leves" },
-                  { dot: "bg-orange-400/80 dark:bg-orange-500/70", label: "Moderados" },
-                  { dot: "bg-red-400/80 dark:bg-red-500/70", label: "Graves" },
+                  { dot: "bg-emerald-300/90 dark:bg-emerald-500/60", label: "Bien" },
+                  { dot: "bg-amber-300/90 dark:bg-yellow-400/60", label: "Regular" },
+                  { dot: "bg-orange-400/90 dark:bg-orange-500/70", label: "Mal" },
                   { dot: "bg-sky-400/80 dark:bg-sky-500/70", label: "Cita" },
                 ].map(({ dot, label }) => (
                   <span

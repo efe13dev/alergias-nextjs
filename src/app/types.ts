@@ -1,4 +1,4 @@
-export type SymptomLevel = "green" | "yellow" | "orange" | "red" | null;
+export type SymptomLevel = "green" | "yellow" | "orange" | null;
 
 export type Medication = "Bilaxten" | "Relvar" | "Ventolin" | "Dymista";
 

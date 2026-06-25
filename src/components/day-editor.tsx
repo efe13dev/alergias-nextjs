@@ -76,30 +76,28 @@ export default function DayEditor({
     label: string;
     dotClass: string;
     borderClass: string;
+    activeBg: string;
   }[] = [
     {
       value: "green",
-      label: "Sin síntomas",
+      label: "Bien",
       dotClass: "bg-emerald-300/90 dark:bg-emerald-500/60",
-      borderClass: "border-emerald-200/80 dark:border-emerald-500/30",
+      borderClass: "border-emerald-300/80 dark:border-emerald-500/40",
+      activeBg: "bg-emerald-50/80 dark:bg-emerald-900/20",
     },
     {
       value: "yellow",
-      label: "Leves",
+      label: "Regular",
       dotClass: "bg-amber-300/90 dark:bg-yellow-400/60",
-      borderClass: "border-amber-200/80 dark:border-yellow-500/30",
+      borderClass: "border-amber-300/80 dark:border-yellow-500/40",
+      activeBg: "bg-amber-50/80 dark:bg-yellow-900/20",
     },
     {
       value: "orange",
-      label: "Moderados",
-      dotClass: "bg-orange-300/90 dark:bg-orange-500/60",
-      borderClass: "border-orange-200/80 dark:border-orange-500/30",
-    },
-    {
-      value: "red",
-      label: "Graves",
-      dotClass: "bg-rose-300/90 dark:bg-rose-500/60",
-      borderClass: "border-rose-200/80 dark:border-rose-500/30",
+      label: "Mal",
+      dotClass: "bg-orange-400/90 dark:bg-orange-500/70",
+      borderClass: "border-orange-300/90 dark:border-orange-500/40",
+      activeBg: "bg-orange-100/70 dark:bg-orange-900/25",
     },
   ];
 
@@ -136,21 +134,21 @@ export default function DayEditor({
         <RadioGroup
           value={symptomLevel || ""}
           onValueChange={(value) => setSymptomLevel(value as SymptomLevel)}
-          className="grid grid-cols-2 gap-2"
+          className="grid grid-cols-3 gap-2"
         >
-          {symptomOptions.map(({ value, label, dotClass, borderClass }) => (
+          {symptomOptions.map(({ value, label, dotClass, borderClass, activeBg }) => (
             <div key={value} className="flex items-center">
               <RadioGroupItem value={value} id={value} className="sr-only" />
               <Label
                 htmlFor={value}
-                className={`border-border/50 flex w-full cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all ${
+                className={`border-border/50 flex w-full cursor-pointer flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-sm transition-all ${
                   symptomLevel === value
-                    ? `${borderClass} bg-muted/60 font-medium ring-1 ring-inset ${borderClass}`
+                    ? `${borderClass} ${activeBg} font-medium ring-1 ring-inset ${borderClass}`
                     : "hover:bg-muted/40"
                 }`}
               >
-                <span className={`h-3 w-3 flex-shrink-0 rounded-full ${dotClass}`} />
-                {label}
+                <span className={`h-3.5 w-3.5 rounded-full ${dotClass}`} />
+                <span className="text-xs">{label}</span>
               </Label>
             </div>
           ))}
