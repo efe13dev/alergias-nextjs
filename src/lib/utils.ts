@@ -9,13 +9,13 @@ export function cn(...inputs: ClassValue[]) {
 export function getDayColorBySymptomLevel(symptomLevel: string | null | undefined): string {
   switch (symptomLevel) {
     case "green":
-      return "text-foreground border border-green-300 bg-green-200 hover:bg-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background aria-selected:bg-green-300 aria-selected:border-green-400 aria-selected:ring-2 aria-selected:ring-green-400 aria-selected:ring-offset-2 aria-selected:ring-offset-background dark:border-emerald-500/50 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/45 dark:focus-visible:ring-emerald-400/50 dark:aria-selected:bg-emerald-900/50 dark:aria-selected:border-emerald-500/60 dark:aria-selected:ring-emerald-400/60";
+      return "text-foreground border border-emerald-200/90 bg-emerald-50/80 hover:bg-emerald-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-emerald-500/30 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/32";
     case "yellow":
-      return "text-foreground border border-yellow-300 bg-yellow-200 hover:bg-yellow-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background aria-selected:bg-yellow-300 aria-selected:border-yellow-400 aria-selected:ring-2 aria-selected:ring-yellow-400 aria-selected:ring-offset-2 aria-selected:ring-offset-background dark:border-yellow-400/60 dark:bg-yellow-900/35 dark:hover:bg-yellow-900/50 dark:focus-visible:ring-yellow-300/60 dark:aria-selected:bg-yellow-900/55 dark:aria-selected:border-yellow-300/70 dark:aria-selected:ring-yellow-300/70";
+      return "text-foreground border border-amber-200/90 bg-amber-50/80 hover:bg-amber-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-yellow-500/30 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/30";
     case "orange":
-      return "text-foreground border border-orange-300 bg-orange-200 hover:bg-orange-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background aria-selected:bg-orange-300 aria-selected:border-orange-400 aria-selected:ring-2 aria-selected:ring-orange-400 aria-selected:ring-offset-2 aria-selected:ring-offset-background dark:border-orange-500/70 dark:bg-orange-950/40 dark:hover:bg-orange-950/55 dark:focus-visible:ring-orange-300/70 dark:aria-selected:bg-orange-950/60 dark:aria-selected:border-orange-400/80 dark:aria-selected:ring-orange-300/80";
+      return "text-foreground border border-orange-200/90 bg-orange-50/80 hover:bg-orange-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-orange-500/30 dark:bg-orange-900/18 dark:hover:bg-orange-900/28";
     case "red":
-      return "text-foreground border border-red-300 bg-red-200 hover:bg-red-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background aria-selected:bg-red-300 aria-selected:border-red-400 aria-selected:ring-2 aria-selected:ring-red-400 aria-selected:ring-offset-2 aria-selected:ring-offset-background dark:border-rose-500/50 dark:bg-rose-900/25 dark:hover:bg-rose-900/40 dark:focus-visible:ring-rose-400/50 dark:aria-selected:bg-rose-900/45 dark:aria-selected:border-rose-500/60 dark:aria-selected:ring-rose-400/60";
+      return "text-foreground border border-rose-200/90 bg-rose-50/80 hover:bg-rose-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-rose-500/30 dark:bg-rose-900/18 dark:hover:bg-rose-900/28";
     default:
       return "";
   }
@@ -25,13 +25,13 @@ export function getDayColorBySymptomLevel(symptomLevel: string | null | undefine
 export function getDayAccentBySymptomLevel(symptomLevel: string | null | undefined): string {
   switch (symptomLevel) {
     case "green":
-      return "bg-green-400 dark:bg-emerald-400";
+      return "bg-emerald-300/90 dark:bg-emerald-500/60";
     case "yellow":
-      return "bg-yellow-400 dark:bg-yellow-300";
+      return "bg-amber-300/90 dark:bg-yellow-400/60";
     case "orange":
-      return "bg-orange-400 dark:bg-orange-500";
+      return "bg-orange-300/90 dark:bg-orange-500/60";
     case "red":
-      return "bg-red-400 dark:bg-red-400";
+      return "bg-rose-300/90 dark:bg-rose-500/60";
     default:
       return "";
   }

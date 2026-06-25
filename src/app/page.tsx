@@ -10,7 +10,6 @@ import { CalendarDayButton } from "../components/CalendarDayButton";
 import DayEditor from "../components/day-editor";
 
 import ThemeToggle from "@/components/ThemeToggle";
-import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -193,14 +192,14 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      <Card className="mb-8 overflow-hidden border-0 shadow-lg shadow-black/5 dark:shadow-black/20">
-        <CardHeader className="border-border/50 from-primary/5 to-accent/5 border-b bg-gradient-to-r via-transparent pb-6">
-          <div className="flex items-center justify-between">
+      <Card className="border-border/40 mb-6 overflow-hidden border shadow-sm">
+        <CardHeader className="border-border/40 border-b px-6 py-5">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <CardTitle className="font-serif text-3xl tracking-tight">
+              <CardTitle className="font-serif text-2xl tracking-tight">
                 Seguimiento de Alergia
               </CardTitle>
-              <CardDescription className="mt-1.5 text-sm">
+              <CardDescription className="mt-1 text-xs">
                 Registra tus síntomas y medicamentos diarios
               </CardDescription>
             </div>
@@ -208,11 +207,11 @@ export default function Home() {
               <button
                 onClick={handleExportJPG}
                 type="button"
-                className="text-foreground border-primary/20 bg-primary/10 hover:bg-primary/20 dark:border-primary/30 dark:bg-primary/15 dark:hover:bg-primary/25 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
+                className="text-muted-foreground hover:text-foreground border-border/60 hover:border-border hover:bg-muted/50 inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
+                  className="h-3.5 w-3.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -225,98 +224,113 @@ export default function Home() {
                     d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
                   />
                 </svg>
-                Exportar JPG
+                Exportar
               </button>
               <ThemeToggle />
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-5">
-          <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="border-border/60 bg-muted/30 rounded-xl border p-3">
-              <p className="text-muted-foreground mb-2 text-xs font-semibold tracking-wider uppercase">
-                Nivel de síntomas
-              </p>
+        <CardContent className="px-6 pt-4 pb-5">
+          {/* Leyenda compacta en una sola fila */}
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+                Síntomas
+              </span>
               <div className="flex flex-wrap gap-1.5">
-                <Badge className="text-foreground border border-emerald-300/80 bg-emerald-100 text-xs font-medium dark:border-emerald-500/40 dark:bg-emerald-900/25">
-                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-400 dark:bg-emerald-400"></span>
-                  Sin síntomas
-                </Badge>
-                <Badge className="text-foreground border border-yellow-300/80 bg-yellow-100 text-xs font-medium dark:border-yellow-500/60 dark:bg-yellow-900/35">
-                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-yellow-400 dark:bg-yellow-300"></span>
-                  Leves
-                </Badge>
-                <Badge className="text-foreground border border-orange-300/80 bg-orange-100 text-xs font-medium dark:border-orange-500/70 dark:bg-orange-950/45">
-                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-orange-400"></span>
-                  Moderados
-                </Badge>
-                <Badge className="text-foreground border border-red-300/80 bg-red-100 text-xs font-medium dark:border-rose-500/40 dark:bg-rose-900/20">
-                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-red-400 dark:bg-rose-400"></span>
-                  Graves
-                </Badge>
-                <Badge className="text-foreground border border-sky-300/80 bg-sky-100 text-xs font-medium dark:border-sky-500/40 dark:bg-sky-900/20">
-                  <span className="mr-1 inline-block h-2 w-2 rounded-full bg-sky-400"></span>
-                  Cita
-                </Badge>
-              </div>
-            </div>
-            <div className="border-border/60 bg-muted/30 rounded-xl border p-3">
-              <div className="flex items-center justify-between">
-                <p className="text-muted-foreground mb-2 text-xs font-semibold tracking-wider uppercase">
-                  Medicamentos
-                </p>
-                <button
-                  onClick={() => setShowPendingAppointments(true)}
-                  type="button"
-                  className="text-foreground -mt-1 inline-flex items-center gap-1.5 rounded-lg border border-sky-300/60 bg-sky-100/80 px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-sky-200/80 dark:border-sky-500/30 dark:bg-sky-900/20 dark:hover:bg-sky-900/35"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3.5 w-3.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-label="Añadir cita pendiente"
+                {[
+                  { dot: "bg-emerald-400/80 dark:bg-emerald-500/70", label: "Sin síntomas" },
+                  { dot: "bg-yellow-400/80 dark:bg-yellow-400/70", label: "Leves" },
+                  { dot: "bg-orange-400/80 dark:bg-orange-500/70", label: "Moderados" },
+                  { dot: "bg-red-400/80 dark:bg-red-500/70", label: "Graves" },
+                  { dot: "bg-sky-400/80 dark:bg-sky-500/70", label: "Cita" },
+                ].map(({ dot, label }) => (
+                  <span
+                    key={label}
+                    className="text-muted-foreground flex items-center gap-1 text-xs"
                   >
-                    <title>Añadir cita pendiente</title>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Citas
-                </button>
+                    <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
+                    {label}
+                  </span>
+                ))}
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-sky-300/70 bg-sky-100 px-1.5 py-0.5 text-xs font-medium dark:border-sky-500/40 dark:bg-sky-900/25">
-                  <span className="font-bold">B</span> Bilaxten
-                </span>
-                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-violet-300/70 bg-violet-100 px-1.5 py-0.5 text-xs font-medium dark:border-violet-500/40 dark:bg-violet-900/25">
-                  <span className="font-bold">R</span> Relvar
-                </span>
-                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-teal-300/70 bg-teal-100 px-1.5 py-0.5 text-xs font-medium dark:border-teal-500/40 dark:bg-teal-900/25">
-                  <span className="font-bold">V</span> Ventolin
-                </span>
-                <span className="text-foreground inline-flex items-center gap-1 rounded-md border border-rose-300/70 bg-rose-100 px-1.5 py-0.5 text-xs font-medium dark:border-rose-500/40 dark:bg-rose-900/25">
-                  <span className="font-bold">D</span> Dymista
-                </span>
+              <span className="text-border hidden h-3 w-px bg-current sm:inline-block" />
+              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+                Medicamentos
+              </span>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {[
+                  {
+                    letter: "B",
+                    color: "border-sky-300/60 bg-sky-50 dark:border-sky-600/40 dark:bg-sky-900/20",
+                    label: "Bilaxten",
+                  },
+                  {
+                    letter: "R",
+                    color:
+                      "border-violet-300/60 bg-violet-50 dark:border-violet-600/40 dark:bg-violet-900/20",
+                    label: "Relvar",
+                  },
+                  {
+                    letter: "V",
+                    color:
+                      "border-teal-300/60 bg-teal-50 dark:border-teal-600/40 dark:bg-teal-900/20",
+                    label: "Ventolin",
+                  },
+                  {
+                    letter: "D",
+                    color:
+                      "border-rose-300/60 bg-rose-50 dark:border-rose-600/40 dark:bg-rose-900/20",
+                    label: "Dymista",
+                  },
+                ].map(({ letter, color, label }) => (
+                  <span
+                    key={label}
+                    className={`text-muted-foreground inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium ${color}`}
+                  >
+                    <span className="font-bold">{letter}</span>
+                    <span>{label}</span>
+                  </span>
+                ))}
               </div>
             </div>
+            <button
+              onClick={() => setShowPendingAppointments(true)}
+              type="button"
+              className="text-muted-foreground hover:text-foreground border-border/60 hover:border-border hover:bg-muted/50 inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-label="Gestionar citas"
+              >
+                <title>Gestionar citas</title>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Citas
+            </button>
           </div>
 
           <Tabs value={selectedTab} onValueChange={handleMonthChange} className="w-full">
-            <div className="border-border/60 bg-muted/40 mb-3 inline-flex flex-wrap gap-1 rounded-xl border p-1">
+            {/* Selector de año */}
+            <div className="mb-2.5 flex items-center gap-1.5">
               {years.map((year) => (
                 <button
                   key={year}
                   type="button"
                   onClick={() => handleYearSelect(year)}
-                  className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all duration-200 ${
+                  className={`rounded-md px-3 py-1 text-sm font-semibold transition-all duration-150 ${
                     selectedYear === year
-                      ? "border-primary/40 bg-primary text-primary-foreground shadow-primary/20 shadow-md"
-                      : "bg-background/80 text-muted-foreground hover:border-border/70 hover:bg-background hover:text-foreground border-transparent"
+                      ? "bg-foreground/10 text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {year}
@@ -324,27 +338,28 @@ export default function Home() {
               ))}
             </div>
 
-            <TabsList className="border-border/60 bg-background/70 mb-5 flex h-auto w-full justify-start gap-1.5 overflow-x-auto rounded-xl border p-2">
+            {/* Tabs de meses */}
+            <TabsList className="border-border/40 bg-muted/30 mb-5 flex h-auto w-full justify-start gap-1 overflow-x-auto rounded-lg border p-1">
               {selectedYearMonths.map((month) => (
                 <TabsTrigger
                   key={month.toISOString()}
                   value={getMonthKey(month)}
-                  className="h-9 flex-none px-3 text-xs sm:text-sm"
+                  className="h-8 flex-none px-3 text-xs capitalize sm:text-xs"
                 >
-                  {format(month, "MMMM", { locale: es })}
+                  {format(month, "MMM", { locale: es })}
                 </TabsTrigger>
               ))}
             </TabsList>
 
             {months.map((month) => (
               <TabsContent key={month.toISOString()} value={getMonthKey(month)} className="mt-0">
-                <Card className="calendar-export-card border-0 shadow-md shadow-black/5 dark:shadow-black/15">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="font-serif text-xl tracking-tight capitalize">
+                <Card className="calendar-export-card border-border/30 border shadow-none">
+                  <CardHeader className="px-5 pt-4 pb-2">
+                    <CardTitle className="font-serif text-lg tracking-tight capitalize">
                       {format(month, "MMMM yyyy", { locale: es })}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="px-3 pb-4">
                     <Calendar
                       mode="single"
                       month={month}
@@ -352,11 +367,11 @@ export default function Home() {
                       className="min-h-[484px] w-full rounded-md border"
                       weekStartsOn={1}
                       classNames={{
-                        month: "space-y-4",
+                        month: "space-y-3",
                         table: "w-full border-collapse",
                         head_row: "flex",
                         head_cell:
-                          "text-muted-foreground rounded-md w-full font-normal text-[0.8rem] p-0 text-center",
+                          "text-muted-foreground/70 rounded-md w-full font-medium text-[0.7rem] p-0 text-center tracking-wide uppercase",
                         row: "flex w-full",
                         cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
                         day: "h-16 w-16 p-0 font-normal aria-selected:opacity-100",
@@ -364,8 +379,8 @@ export default function Home() {
                         day_selected:
                           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                         day_today: "bg-accent text-accent-foreground",
-                        day_outside: "day-outside text-muted-foreground opacity-50",
-                        day_disabled: "text-muted-foreground opacity-50",
+                        day_outside: "day-outside text-muted-foreground opacity-30",
+                        day_disabled: "text-muted-foreground opacity-30",
                         day_range_middle:
                           "aria-selected:bg-accent aria-selected:text-accent-foreground",
                         day_hidden: "invisible",

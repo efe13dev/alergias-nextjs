@@ -71,137 +71,162 @@ export default function DayEditor({
   const isPendingAppointment = appointment?.status === "pendiente";
   const hasNotes = Boolean(notes.trim());
 
+  const symptomOptions: {
+    value: NonNullable<SymptomLevel>;
+    label: string;
+    dotClass: string;
+    borderClass: string;
+  }[] = [
+    {
+      value: "green",
+      label: "Sin síntomas",
+      dotClass: "bg-emerald-300/90 dark:bg-emerald-500/60",
+      borderClass: "border-emerald-200/80 dark:border-emerald-500/30",
+    },
+    {
+      value: "yellow",
+      label: "Leves",
+      dotClass: "bg-amber-300/90 dark:bg-yellow-400/60",
+      borderClass: "border-amber-200/80 dark:border-yellow-500/30",
+    },
+    {
+      value: "orange",
+      label: "Moderados",
+      dotClass: "bg-orange-300/90 dark:bg-orange-500/60",
+      borderClass: "border-orange-200/80 dark:border-orange-500/30",
+    },
+    {
+      value: "red",
+      label: "Graves",
+      dotClass: "bg-rose-300/90 dark:bg-rose-500/60",
+      borderClass: "border-rose-200/80 dark:border-rose-500/30",
+    },
+  ];
+
+  const medicationOptions: { id: Medication; label: string; color: string }[] = [
+    {
+      id: "Bilaxten",
+      label: "Bilaxten",
+      color: "border-sky-200/80 bg-sky-50/60 dark:border-sky-500/30 dark:bg-sky-900/15",
+    },
+    {
+      id: "Relvar",
+      label: "Relvar",
+      color: "border-violet-200/80 bg-violet-50/60 dark:border-violet-500/30 dark:bg-violet-900/15",
+    },
+    {
+      id: "Ventolin",
+      label: "Ventolin",
+      color: "border-teal-200/80 bg-teal-50/60 dark:border-teal-500/30 dark:bg-teal-900/15",
+    },
+    {
+      id: "Dymista",
+      label: "Dymista",
+      color: "border-rose-200/80 bg-rose-50/60 dark:border-rose-500/30 dark:bg-rose-900/15",
+    },
+  ];
+
   return (
-    <div className="space-y-4 py-1">
-      <div className="space-y-2.5">
-        <h3 className="font-serif text-lg tracking-tight">Nivel de síntomas</h3>
+    <div className="space-y-5 py-1">
+      {/* Nivel de síntomas */}
+      <div className="space-y-2">
+        <p className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+          Nivel de síntomas
+        </p>
         <RadioGroup
           value={symptomLevel || ""}
           onValueChange={(value) => setSymptomLevel(value as SymptomLevel)}
-          className="flex flex-col space-y-2"
+          className="grid grid-cols-2 gap-2"
         >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem
-              value="green"
-              id="green"
-              className="border-green-300 dark:border-emerald-500/60"
-            />
-            <Label htmlFor="green" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full border border-green-300 bg-green-200 dark:border-emerald-500/60 dark:bg-emerald-900/30" />
-              Verde (Sin síntomas)
-            </Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem
-              value="yellow"
-              id="yellow"
-              className="border-yellow-300 dark:border-yellow-500/70"
-            />
-            <Label htmlFor="yellow" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full border border-yellow-300 bg-yellow-200 dark:border-yellow-500/70 dark:bg-yellow-900/35" />
-              Amarillo (Síntomas leves)
-            </Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem
-              value="orange"
-              id="orange"
-              className="border-orange-300 dark:border-orange-500/80"
-            />
-            <Label htmlFor="orange" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full border border-orange-300 bg-orange-200 dark:border-orange-500/80 dark:bg-orange-950/45" />
-              Naranja (Síntomas moderados)
-            </Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem
-              value="red"
-              id="red"
-              className="border-red-300 dark:border-rose-500/60"
-            />
-            <Label htmlFor="red" className="flex items-center">
-              <span className="mr-2 h-4 w-4 rounded-full border border-red-300 bg-red-200 dark:border-rose-500/60 dark:bg-rose-900/25" />
-              Rojo (Síntomas graves)
-            </Label>
-          </div>
-          {/* Botón para eliminar el color (dejar por defecto) */}
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={() => setSymptomLevel(null)} type="button" size="sm">
-              Quitar color
-            </Button>
-          </div>
+          {symptomOptions.map(({ value, label, dotClass, borderClass }) => (
+            <div key={value} className="flex items-center">
+              <RadioGroupItem value={value} id={value} className="sr-only" />
+              <Label
+                htmlFor={value}
+                className={`border-border/50 flex w-full cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all ${
+                  symptomLevel === value
+                    ? `${borderClass} bg-muted/60 font-medium ring-1 ring-inset ${borderClass}`
+                    : "hover:bg-muted/40"
+                }`}
+              >
+                <span className={`h-3 w-3 flex-shrink-0 rounded-full ${dotClass}`} />
+                {label}
+              </Label>
+            </div>
+          ))}
         </RadioGroup>
+        {symptomLevel && (
+          <button
+            type="button"
+            onClick={() => setSymptomLevel(null)}
+            className="text-muted-foreground hover:text-foreground text-xs underline-offset-2 hover:underline"
+          >
+            Quitar selección
+          </button>
+        )}
       </div>
 
-      <div className="space-y-2.5">
-        <h3 className="font-serif text-lg tracking-tight">Medicamentos tomados</h3>
-        <div className="flex flex-col space-y-2">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="bilaxten"
-              checked={medications.includes("Bilaxten")}
-              onCheckedChange={() => handleMedicationToggle("Bilaxten")}
-            />
-            <Label htmlFor="bilaxten">Bilaxten</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="relvar"
-              checked={medications.includes("Relvar")}
-              onCheckedChange={() => handleMedicationToggle("Relvar")}
-            />
-            <Label htmlFor="relvar">Relvar</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="ventolin"
-              checked={medications.includes("Ventolin")}
-              onCheckedChange={() => handleMedicationToggle("Ventolin")}
-            />
-            <Label htmlFor="ventolin">Ventolin</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="dymista"
-              checked={medications.includes("Dymista")}
-              onCheckedChange={() => handleMedicationToggle("Dymista")}
-            />
-            <Label htmlFor="dymista">Dymista</Label>
-          </div>
+      {/* Medicamentos */}
+      <div className="space-y-2">
+        <p className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+          Medicamentos tomados
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {medicationOptions.map(({ id, label, color }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => handleMedicationToggle(id)}
+              className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all ${
+                medications.includes(id)
+                  ? `${color} font-medium ring-1 ring-inset ${color}`
+                  : "border-border/50 hover:bg-muted/40"
+              }`}
+            >
+              <Checkbox
+                id={id}
+                checked={medications.includes(id)}
+                onCheckedChange={() => handleMedicationToggle(id)}
+                className="pointer-events-none"
+                aria-hidden
+              />
+              <span>{label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200/70 dark:border-slate-800/80">
+      {/* Notas del día */}
+      <div className="border-border/40 rounded-lg border">
         <button
           type="button"
-          className="hover:bg-muted/60 flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition-colors"
+          className="hover:bg-muted/40 flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors"
           onClick={() => setIsNotesExpanded((prev) => !prev)}
           aria-expanded={isNotesExpanded}
         >
           <span className="flex items-center gap-2">
-            <span className="font-serif text-base tracking-tight">Notas del día</span>
+            <span className="text-sm font-medium">Notas del día</span>
             {hasNotes && (
-              <span className="rounded-md border border-amber-300/70 bg-amber-100 px-2 py-0.5 text-[11px] font-medium dark:border-amber-500/40 dark:bg-amber-900/25">
-                Tiene notas
+              <span className="rounded border border-amber-200/70 bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:border-amber-500/30 dark:bg-amber-900/20 dark:text-amber-300">
+                con notas
               </span>
             )}
           </span>
           <span className="text-muted-foreground text-xs">
-            {isNotesExpanded ? "Ocultar" : hasNotes ? "Mostrar" : "Añadir"}
+            {isNotesExpanded ? "Ocultar" : hasNotes ? "Ver" : "Añadir"}
           </span>
         </button>
-
         <div
-          className={`grid transition-all duration-300 ease-in-out ${
+          className={`grid transition-all duration-200 ease-in-out ${
             isNotesExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
           }`}
         >
           <div className="overflow-hidden">
-            <div className="space-y-3 px-3 pt-1 pb-3">
+            <div className="px-3 pb-3">
               <textarea
                 name="dayNotes"
-                className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
-                placeholder="Ej: Ese día había mucho polvo en el ambiente"
+                className="border-border/60 bg-muted/20 focus:border-border focus:ring-ring/20 min-h-20 w-full rounded-md border px-2.5 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+                placeholder="Ej: Ese día había mucho polvo en el ambiente…"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
@@ -210,63 +235,48 @@ export default function DayEditor({
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200/70 dark:border-slate-800/80">
+      {/* Cita del día */}
+      <div className="border-border/40 rounded-lg border">
         <button
           type="button"
-          className="hover:bg-muted/60 flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition-colors"
+          className="hover:bg-muted/40 flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors"
           onClick={() => setIsAppointmentExpanded((prev) => !prev)}
           aria-expanded={isAppointmentExpanded}
         >
           <span className="flex items-center gap-2">
-            <span className="font-serif text-base tracking-tight">Cita del día</span>
+            <span className="text-sm font-medium">Cita del día</span>
             {hasAppointment && (
               <span
-                className={`rounded-md border px-2 py-0.5 text-[11px] font-medium ${
+                className={`rounded border px-1.5 py-0.5 text-[10px] font-medium ${
                   isPendingAppointment
-                    ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
-                    : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
+                    ? "border-sky-200/70 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-900/20 dark:text-sky-300"
+                    : "border-emerald-200/70 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-900/20 dark:text-emerald-300"
                 }`}
               >
-                {isPendingAppointment ? "Tiene cita" : "Cita completada"}
+                {isPendingAppointment ? "pendiente" : "completada"}
               </span>
             )}
           </span>
           <span className="text-muted-foreground text-xs">
-            {isAppointmentExpanded ? "Ocultar" : hasAppointment ? "Mostrar" : "Añadir"}
+            {isAppointmentExpanded ? "Ocultar" : hasAppointment ? "Ver" : "Añadir"}
           </span>
         </button>
-
         <div
-          className={`grid transition-all duration-300 ease-in-out ${
+          className={`grid transition-all duration-200 ease-in-out ${
             isAppointmentExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
           }`}
         >
           <div className="overflow-hidden">
-            <div className="space-y-3 px-3 pt-1 pb-3">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Estado</p>
-                {hasAppointment && (
-                  <span
-                    className={`rounded-md border px-2 py-0.5 text-xs font-medium ${
-                      isPendingAppointment
-                        ? "border-sky-300/70 bg-sky-100 dark:border-sky-500/40 dark:bg-sky-900/25"
-                        : "border-emerald-300/70 bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-900/25"
-                    }`}
-                  >
-                    {isPendingAppointment ? "Pendiente" : "Completada"}
-                  </span>
-                )}
-              </div>
-
+            <div className="space-y-2.5 px-3 pb-3">
               <textarea
                 name="appointmentDescription"
-                className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 min-h-24 w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+                className="border-border/60 bg-muted/20 focus:border-border focus:ring-ring/20 min-h-20 w-full rounded-md border px-2.5 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
                 placeholder="Ej: Revisión con alergólogo a las 10:00"
                 value={appointmentDescription}
                 onChange={(e) => setAppointmentDescription(e.target.value)}
               />
               <p className="text-muted-foreground text-xs">
-                Mantén una única cita por día. Si guardas una descripción, se crea o actualiza.
+                Una cita por día. Si escribes una descripción, se crea o actualiza al guardar.
               </p>
               {hasAppointment && (
                 <div className="flex gap-2">
@@ -274,22 +284,24 @@ export default function DayEditor({
                     <Button
                       type="button"
                       variant="outline"
-                      className="flex-1"
+                      size="sm"
+                      className="flex-1 text-xs"
                       onClick={() => onCompleteAppointment(date)}
                     >
-                      Marcar como completada
+                      Marcar completada
                     </Button>
                   )}
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex-1"
+                    size="sm"
+                    className="flex-1 text-xs"
                     onClick={() => {
                       onRemoveAppointment(date);
                       setAppointmentDescription("");
                     }}
                   >
-                    Eliminar cita del día
+                    Eliminar cita
                   </Button>
                 </div>
               )}
@@ -298,8 +310,8 @@ export default function DayEditor({
         </div>
       </div>
 
-      <div className="border-border/50 flex justify-end border-t pt-4">
-        <Button onClick={handleSave} className="px-6 shadow-sm">
+      <div className="border-border/40 flex justify-end border-t pt-4">
+        <Button onClick={handleSave} size="sm" className="px-5">
           Guardar
         </Button>
       </div>
