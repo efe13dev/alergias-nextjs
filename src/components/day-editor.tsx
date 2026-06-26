@@ -171,11 +171,10 @@ export default function DayEditor({
         </p>
         <div className="grid grid-cols-2 gap-2">
           {medicationOptions.map(({ id, label, color }) => (
-            <button
+            <label
               key={id}
-              type="button"
-              onClick={() => handleMedicationToggle(id)}
-              className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all ${
+              htmlFor={id}
+              className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all ${
                 medications.includes(id)
                   ? `${color} font-medium ring-1 ring-inset ${color}`
                   : "border-border/50 hover:bg-muted/40"
@@ -189,7 +188,7 @@ export default function DayEditor({
                 aria-hidden
               />
               <span>{label}</span>
-            </button>
+            </label>
           ))}
         </div>
       </div>

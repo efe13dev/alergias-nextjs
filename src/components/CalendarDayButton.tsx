@@ -97,7 +97,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
                 <rect x="3" y="5" width="18" height="16" rx="2" ry="2" />
               </svg>
             </span>
-            <span className="bg-background/95 border-border/70 text-foreground pointer-events-none invisible absolute right-0 bottom-[calc(100%+6px)] z-30 w-44 rounded-lg border p-2 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/appointment:visible group-focus-within/appointment:opacity-100 group-hover/appointment:visible group-hover/appointment:opacity-100">
+            <span className="bg-background/95 border-border/70 text-foreground pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border p-2 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/appointment:visible group-focus-within/appointment:opacity-100 group-hover/appointment:visible group-hover/appointment:opacity-100">
               <span
                 className={`block font-semibold ${
                   isPendingAppointment
