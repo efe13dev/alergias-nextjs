@@ -42,33 +42,30 @@ export default async function RootLayout({
         {/* Avisa al navegador de los esquemas soportados para controles nativos */}
         <meta name="color-scheme" content="dark light" />
         {/*
-          Pre-estilo fijo (dark) para evitar flash blanco en el primer paint.
-          El script inline lo ajusta inmediatamente si el tema real es claro.
-          El contenido nunca varía entre SSR y cliente → sin mismatch de hidratación.
+          El <style> de pre-paint se inyecta via JS (beforeInteractive) para que
+          React nunca gestione ese nodo y no haya hydration mismatch.
+          El script detecta el tema real (cookie → localStorage → sistema) y
+          aplica clase + color de fondo antes del primer paint.
         */}
-        <style id="theme-prestyle">{`html,body{background-color:oklch(0.145 0 0);color:oklch(0.985 0 0)}`}</style>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`
-            (function(){
-              try {
-                var m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
-                var cookieTheme = m ? decodeURIComponent(m[1]) : null;
-                var stored = localStorage.getItem('theme');
-                var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                var theme = cookieTheme || stored || (systemDark ? 'dark' : 'light');
-                var root = document.documentElement;
-                if (theme === 'dark') {
-                  root.classList.add('dark');
-                } else {
-                  root.classList.remove('dark');
-                  // Tema claro: ajusta el pre-estilo para evitar flash oscuro
-                  var pre = document.getElementById('theme-prestyle');
-                  if (pre) pre.textContent = 'html,body{background-color:oklch(1 0 0);color:oklch(0.145 0 0)}';
-                }
-              } catch(e) {}
-            })();
-          `}
-        </Script>
+        <Script id="theme-init" strategy="beforeInteractive">{`
+          (function(){
+            try {
+              var m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
+              var theme = (m ? decodeURIComponent(m[1]) : null)
+                || localStorage.getItem('theme')
+                || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+              var root = document.documentElement;
+              var dark = theme === 'dark';
+              root.classList.toggle('dark', dark);
+              var s = document.createElement('style');
+              s.id = 'theme-prestyle';
+              s.textContent = dark
+                ? 'html,body{background-color:oklch(0.145 0 0);color:oklch(0.985 0 0)}'
+                : 'html,body{background-color:oklch(0.978 0.005 75);color:oklch(0.20 0.018 45)}';
+              document.head.appendChild(s);
+            } catch(e) {}
+          })();
+        `}</Script>
       </head>
       <body className={`${dmSans.variable} ${dmSerif.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
