@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import html2canvaspro from "html2canvas-pro";
 import { CalendarDays, Download } from "lucide-react";
 import { useState } from "react";
 
@@ -109,9 +110,26 @@ export default function Home() {
     setIsDialogOpen(true);
   };
 
-  // Función para exportar la vista como imagen/PDF usando el diálogo nativo de impresión
-  const handleExportJPG = () => {
-    window.print();
+  // Función para exportar la vista como imagen JPG
+  const handleExportJPG = async () => {
+    const selectedMonthObj = months.find((month) => getMonthKey(month) === selectedTab);
+    const mesActual = selectedMonthObj
+      ? format(selectedMonthObj, "MMMM", { locale: es })
+      : format(months[0], "MMMM", { locale: es });
+    const nombreArchivo = `alergia-captura-${mesActual}.jpg`;
+
+    const canvas = await html2canvaspro(document.body, {
+      useCORS: true,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      scrollX: 0,
+      scrollY: 0,
+    });
+    const link = document.createElement("a");
+
+    link.href = canvas.toDataURL("image/jpeg");
+    link.download = nombreArchivo;
+    link.click();
   };
 
   return (
