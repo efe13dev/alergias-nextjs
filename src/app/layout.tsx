@@ -30,23 +30,23 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Lee cookie del tema en SSR (Next 15: cookies() es async)
+  // Lee cookie del tema en SSR para poner la clase correcta en <html>
+  // y evitar flash. Si no hay cookie, asumimos dark (default de la app).
   const cookieStore = await cookies();
   const themeCookie = cookieStore.get("theme")?.value;
-  const isDark = themeCookie ? themeCookie === "dark" : null; // null => desconocido
-  const htmlClass = isDark === true ? "dark" : isDark === false ? "" : "dark"; // por defecto dark para evitar flash claro
-  const preBg = isDark === false ? "oklch(1 0 0)" : "oklch(0.145 0 0)";
-  const preFg = isDark === false ? "oklch(0.145 0 0)" : "oklch(0.985 0 0)";
+  const htmlClass = themeCookie === "light" ? "" : "dark";
 
   return (
     <html lang="en" className={htmlClass} suppressHydrationWarning>
       <head>
         {/* Avisa al navegador de los esquemas soportados para controles nativos */}
         <meta name="color-scheme" content="dark light" />
-        {/* Pre-estilo mínimo para evitar flash antes de cargar CSS, acorde al tema detectado */}
-        <style id="theme-prestyle">{`
-          html, body { background-color: ${preBg}; color: ${preFg}; }
-        `}</style>
+        {/*
+          Pre-estilo fijo (dark) para evitar flash blanco en el primer paint.
+          El script inline lo ajusta inmediatamente si el tema real es claro.
+          El contenido nunca varía entre SSR y cliente → sin mismatch de hidratación.
+        */}
+        <style id="theme-prestyle">{`html,body{background-color:oklch(0.145 0 0);color:oklch(0.985 0 0)}`}</style>
         <Script id="theme-init" strategy="beforeInteractive">
           {`
             (function(){
@@ -61,9 +61,9 @@ export default async function RootLayout({
                   root.classList.add('dark');
                 } else {
                   root.classList.remove('dark');
-                  // Quita el pre-estilo si el tema real es claro
+                  // Tema claro: ajusta el pre-estilo para evitar flash oscuro
                   var pre = document.getElementById('theme-prestyle');
-                  if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+                  if (pre) pre.textContent = 'html,body{background-color:oklch(1 0 0);color:oklch(0.145 0 0)}';
                 }
               } catch(e) {}
             })();
