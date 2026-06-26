@@ -167,9 +167,9 @@ export default function Home() {
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  { dot: "bg-emerald-300/90 dark:bg-emerald-500/60", label: "Bien" },
-                  { dot: "bg-amber-300/90 dark:bg-yellow-400/60", label: "Regular" },
-                  { dot: "bg-orange-400/90 dark:bg-orange-500/70", label: "Mal" },
+                  { dot: "bg-emerald-400 dark:bg-emerald-500/60", label: "Bien" },
+                  { dot: "bg-amber-400 dark:bg-yellow-400/60", label: "Regular" },
+                  { dot: "bg-orange-500 dark:bg-orange-500/70", label: "Mal" },
                 ].map(({ dot, label }) => (
                   <span
                     key={label}

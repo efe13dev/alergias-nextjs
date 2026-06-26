@@ -81,23 +81,23 @@ export default function DayEditor({
     {
       value: "green",
       label: "Bien",
-      dotClass: "bg-emerald-300/90 dark:bg-emerald-500/60",
-      borderClass: "border-emerald-300/80 dark:border-emerald-500/40",
-      activeBg: "bg-emerald-50/80 dark:bg-emerald-900/20",
+      dotClass: "bg-emerald-400 dark:bg-emerald-500/60",
+      borderClass: "border-emerald-300 dark:border-emerald-500/40",
+      activeBg: "bg-emerald-100 dark:bg-emerald-900/20",
     },
     {
       value: "yellow",
       label: "Regular",
-      dotClass: "bg-amber-300/90 dark:bg-yellow-400/60",
-      borderClass: "border-amber-300/80 dark:border-yellow-500/40",
-      activeBg: "bg-amber-50/80 dark:bg-yellow-900/20",
+      dotClass: "bg-amber-400 dark:bg-yellow-400/60",
+      borderClass: "border-amber-300 dark:border-yellow-500/40",
+      activeBg: "bg-amber-100 dark:bg-yellow-900/20",
     },
     {
       value: "orange",
       label: "Mal",
-      dotClass: "bg-orange-400/90 dark:bg-orange-500/70",
-      borderClass: "border-orange-300/90 dark:border-orange-500/40",
-      activeBg: "bg-orange-100/70 dark:bg-orange-900/25",
+      dotClass: "bg-orange-500 dark:bg-orange-500/70",
+      borderClass: "border-orange-400 dark:border-orange-500/40",
+      activeBg: "bg-orange-200 dark:bg-orange-900/25",
     },
   ];
 
