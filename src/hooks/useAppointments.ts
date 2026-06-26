@@ -2,13 +2,13 @@
 
 import type { Appointment } from "@/app/types";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "pendingAppointments";
 
 export function useAppointments() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [initialized, setInitialized] = useState(false);
+  const initialized = useRef(false);
 
   // Cargar desde localStorage al montar
   useEffect(() => {
@@ -17,15 +17,15 @@ export function useAppointments() {
     if (saved) {
       setAppointments(JSON.parse(saved) as Appointment[]);
     }
-    setInitialized(true);
+    initialized.current = true;
   }, []);
 
   // Persistir en localStorage cuando cambian los datos
   useEffect(() => {
-    if (initialized) {
+    if (initialized.current) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
     }
-  }, [appointments, initialized]);
+  }, [appointments]);
 
   const getAppointmentByDate = (date: Date): Appointment | undefined => {
     const forDate = appointments.filter(

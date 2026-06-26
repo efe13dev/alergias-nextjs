@@ -13,13 +13,13 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 function applyThemeClass(theme: Theme) {
-  const root = document.documentElement;
+  document.documentElement.classList.toggle("dark", theme === "dark");
+}
 
-  if (theme === "dark") {
-    root.classList.add("dark");
-  } else {
-    root.classList.remove("dark");
-  }
+function removePrestyle() {
+  try {
+    document.getElementById("theme-prestyle")?.remove();
+  } catch {}
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -38,11 +38,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       setThemeState(initial);
       applyThemeClass(initial);
       // Retira el pre-estilo de primer paint para no bloquear cambios posteriores de tema
-      try {
-        const pre = document.getElementById("theme-prestyle");
-
-        if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
-      } catch {}
+      removePrestyle();
     } catch {}
   }, []);
 
@@ -55,11 +51,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     } catch {}
     applyThemeClass(t);
     // Asegura que el pre-estilo no permanezca tras un cambio de tema
-    try {
-      const pre = document.getElementById("theme-prestyle");
-
-      if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
-    } catch {}
+    removePrestyle();
   }, []);
 
   const toggle = useCallback(() => {

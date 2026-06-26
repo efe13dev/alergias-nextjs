@@ -35,17 +35,3 @@ export function getDayAccentBySymptomLevel(symptomLevel: string | null | undefin
   }
 }
 
-// Posición de la barra de acento por nivel (arriba para amarillo)
-export function getDayAccentPositionBySymptomLevel(
-  symptomLevel: string | null | undefined,
-): "top-0" | "bottom-0" | "" {
-  switch (symptomLevel) {
-    case "yellow":
-      return "top-0";
-    case "green":
-    case "orange":
-      return "bottom-0";
-    default:
-      return "";
-  }
-}

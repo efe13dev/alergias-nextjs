@@ -1,7 +1,18 @@
-import type { Appointment, DayData } from "@/app/types";
+import type { Appointment, DayData, Medication } from "@/app/types";
 import type React from "react";
 
 import { getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
+
+const MED_CLASS: Record<Medication, string> = {
+  Bilaxten:
+    "text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-[10px] font-semibold dark:border-sky-500/80 dark:bg-sky-900/50",
+  Relvar:
+    "text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-[10px] font-semibold dark:border-violet-500/80 dark:bg-violet-900/50",
+  Ventolin:
+    "text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-[10px] font-semibold dark:border-teal-500/80 dark:bg-teal-900/50",
+  Dymista:
+    "text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-[10px] font-semibold dark:border-rose-500/80 dark:bg-rose-900/50",
+};
 
 type Props = {
   date: Date;
@@ -115,45 +126,16 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
         {dayMeds.length > 0 && (
           <div className="z-10 flex flex-col items-center justify-center gap-0.5">
             {/* Dividir los medicamentos en dos filas de máximo 2 elementos cada una */}
-            <div className="flex justify-center gap-1">
-              {dayMeds.slice(0, 2).map((med) => (
-                <span
-                  key={med}
-                  className={
-                    med === "Bilaxten"
-                      ? "text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-[10px] font-semibold dark:border-sky-500/80 dark:bg-sky-900/50"
-                      : med === "Relvar"
-                        ? "text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-[10px] font-semibold dark:border-violet-500/80 dark:bg-violet-900/50"
-                        : med === "Ventolin"
-                          ? "text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-[10px] font-semibold dark:border-teal-500/80 dark:bg-teal-900/50"
-                          : "text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-[10px] font-semibold dark:border-rose-500/80 dark:bg-rose-900/50"
-                  }
-                  title={med}
-                >
-                  {med[0]}
-                </span>
-              ))}
-            </div>
-            {dayMeds.length > 2 && (
-              <div className="mt-0 flex justify-center gap-1">
-                {dayMeds.slice(2, 4).map((med) => (
-                  <span
-                    key={med}
-                    className={
-                      med === "Bilaxten"
-                        ? "text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-[10px] font-semibold dark:border-sky-500/60 dark:bg-sky-900/30"
-                        : med === "Relvar"
-                          ? "text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-[10px] font-semibold dark:border-violet-500/60 dark:bg-violet-900/30"
-                          : med === "Ventolin"
-                            ? "text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-[10px] font-semibold dark:border-teal-500/60 dark:bg-teal-900/30"
-                            : "text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-[10px] font-semibold dark:border-rose-500/60 dark:bg-rose-900/30"
-                    }
-                    title={med}
-                  >
-                    {med[0]}
-                  </span>
-                ))}
-              </div>
+            {[dayMeds.slice(0, 2), dayMeds.slice(2, 4)].map((row, rowIdx) =>
+              row.length > 0 ? (
+                <div key={rowIdx} className="flex justify-center gap-1">
+                  {row.map((med) => (
+                    <span key={med} className={MED_CLASS[med]} title={med}>
+                      {med[0]}
+                    </span>
+                  ))}
+                </div>
+              ) : null,
             )}
           </div>
         )}

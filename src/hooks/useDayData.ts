@@ -2,13 +2,13 @@
 
 import type { DayData, Medication, SymptomLevel } from "@/app/types";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "allergyTrackerData";
 
 export function useDayData() {
   const [dayData, setDayData] = useState<DayData[]>([]);
-  const [initialized, setInitialized] = useState(false);
+  const initialized = useRef(false);
 
   // Cargar desde localStorage al montar
   useEffect(() => {
@@ -17,15 +17,15 @@ export function useDayData() {
     if (saved) {
       setDayData(JSON.parse(saved) as DayData[]);
     }
-    setInitialized(true);
+    initialized.current = true;
   }, []);
 
   // Persistir en localStorage cuando cambian los datos
   useEffect(() => {
-    if (initialized) {
+    if (initialized.current) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dayData));
     }
-  }, [dayData, initialized]);
+  }, [dayData]);
 
   const getDayData = (date: Date): DayData | undefined =>
     dayData.find((item) => new Date(item.date).toDateString() === date.toDateString());

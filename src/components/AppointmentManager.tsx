@@ -2,7 +2,6 @@ import type { Appointment } from "@/app/types";
 import type React from "react";
 
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   appointments: Appointment[];
@@ -52,7 +51,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
 
     const newAppointment: Appointment = {
       ...form,
-      id: uuidv4(),
+      id: crypto.randomUUID(),
       status: "pendiente",
     };
 

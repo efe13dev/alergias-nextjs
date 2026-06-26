@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import html2canvaspro from "html2canvas-pro";
+import { CalendarDays, Download } from "lucide-react";
 import { useState } from "react";
 
 import AppointmentManager from "../components/AppointmentManager";
@@ -35,28 +35,8 @@ export default function Home() {
 
   const getMonthKey = (date: Date) => format(date, "yyyy-MM");
 
-  // Meses que queremos mostrar
-  const trackingStartYear = 2025;
-  const months = [
-    new Date(trackingStartYear, 3, 1), // Abril (mes 3)
-    new Date(trackingStartYear, 4, 1), // Mayo (mes 4)
-    new Date(trackingStartYear, 5, 1), // Junio (mes 5)
-    new Date(trackingStartYear, 6, 1), // Julio (mes 6)
-    new Date(trackingStartYear, 7, 1), // Agosto (mes 7)
-    new Date(trackingStartYear, 8, 1), // Septiembre (mes 8)
-    new Date(trackingStartYear, 9, 1), // Octubre (mes 9)
-    new Date(trackingStartYear, 10, 1), // Noviembre (mes 10)
-    new Date(trackingStartYear, 11, 1), // Diciembre (mes 11)
-    new Date(trackingStartYear + 1, 0, 1), // Enero (mes 0 del siguiente año)
-    new Date(trackingStartYear + 1, 1, 1), // Febrero (mes 1 del siguiente año)
-    new Date(trackingStartYear + 1, 2, 1), // Marzo (mes 2 del siguiente año)
-    new Date(trackingStartYear + 1, 3, 1), // Abril (mes 3 del siguiente año)
-    new Date(trackingStartYear + 1, 4, 1), // Mayo (mes 4 del siguiente año)
-    new Date(trackingStartYear + 1, 5, 1), // Junio (mes 5 del siguiente año)
-    new Date(trackingStartYear + 1, 6, 1), // Julio (mes 6 del siguiente año)
-    new Date(trackingStartYear + 1, 7, 1), // Agosto (mes 7 del siguiente año)
-    new Date(trackingStartYear + 1, 8, 1), // Septiembre (mes 8 del siguiente año)
-  ];
+  // Meses a mostrar: desde Abril 2025 durante 18 meses
+  const months = Array.from({ length: 18 }, (_, i) => new Date(2025, 3 + i, 1));
 
   const monthsByYear = months.reduce<Record<number, Date[]>>((acc, month) => {
     const year = month.getFullYear();
@@ -129,26 +109,9 @@ export default function Home() {
     setIsDialogOpen(true);
   };
 
-  // Función para exportar la vista como imagen JPG
-  const handleExportJPG = async () => {
-    const selectedMonthObj = months.find((month) => getMonthKey(month) === selectedTab);
-    const mesActual = selectedMonthObj
-      ? format(selectedMonthObj, "MMMM", { locale: es })
-      : format(months[0], "MMMM", { locale: es });
-    const nombreArchivo = `alergia-captura-${mesActual}.jpg`;
-
-    const canvas = await html2canvaspro(document.body, {
-      useCORS: true,
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-      scrollX: 0,
-      scrollY: 0,
-    });
-    const link = document.createElement("a");
-
-    link.href = canvas.toDataURL("image/jpeg");
-    link.download = nombreArchivo;
-    link.click();
+  // Función para exportar la vista como imagen/PDF usando el diálogo nativo de impresión
+  const handleExportJPG = () => {
+    window.print();
   };
 
   return (
@@ -170,21 +133,7 @@ export default function Home() {
                 type="button"
                 className="text-muted-foreground hover:text-foreground border-border/60 hover:border-border hover:bg-muted/50 inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-3.5 w-3.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
-                  />
-                </svg>
+                <Download className="h-3.5 w-3.5" aria-hidden="true" />
                 Exportar
               </button>
               <ThemeToggle />
@@ -276,22 +225,7 @@ export default function Home() {
               type="button"
               className="text-muted-foreground hover:text-foreground border-border/60 hover:border-border hover:bg-muted/50 inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium transition-colors"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-label="Gestionar citas"
-              >
-                <title>Gestionar citas</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
               Citas
             </button>
           </div>
