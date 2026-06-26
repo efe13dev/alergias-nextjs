@@ -7,6 +7,33 @@ export function cn(...inputs: ClassValue[]) {
 
 // Devuelve la clase de color de fondo según el nivel de síntoma
 // Niveles: green = Bien, yellow = Regular, orange = Mal
+// Colores inline para bg y border — usados también en la exportación JPG.
+// Se usan style inline en CalendarDayButton para evitar que html2canvas-pro
+// falle al resolver variables oklch() de Tailwind.
+export const DAY_COLORS: Record<
+  string,
+  { bg: string; border: string; bgHover: string; accent: string }
+> = {
+  green: {
+    bg: "#d1fae5",
+    border: "#6ee7b7",
+    bgHover: "#a7f3d0",
+    accent: "#34d399",
+  },
+  yellow: {
+    bg: "#fef3c7",
+    border: "#fcd34d",
+    bgHover: "#fde68a",
+    accent: "#f59e0b",
+  },
+  orange: {
+    bg: "#fed7aa",
+    border: "#fb923c",
+    bgHover: "#fdba74",
+    accent: "#f97316",
+  },
+};
+
 export function getDayColorBySymptomLevel(symptomLevel: string | null | undefined): string {
   switch (symptomLevel) {
     case "green":

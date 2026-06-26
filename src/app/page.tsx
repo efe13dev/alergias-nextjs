@@ -118,16 +118,19 @@ export default function Home() {
       : format(months[0], "MMMM", { locale: es });
     const nombreArchivo = `alergia-captura-${mesActual}.jpg`;
 
-    const canvas = await html2canvaspro(document.body, {
+    // Capturamos solo el card del mes visible; backgroundColor explícito en hex
+    // para evitar que html2canvas-pro falle con colores oklch() de las variables CSS.
+    const target =
+      (document.querySelector(".calendar-export-card") as HTMLElement) ?? document.body;
+
+    const canvas = await html2canvaspro(target, {
       useCORS: true,
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-      scrollX: 0,
-      scrollY: 0,
+      backgroundColor: "#fffdf8",
+      scale: 2,
     });
     const link = document.createElement("a");
 
-    link.href = canvas.toDataURL("image/jpeg");
+    link.href = canvas.toDataURL("image/jpeg", 0.95);
     link.download = nombreArchivo;
     link.click();
   };

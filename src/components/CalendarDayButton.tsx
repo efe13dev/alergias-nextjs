@@ -1,7 +1,7 @@
 import type { Appointment, DayData, Medication } from "@/app/types";
 import type React from "react";
 
-import { getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
+import { DAY_COLORS, getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
 
 const MED_CLASS: Record<Medication, string> = {
   Bilaxten:
@@ -22,8 +22,10 @@ type Props = {
 };
 
 export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, appointment }) => {
-  const dayColor = getDayColorBySymptomLevel(dayData?.symptomLevel);
-  const accentClass = getDayAccentBySymptomLevel(dayData?.symptomLevel);
+  const symptomLevel = dayData?.symptomLevel ?? null;
+  const dayColor = getDayColorBySymptomLevel(symptomLevel);
+  const accentClass = getDayAccentBySymptomLevel(symptomLevel);
+  const colors = symptomLevel ? DAY_COLORS[symptomLevel] : null;
   const dayMeds = dayData?.medications || [];
   const noteText = dayData?.notes?.trim() ?? "";
   const hasNotes = Boolean(dayData?.notes?.trim());
@@ -41,6 +43,11 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
             onClick(date);
           }
         }}
+        style={
+          colors
+            ? { backgroundColor: colors.bg, borderColor: colors.border, borderWidth: 1 }
+            : undefined
+        }
         className={`relative min-h-[70px] min-w-[70px] cursor-pointer flex-col items-center rounded-lg p-1 font-normal transition-all duration-150 hover:scale-[1.03] hover:shadow-md focus-visible:scale-[1.03] focus-visible:shadow-md aria-selected:opacity-100 ${dayColor} ${
           hasAppointment ? "ring-1 ring-sky-400/50" : ""
         } flex`}
@@ -142,6 +149,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
         {accentClass && (
           <span
             aria-hidden="true"
+            style={colors ? { backgroundColor: colors.accent } : undefined}
             className={`pointer-events-none absolute right-0 bottom-0 left-0 z-0 h-1.5 rounded-b ${accentClass}`}
           />
         )}
