@@ -1,6 +1,7 @@
 import type { Appointment, DayData, Medication } from "@/app/types";
 import type React from "react";
 
+import { useTheme } from "@/components/theme-provider";
 import { DAY_COLORS, getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
 
 const MED_CLASS: Record<Medication, string> = {
@@ -22,10 +23,17 @@ type Props = {
 };
 
 export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, appointment }) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const symptomLevel = dayData?.symptomLevel ?? null;
   const dayColor = getDayColorBySymptomLevel(symptomLevel);
   const accentClass = getDayAccentBySymptomLevel(symptomLevel);
   const colors = symptomLevel ? DAY_COLORS[symptomLevel] : null;
+  const activeColors = colors
+    ? isDark
+      ? { bg: colors.dark.bg, border: colors.dark.border, accent: colors.dark.accent }
+      : { bg: colors.bg, border: colors.border, accent: colors.accent }
+    : null;
   const dayMeds = dayData?.medications || [];
   const noteText = dayData?.notes?.trim() ?? "";
   const hasNotes = Boolean(dayData?.notes?.trim());
@@ -44,8 +52,8 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
           }
         }}
         style={
-          colors
-            ? { backgroundColor: colors.bg, borderColor: colors.border, borderWidth: 1 }
+          activeColors
+            ? { backgroundColor: activeColors.bg, borderColor: activeColors.border, borderWidth: 1 }
             : undefined
         }
         className={`relative min-h-[70px] min-w-[70px] cursor-pointer flex-col items-center rounded-lg p-1 font-normal transition-all duration-150 hover:scale-[1.03] hover:shadow-md focus-visible:scale-[1.03] focus-visible:shadow-md aria-selected:opacity-100 ${dayColor} ${
@@ -149,7 +157,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
         {accentClass && (
           <span
             aria-hidden="true"
-            style={colors ? { backgroundColor: colors.accent } : undefined}
+            style={activeColors ? { backgroundColor: activeColors.accent } : undefined}
             className={`pointer-events-none absolute right-0 bottom-0 left-0 z-0 h-1.5 rounded-b ${accentClass}`}
           />
         )}

@@ -10,27 +10,31 @@ export function cn(...inputs: ClassValue[]) {
 // Colores inline para bg y border — usados también en la exportación JPG.
 // Se usan style inline en CalendarDayButton para evitar que html2canvas-pro
 // falle al resolver variables oklch() de Tailwind.
+// Cada nivel tiene variantes light y dark con contraste adecuado en ambos modos.
 export const DAY_COLORS: Record<
   string,
-  { bg: string; border: string; bgHover: string; accent: string }
+  { bg: string; border: string; bgHover: string; accent: string; dark: { bg: string; border: string; accent: string } }
 > = {
   green: {
     bg: "#d1fae5",
     border: "#6ee7b7",
     bgHover: "#a7f3d0",
     accent: "#34d399",
+    dark: { bg: "#064e3b", border: "#059669", accent: "#34d399" },
   },
   yellow: {
     bg: "#fef3c7",
     border: "#fcd34d",
     bgHover: "#fde68a",
     accent: "#f59e0b",
+    dark: { bg: "#451a03", border: "#d97706", accent: "#f59e0b" },
   },
   orange: {
     bg: "#fed7aa",
     border: "#fb923c",
     bgHover: "#fdba74",
     accent: "#f97316",
+    dark: { bg: "#431407", border: "#ea580c", accent: "#f97316" },
   },
 };
 

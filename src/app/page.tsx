@@ -287,9 +287,14 @@ export default function Home() {
               <TabsContent key={month.toISOString()} value={getMonthKey(month)} className="mt-0">
                 <Card className="calendar-export-card border-border/30 border shadow-none">
                   <CardHeader className="px-5 pt-4 pb-2">
-                    <CardTitle className="font-serif text-lg tracking-tight capitalize">
-                      {format(month, "MMMM yyyy", { locale: es })}
-                    </CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="font-serif text-lg tracking-tight capitalize">
+                        {format(month, "MMMM yyyy", { locale: es })}
+                      </CardTitle>
+                      <span className="text-muted-foreground/60 text-[10px] tracking-widest uppercase">
+                        Seguimiento de Alergia
+                      </span>
+                    </div>
                   </CardHeader>
                   <CardContent className="px-3 pb-4">
                     <Calendar
@@ -343,6 +348,89 @@ export default function Home() {
                         },
                       }}
                     />
+
+                    {/* Leyenda incluida dentro del card — visible en pantalla y en la exportación */}
+                    <div className="border-border/30 mt-4 border-t pt-3">
+                      <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
+                        {/* Síntomas */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground/70 text-[10px] font-semibold tracking-widest uppercase">
+                            Síntomas
+                          </span>
+                          <div className="flex gap-2">
+                            {[
+                              { bg: "#d1fae5", border: "#6ee7b7", accent: "#34d399", label: "Bien" },
+                              { bg: "#fef3c7", border: "#fcd34d", accent: "#f59e0b", label: "Regular" },
+                              { bg: "#fed7aa", border: "#fb923c", accent: "#f97316", label: "Mal" },
+                            ].map(({ bg, border, accent, label }) => (
+                              <span key={label} className="flex items-center gap-1 text-[11px]">
+                                <span
+                                  style={{ backgroundColor: bg, borderColor: border, borderWidth: 1, borderStyle: "solid" }}
+                                  className="inline-flex h-4 w-4 rounded-sm relative overflow-hidden"
+                                >
+                                  <span
+                                    style={{ backgroundColor: accent }}
+                                    className="absolute right-0 bottom-0 left-0 h-1"
+                                  />
+                                </span>
+                                <span className="text-muted-foreground">{label}</span>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Separador */}
+                        <span className="text-border hidden h-3 w-px self-center bg-current sm:inline-block" />
+
+                        {/* Medicamentos */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground/70 text-[10px] font-semibold tracking-widest uppercase">
+                            Medicamentos
+                          </span>
+                          <div className="flex gap-1.5">
+                            {[
+                              { letter: "B", bg: "#eff6ff", border: "#93c5fd", label: "Bilaxten" },
+                              { letter: "R", bg: "#f5f3ff", border: "#c4b5fd", label: "Relvar" },
+                              { letter: "V", bg: "#f0fdfa", border: "#5eead4", label: "Ventolin" },
+                              { letter: "D", bg: "#fff1f2", border: "#fda4af", label: "Dymista" },
+                            ].map(({ letter, bg, border, label }) => (
+                              <span
+                                key={label}
+                                style={{ backgroundColor: bg, borderColor: border, borderWidth: 1, borderStyle: "solid" }}
+                                className="text-foreground inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium"
+                              >
+                                <span className="font-bold">{letter}</span>
+                                <span className="text-muted-foreground">{label}</span>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Separador */}
+                        <span className="text-border hidden h-3 w-px self-center bg-current sm:inline-block" />
+
+                        {/* Citas y notas */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground/70 text-[10px] font-semibold tracking-widest uppercase">
+                            Otros
+                          </span>
+                          <div className="flex gap-2">
+                            {[
+                              { bg: "#bfdbfe", border: "#60a5fa", label: "Cita médica" },
+                              { bg: "#fde68a", border: "#fbbf24", label: "Nota del día" },
+                            ].map(({ bg, border, label }) => (
+                              <span key={label} className="flex items-center gap-1 text-[11px]">
+                                <span
+                                  style={{ backgroundColor: bg, borderColor: border, borderWidth: 1, borderStyle: "solid" }}
+                                  className="inline-flex h-4 w-4 items-center justify-center rounded-full"
+                                />
+                                <span className="text-muted-foreground">{label}</span>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
