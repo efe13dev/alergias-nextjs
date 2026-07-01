@@ -30,11 +30,11 @@ export const DAY_COLORS: Record<
     dark: { bg: "#451a03", border: "#d97706", accent: "#f59e0b" },
   },
   orange: {
-    bg: "#fed7aa",
-    border: "#fb923c",
-    bgHover: "#fdba74",
-    accent: "#f97316",
-    dark: { bg: "#431407", border: "#ea580c", accent: "#f97316" },
+    bg: "#fee2e2",
+    border: "#f87171",
+    bgHover: "#fecaca",
+    accent: "#ef4444",
+    dark: { bg: "#450a0a", border: "#dc2626", accent: "#ef4444" },
   },
 };
 
@@ -45,8 +45,8 @@ export function getDayColorBySymptomLevel(symptomLevel: string | null | undefine
     case "yellow":
       return "text-foreground border border-amber-300 bg-amber-100 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-yellow-500/30 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/30";
     case "orange":
-      // Orange es ahora el nivel máximo (Mal) — fondo y borde algo más intensos
-      return "text-foreground border border-orange-400 bg-orange-200 hover:bg-orange-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-orange-500/40 dark:bg-orange-900/25 dark:hover:bg-orange-900/35";
+      // Orange (Mal) — rojo para distinguirse claramente de Regular (amarillo)
+      return "text-foreground border border-red-400 bg-red-100 hover:bg-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-red-500/50 dark:bg-red-950/40 dark:hover:bg-red-950/55";
     default:
       return "";
   }
@@ -60,7 +60,7 @@ export function getDayAccentBySymptomLevel(symptomLevel: string | null | undefin
     case "yellow":
       return "bg-amber-400 dark:bg-yellow-400/60";
     case "orange":
-      return "bg-orange-500 dark:bg-orange-500/70";
+      return "bg-red-500 dark:bg-red-500/80";
     default:
       return "";
   }

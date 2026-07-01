@@ -172,7 +172,7 @@ export default function Home() {
                 {[
                   { dot: "bg-emerald-400 dark:bg-emerald-500/60", label: "Bien" },
                   { dot: "bg-amber-400 dark:bg-yellow-400/60", label: "Regular" },
-                  { dot: "bg-orange-500 dark:bg-orange-500/70", label: "Mal" },
+                  { dot: "bg-red-500 dark:bg-red-500/80", label: "Mal" },
                 ].map(({ dot, label }) => (
                   <span
                     key={label}
@@ -361,7 +361,7 @@ export default function Home() {
                             {[
                               { bg: "#d1fae5", border: "#6ee7b7", accent: "#34d399", label: "Bien" },
                               { bg: "#fef3c7", border: "#fcd34d", accent: "#f59e0b", label: "Regular" },
-                              { bg: "#fed7aa", border: "#fb923c", accent: "#f97316", label: "Mal" },
+                              { bg: "#fee2e2", border: "#f87171", accent: "#ef4444", label: "Mal" },
                             ].map(({ bg, border, accent, label }) => (
                               <span key={label} className="flex items-center gap-1 text-[11px]">
                                 <span
