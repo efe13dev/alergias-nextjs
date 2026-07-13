@@ -88,9 +88,9 @@ export default function DayEditor({
     {
       value: "yellow",
       label: "Regular",
-      dotClass: "bg-amber-400 dark:bg-yellow-400/60",
-      borderClass: "border-amber-300 dark:border-yellow-500/40",
-      activeBg: "bg-amber-100 dark:bg-yellow-900/20",
+      dotClass: "bg-amber-400 dark:bg-yellow-300/80",
+      borderClass: "border-amber-300 dark:border-yellow-400/50",
+      activeBg: "bg-amber-100 dark:bg-yellow-400/10",
     },
     {
       value: "orange",
