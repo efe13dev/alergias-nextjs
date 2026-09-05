@@ -86,17 +86,7 @@ export default function Home() {
       ? yearMonths.find((month) => month.getMonth() === selectedMonth.getMonth())
       : undefined;
 
-    if (sameMonthInSelectedYear) {
-      setSelectedTab(getMonthKey(sameMonthInSelectedYear));
-
-      return;
-    }
-
-    const hasSelectedMonthInYear = yearMonths.some((month) => getMonthKey(month) === selectedTab);
-
-    if (!hasSelectedMonthInYear) {
-      setSelectedTab(getMonthKey(yearMonths[0]));
-    }
+    setSelectedTab(getMonthKey(sameMonthInSelectedYear ?? yearMonths[0]));
   };
 
   const handleSaveDayData: typeof updateDayData = (date, symptomLevel, medications, notes) => {

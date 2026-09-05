@@ -13,26 +13,28 @@ export function cn(...inputs: ClassValue[]) {
 // Cada nivel tiene variantes light y dark con contraste adecuado en ambos modos.
 export const DAY_COLORS: Record<
   string,
-  { bg: string; border: string; bgHover: string; accent: string; dark: { bg: string; border: string; accent: string } }
+  {
+    bg: string;
+    border: string;
+    accent: string;
+    dark: { bg: string; border: string; accent: string };
+  }
 > = {
   green: {
     bg: "#d1fae5",
     border: "#6ee7b7",
-    bgHover: "#a7f3d0",
     accent: "#34d399",
     dark: { bg: "#064e3b", border: "#059669", accent: "#34d399" },
   },
   yellow: {
     bg: "#fef3c7",
     border: "#fcd34d",
-    bgHover: "#fde68a",
     accent: "#f59e0b",
     dark: { bg: "#4a4400", border: "#fde047", accent: "#facc15" },
   },
   orange: {
     bg: "#fee2e2",
     border: "#f87171",
-    bgHover: "#fecaca",
     accent: "#ef4444",
     dark: { bg: "#450a0a", border: "#dc2626", accent: "#ef4444" },
   },
@@ -65,4 +67,3 @@ export function getDayAccentBySymptomLevel(symptomLevel: string | null | undefin
       return "";
   }
 }
-

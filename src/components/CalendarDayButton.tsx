@@ -45,12 +45,6 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
     <div className="group relative z-0 flex justify-center focus-within:z-40 hover:z-40">
       <button
         onClick={() => onClick(date)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onClick(date);
-          }
-        }}
         style={
           activeColors
             ? { backgroundColor: activeColors.bg, borderColor: activeColors.border, borderWidth: 1 }

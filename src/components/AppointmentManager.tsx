@@ -75,22 +75,8 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
       (app, idx) => idx !== editingIndex && isSameDay(app.date, form.date),
     );
 
-    if (duplicateIndex >= 0) {
-      updated.splice(duplicateIndex, 1);
-      const adjustedEditingIndex = duplicateIndex < editingIndex ? editingIndex - 1 : editingIndex;
-
-      updated[adjustedEditingIndex] = {
-        ...updated[adjustedEditingIndex],
-        ...form,
-      };
-      setAppointments(updated);
-      setEditingIndex(null);
-      setForm(emptyAppointment);
-
-      return;
-    }
-
     updated[editingIndex] = form;
+    if (duplicateIndex >= 0) updated.splice(duplicateIndex, 1);
     setAppointments(updated);
     setEditingIndex(null);
     setForm(emptyAppointment);

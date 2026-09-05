@@ -5,9 +5,6 @@ import type { Appointment, DayData, Medication, SymptomLevel } from "@/app/types
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface DayEditorProps {
   date: Date;
@@ -127,21 +124,25 @@ export default function DayEditor({
   return (
     <div className="space-y-5 py-1">
       {/* Nivel de síntomas */}
-      <div className="space-y-2">
-        <p className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+      <fieldset className="space-y-2">
+        <legend className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
           Nivel de síntomas
-        </p>
-        <RadioGroup
-          value={symptomLevel || ""}
-          onValueChange={(value) => setSymptomLevel(value as SymptomLevel)}
-          className="grid grid-cols-3 gap-2"
-        >
+        </legend>
+        <div className="grid grid-cols-3 gap-2">
           {symptomOptions.map(({ value, label, dotClass, borderClass, activeBg }) => (
             <div key={value} className="flex items-center">
-              <RadioGroupItem value={value} id={value} className="sr-only" />
-              <Label
+              <input
+                type="radio"
+                name="symptomLevel"
+                value={value}
+                id={value}
+                checked={symptomLevel === value}
+                onChange={() => setSymptomLevel(value)}
+                className="peer sr-only"
+              />
+              <label
                 htmlFor={value}
-                className={`border-border/50 flex w-full cursor-pointer flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-sm transition-all ${
+                className={`border-border/50 peer-focus-visible:outline-ring flex w-full cursor-pointer flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-sm leading-none font-medium transition-all select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 ${
                   symptomLevel === value
                     ? `${borderClass} ${activeBg} font-medium ring-1 ring-inset ${borderClass}`
                     : "hover:bg-muted/40"
@@ -149,10 +150,10 @@ export default function DayEditor({
               >
                 <span className={`h-3.5 w-3.5 rounded-full ${dotClass}`} />
                 <span className="text-xs">{label}</span>
-              </Label>
+              </label>
             </div>
           ))}
-        </RadioGroup>
+        </div>
         {symptomLevel && (
           <button
             type="button"
@@ -162,7 +163,7 @@ export default function DayEditor({
             Quitar selección
           </button>
         )}
-      </div>
+      </fieldset>
 
       {/* Medicamentos */}
       <div className="space-y-2">
@@ -180,12 +181,12 @@ export default function DayEditor({
                   : "border-border/50 hover:bg-muted/40"
               }`}
             >
-              <Checkbox
+              <input
+                type="checkbox"
                 id={id}
                 checked={medications.includes(id)}
-                onCheckedChange={() => handleMedicationToggle(id)}
-                className="pointer-events-none"
-                aria-hidden
+                onChange={() => handleMedicationToggle(id)}
+                className="accent-primary focus-visible:outline-ring size-4 shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
               />
               <span>{label}</span>
             </label>
