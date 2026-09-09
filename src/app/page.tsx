@@ -349,14 +349,29 @@ export default function Home() {
                           </span>
                           <div className="flex gap-2">
                             {[
-                              { bg: "#d1fae5", border: "#6ee7b7", accent: "#34d399", label: "Bien" },
-                              { bg: "#fef3c7", border: "#fcd34d", accent: "#f59e0b", label: "Regular" },
+                              {
+                                bg: "#d1fae5",
+                                border: "#6ee7b7",
+                                accent: "#34d399",
+                                label: "Bien",
+                              },
+                              {
+                                bg: "#fef3c7",
+                                border: "#fcd34d",
+                                accent: "#f59e0b",
+                                label: "Regular",
+                              },
                               { bg: "#fee2e2", border: "#f87171", accent: "#ef4444", label: "Mal" },
                             ].map(({ bg, border, accent, label }) => (
                               <span key={label} className="flex items-center gap-1 text-[11px]">
                                 <span
-                                  style={{ backgroundColor: bg, borderColor: border, borderWidth: 1, borderStyle: "solid" }}
-                                  className="inline-flex h-4 w-4 rounded-sm relative overflow-hidden"
+                                  style={{
+                                    backgroundColor: bg,
+                                    borderColor: border,
+                                    borderWidth: 1,
+                                    borderStyle: "solid",
+                                  }}
+                                  className="relative inline-flex h-4 w-4 overflow-hidden rounded-sm"
                                 >
                                   <span
                                     style={{ backgroundColor: accent }}
@@ -386,7 +401,12 @@ export default function Home() {
                             ].map(({ letter, bg, border, label }) => (
                               <span
                                 key={label}
-                                style={{ backgroundColor: bg, borderColor: border, borderWidth: 1, borderStyle: "solid" }}
+                                style={{
+                                  backgroundColor: bg,
+                                  borderColor: border,
+                                  borderWidth: 1,
+                                  borderStyle: "solid",
+                                }}
                                 className="text-foreground inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium"
                               >
                                 <span className="font-bold">{letter}</span>
@@ -411,7 +431,12 @@ export default function Home() {
                             ].map(({ bg, border, label }) => (
                               <span key={label} className="flex items-center gap-1 text-[11px]">
                                 <span
-                                  style={{ backgroundColor: bg, borderColor: border, borderWidth: 1, borderStyle: "solid" }}
+                                  style={{
+                                    backgroundColor: bg,
+                                    borderColor: border,
+                                    borderWidth: 1,
+                                    borderStyle: "solid",
+                                  }}
                                   className="inline-flex h-4 w-4 items-center justify-center rounded-full"
                                 />
                                 <span className="text-muted-foreground">{label}</span>
@@ -461,7 +486,9 @@ export default function Home() {
             </DialogTitle>
           </DialogHeader>
           <AppointmentManager
-            appointments={pendingAppointments}
+            appointments={[...pendingAppointments].sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+            )}
             setAppointments={setPendingAppointments}
           />
         </DialogContent>
