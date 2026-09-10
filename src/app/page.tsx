@@ -10,6 +10,7 @@ import AppointmentManager from "../components/AppointmentManager";
 import { CalendarDayButton } from "../components/CalendarDayButton";
 import DayEditor from "../components/day-editor";
 
+import { MonthSummary } from "@/components/MonthSummary";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -341,6 +342,8 @@ export default function Home() {
                         },
                       }}
                     />
+
+                    <MonthSummary month={month} dayData={dayData} />
 
                     {/* Leyenda incluida dentro del card — visible en pantalla y en la exportación */}
                     <div className="border-border/30 mt-4 border-t pt-3">

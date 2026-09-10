@@ -77,6 +77,21 @@ test("el rango de meses empieza en abril 2025 y llega 3 meses por delante de hoy
   assert.ok(months.some((month) => key(month) === key(now)));
 });
 
+test("el resumen del mes solo cuenta los días de ese mes", () => {
+  const dayData = [
+    { date: "2026-09-10T12:00:00.000Z", symptomLevel: "green", medications: ["Bilaxten"] },
+    { date: "2026-09-20T12:00:00.000Z", symptomLevel: "orange", medications: [] },
+    { date: "2026-10-15T12:00:00.000Z", symptomLevel: "green", medications: ["Ventolin"] },
+  ];
+  const entries = handler("./src/components/MonthSummary.tsx", "entries", {
+    dayData,
+    month: new Date(2026, 8, 1),
+  });
+
+  assert.equal(entries.length, 2);
+  assert.ok(entries.every((entry) => new Date(entry.date).getMonth() === 8));
+});
+
 test("editar cita sustituye el día duplicado sin cambiar identidad ni orden", () => {
   const appointments = [1, 2, 3].map((day) => ({
     id: String(day),
