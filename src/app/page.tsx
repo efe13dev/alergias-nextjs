@@ -36,9 +36,9 @@ export default function Home() {
 
   const getMonthKey = (date: Date) => format(date, "yyyy-MM");
 
-  // Meses a mostrar: desde abril 2025 hasta 12 meses después del mes actual
+  // Meses a mostrar: desde abril 2025 hasta 3 meses después del mes actual
   const months = Array.from(
-    { length: (new Date().getFullYear() - 2025) * 12 + new Date().getMonth() + 10 },
+    { length: (new Date().getFullYear() - 2025) * 12 + new Date().getMonth() + 1 },
     (_, i) => new Date(2025, 3 + i, 1),
   );
 
