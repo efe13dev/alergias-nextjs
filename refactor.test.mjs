@@ -67,6 +67,16 @@ test("seleccionar año conserva el mes o usa el primero disponible", () => {
   }
 });
 
+test("el rango de meses empieza en abril 2025 y llega 12 meses por delante de hoy", () => {
+  const months = handler("./src/app/page.tsx", "months", {});
+  const now = new Date();
+  const key = (date) => `${date.getFullYear()}-${date.getMonth()}`;
+
+  assert.equal(key(months[0]), key(new Date(2025, 3, 1)));
+  assert.equal(key(months.at(-1)), key(new Date(now.getFullYear(), now.getMonth() + 12, 1)));
+  assert.ok(months.some((month) => key(month) === key(now)));
+});
+
 test("editar cita sustituye el día duplicado sin cambiar identidad ni orden", () => {
   const appointments = [1, 2, 3].map((day) => ({
     id: String(day),

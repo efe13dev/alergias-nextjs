@@ -36,8 +36,11 @@ export default function Home() {
 
   const getMonthKey = (date: Date) => format(date, "yyyy-MM");
 
-  // Meses a mostrar: desde Abril 2025 durante 18 meses
-  const months = Array.from({ length: 18 }, (_, i) => new Date(2025, 3 + i, 1));
+  // Meses a mostrar: desde abril 2025 hasta 12 meses después del mes actual
+  const months = Array.from(
+    { length: (new Date().getFullYear() - 2025) * 12 + new Date().getMonth() + 10 },
+    (_, i) => new Date(2025, 3 + i, 1),
+  );
 
   const monthsByYear = months.reduce<Record<number, Date[]>>((acc, month) => {
     const year = month.getFullYear();
