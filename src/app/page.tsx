@@ -289,166 +289,62 @@ export default function Home() {
                     </div>
                   </CardHeader>
                   <CardContent className="px-3 pb-4">
-                    <Calendar
-                      mode="single"
-                      month={month}
-                      onDayClick={handleDayClick}
-                      className="min-h-[484px] w-full rounded-md border"
-                      weekStartsOn={1}
-                      classNames={{
-                        month: "space-y-3",
-                        table: "w-full border-collapse",
-                        head_row: "flex",
-                        head_cell:
-                          "text-muted-foreground/70 rounded-md w-full font-medium text-[0.7rem] p-0 text-center tracking-wide uppercase",
-                        row: "flex w-full",
-                        cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
-                        day: "h-16 w-16 p-0 font-normal aria-selected:opacity-100",
-                        day_range_end: "day-range-end",
-                        day_selected:
-                          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                        day_today: "bg-accent text-accent-foreground",
-                        day_outside: "day-outside text-muted-foreground opacity-30",
-                        day_disabled: "text-muted-foreground opacity-30",
-                        day_range_middle:
-                          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                        day_hidden: "invisible",
-                      }}
-                      modifiers={{
-                        booked: (date) =>
-                          dayData.some(
-                            (d) => new Date(d.date).toDateString() === date.toDateString(),
-                          ),
-                        appointment: (date) => Boolean(getAppointmentByDate(date)),
-                      }}
-                      modifiersClassNames={{
-                        booked: "font-bold",
-                        appointment: "",
-                      }}
-                      components={{
-                        Day: ({ date }) => {
-                          const appointment = getAppointmentByDate(date);
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+                      <div className="lg:flex-none">
+                        <Calendar
+                          mode="single"
+                          month={month}
+                          onDayClick={handleDayClick}
+                          className="min-h-[484px] w-full rounded-md border lg:w-auto"
+                          weekStartsOn={1}
+                          classNames={{
+                            month: "space-y-3",
+                            table: "w-full border-collapse",
+                            head_row: "flex",
+                            head_cell:
+                              "text-muted-foreground/70 rounded-md w-full font-medium text-[0.7rem] p-0 text-center tracking-wide uppercase",
+                            row: "flex w-full",
+                            cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
+                            day: "h-16 w-16 p-0 font-normal aria-selected:opacity-100",
+                            day_range_end: "day-range-end",
+                            day_selected:
+                              "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                            day_today: "bg-accent text-accent-foreground",
+                            day_outside: "day-outside text-muted-foreground opacity-30",
+                            day_disabled: "text-muted-foreground opacity-30",
+                            day_range_middle:
+                              "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                            day_hidden: "invisible",
+                          }}
+                          modifiers={{
+                            booked: (date) =>
+                              dayData.some(
+                                (d) => new Date(d.date).toDateString() === date.toDateString(),
+                              ),
+                            appointment: (date) => Boolean(getAppointmentByDate(date)),
+                          }}
+                          modifiersClassNames={{
+                            booked: "font-bold",
+                            appointment: "",
+                          }}
+                          components={{
+                            Day: ({ date }) => {
+                              const appointment = getAppointmentByDate(date);
 
-                          return (
-                            <CalendarDayButton
-                              date={date}
-                              dayData={getDayData(date)}
-                              onClick={handleDayClick}
-                              appointment={appointment}
-                            />
-                          );
-                        },
-                      }}
-                    />
-
-                    <MonthSummary month={month} dayData={dayData} />
-
-                    {/* Leyenda incluida dentro del card — visible en pantalla y en la exportación */}
-                    <div className="mt-4 border-border/30 border-t pt-3">
-                      <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
-                        {/* Síntomas */}
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-[10px] text-muted-foreground/70 uppercase tracking-widest">
-                            Síntomas
-                          </span>
-                          <div className="flex gap-2">
-                            {[
-                              {
-                                bg: "#d1fae5",
-                                border: "#6ee7b7",
-                                accent: "#34d399",
-                                label: "Bien",
-                              },
-                              {
-                                bg: "#fef3c7",
-                                border: "#fcd34d",
-                                accent: "#f59e0b",
-                                label: "Regular",
-                              },
-                              { bg: "#fee2e2", border: "#f87171", accent: "#ef4444", label: "Mal" },
-                            ].map(({ bg, border, accent, label }) => (
-                              <span key={label} className="flex items-center gap-1 text-[11px]">
-                                <span
-                                  style={{
-                                    backgroundColor: bg,
-                                    borderColor: border,
-                                    borderWidth: 1,
-                                    borderStyle: "solid",
-                                  }}
-                                  className="relative inline-flex h-4 w-4 overflow-hidden rounded-sm"
-                                >
-                                  <span
-                                    style={{ backgroundColor: accent }}
-                                    className="absolute right-0 bottom-0 left-0 h-1"
-                                  />
-                                </span>
-                                <span className="text-muted-foreground">{label}</span>
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Separador */}
-                        <span className="hidden h-3 w-px self-center bg-current text-border sm:inline-block" />
-
-                        {/* Medicamentos */}
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-[10px] text-muted-foreground/70 uppercase tracking-widest">
-                            Medicamentos
-                          </span>
-                          <div className="flex gap-1.5">
-                            {[
-                              { letter: "B", bg: "#eff6ff", border: "#93c5fd", label: "Bilaxten" },
-                              { letter: "R", bg: "#f5f3ff", border: "#c4b5fd", label: "Relvar" },
-                              { letter: "V", bg: "#f0fdfa", border: "#5eead4", label: "Ventolin" },
-                              { letter: "D", bg: "#fff1f2", border: "#fda4af", label: "Dymista" },
-                            ].map(({ letter, bg, border, label }) => (
-                              <span
-                                key={label}
-                                style={{
-                                  backgroundColor: bg,
-                                  borderColor: border,
-                                  borderWidth: 1,
-                                  borderStyle: "solid",
-                                }}
-                                className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-medium text-[11px] text-foreground"
-                              >
-                                <span className="font-bold">{letter}</span>
-                                <span className="text-muted-foreground">{label}</span>
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Separador */}
-                        <span className="hidden h-3 w-px self-center bg-current text-border sm:inline-block" />
-
-                        {/* Citas y notas */}
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-[10px] text-muted-foreground/70 uppercase tracking-widest">
-                            Otros
-                          </span>
-                          <div className="flex gap-2">
-                            {[
-                              { bg: "#bfdbfe", border: "#60a5fa", label: "Cita médica" },
-                              { bg: "#fde68a", border: "#fbbf24", label: "Nota del día" },
-                            ].map(({ bg, border, label }) => (
-                              <span key={label} className="flex items-center gap-1 text-[11px]">
-                                <span
-                                  style={{
-                                    backgroundColor: bg,
-                                    borderColor: border,
-                                    borderWidth: 1,
-                                    borderStyle: "solid",
-                                  }}
-                                  className="inline-flex h-4 w-4 items-center justify-center rounded-full"
+                              return (
+                                <CalendarDayButton
+                                  date={date}
+                                  dayData={getDayData(date)}
+                                  onClick={handleDayClick}
+                                  appointment={appointment}
                                 />
-                                <span className="text-muted-foreground">{label}</span>
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                              );
+                            },
+                          }}
+                        />
                       </div>
+
+                      <MonthSummary month={month} dayData={dayData} />
                     </div>
                   </CardContent>
                 </Card>
