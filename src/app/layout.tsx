@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-
-import Script from "next/script";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import { cookies } from "next/headers";
+import Script from "next/script";
 
 // @ts-ignore Next.js processes global CSS imports at build time.
 import "./globals.css";

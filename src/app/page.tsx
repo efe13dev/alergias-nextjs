@@ -5,11 +5,6 @@ import { es } from "date-fns/locale";
 import html2canvaspro from "html2canvas-pro";
 import { CalendarDays, Download } from "lucide-react";
 import { useState } from "react";
-
-import AppointmentManager from "../components/AppointmentManager";
-import { CalendarDayButton } from "../components/CalendarDayButton";
-import DayEditor from "../components/day-editor";
-
 import { MonthSummary } from "@/components/MonthSummary";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Calendar } from "@/components/ui/calendar";
@@ -18,6 +13,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppointments } from "@/hooks/useAppointments";
 import { useDayData } from "@/hooks/useDayData";
+import AppointmentManager from "../components/AppointmentManager";
+import { CalendarDayButton } from "../components/CalendarDayButton";
+import DayEditor from "../components/day-editor";
 
 export default function Home() {
   const { dayData, getDayData, updateDayData } = useDayData();
@@ -131,7 +129,7 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      <Card className="border-border/40 mb-6 overflow-hidden border shadow-sm">
+      <Card className="mb-6 overflow-hidden border border-border/40 shadow-sm">
         <CardHeader className="border-border/40 border-b px-6 py-5">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -146,7 +144,7 @@ export default function Home() {
               <button
                 onClick={handleExportJPG}
                 type="button"
-                className="text-muted-foreground hover:text-foreground border-border/60 hover:border-border hover:bg-muted/50 inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-border/60 bg-transparent px-3 py-1.5 font-medium text-muted-foreground text-xs transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
               >
                 <Download className="h-3.5 w-3.5" aria-hidden="true" />
                 Exportar
@@ -159,7 +157,7 @@ export default function Home() {
           {/* Leyenda compacta en una sola fila */}
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+              <span className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
                 Síntomas
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -170,15 +168,15 @@ export default function Home() {
                 ].map(({ dot, label }) => (
                   <span
                     key={label}
-                    className="text-muted-foreground flex items-center gap-1 text-xs"
+                    className="flex items-center gap-1 text-muted-foreground text-xs"
                   >
                     <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
                     {label}
                   </span>
                 ))}
               </div>
-              <span className="text-border hidden h-3 w-px bg-current sm:inline-block" />
-              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+              <span className="hidden h-3 w-px bg-current text-border sm:inline-block" />
+              <span className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
                 Medicamentos
               </span>
               <div className="flex flex-wrap items-center gap-1.5">
@@ -209,15 +207,15 @@ export default function Home() {
                 ].map(({ letter, color, label }) => (
                   <span
                     key={label}
-                    className={`text-muted-foreground inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium ${color}`}
+                    className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground ${color}`}
                   >
                     <span className="font-bold">{letter}</span>
                     <span>{label}</span>
                   </span>
                 ))}
               </div>
-              <span className="text-border hidden h-3 w-px bg-current sm:inline-block" />
-              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+              <span className="hidden h-3 w-px bg-current text-border sm:inline-block" />
+              <span className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
                 Citas y notas
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -227,7 +225,7 @@ export default function Home() {
                 ].map(({ dot, label }) => (
                   <span
                     key={label}
-                    className="text-muted-foreground flex items-center gap-1 text-xs"
+                    className="flex items-center gap-1 text-muted-foreground text-xs"
                   >
                     <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
                     {label}
@@ -238,7 +236,7 @@ export default function Home() {
             <button
               onClick={() => setShowPendingAppointments(true)}
               type="button"
-              className="text-muted-foreground hover:text-foreground border-border/60 hover:border-border hover:bg-muted/50 inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-transparent px-3 py-1.5 font-medium text-muted-foreground text-xs transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
             >
               <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
               Citas
@@ -253,7 +251,7 @@ export default function Home() {
                   key={year}
                   type="button"
                   onClick={() => handleYearSelect(year)}
-                  className={`rounded-md px-3 py-1 text-sm font-semibold transition-all duration-150 ${
+                  className={`rounded-md px-3 py-1 font-semibold text-sm transition-all duration-150 ${
                     selectedYear === year
                       ? "bg-foreground/10 text-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -265,7 +263,7 @@ export default function Home() {
             </div>
 
             {/* Tabs de meses */}
-            <TabsList className="border-border/40 bg-muted/30 mb-5 flex h-auto w-full justify-start gap-1 overflow-x-auto rounded-lg border p-1">
+            <TabsList className="mb-5 flex h-auto w-full justify-start gap-1 overflow-x-auto rounded-lg border border-border/40 bg-muted/30 p-1">
               {selectedYearMonths.map((month) => (
                 <TabsTrigger
                   key={month.toISOString()}
@@ -279,13 +277,13 @@ export default function Home() {
 
             {months.map((month) => (
               <TabsContent key={month.toISOString()} value={getMonthKey(month)} className="mt-0">
-                <Card className="calendar-export-card border-border/30 border shadow-none">
+                <Card className="calendar-export-card border border-border/30 shadow-none">
                   <CardHeader className="px-5 pt-4 pb-2">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="font-serif text-lg tracking-tight capitalize">
+                      <CardTitle className="font-serif text-lg capitalize tracking-tight">
                         {format(month, "MMMM yyyy", { locale: es })}
                       </CardTitle>
-                      <span className="text-muted-foreground/60 text-[10px] tracking-widest uppercase">
+                      <span className="text-[10px] text-muted-foreground/60 uppercase tracking-widest">
                         Seguimiento de Alergia
                       </span>
                     </div>
@@ -346,11 +344,11 @@ export default function Home() {
                     <MonthSummary month={month} dayData={dayData} />
 
                     {/* Leyenda incluida dentro del card — visible en pantalla y en la exportación */}
-                    <div className="border-border/30 mt-4 border-t pt-3">
+                    <div className="mt-4 border-border/30 border-t pt-3">
                       <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
                         {/* Síntomas */}
                         <div className="flex items-center gap-2">
-                          <span className="text-muted-foreground/70 text-[10px] font-semibold tracking-widest uppercase">
+                          <span className="font-semibold text-[10px] text-muted-foreground/70 uppercase tracking-widest">
                             Síntomas
                           </span>
                           <div className="flex gap-2">
@@ -391,11 +389,11 @@ export default function Home() {
                         </div>
 
                         {/* Separador */}
-                        <span className="text-border hidden h-3 w-px self-center bg-current sm:inline-block" />
+                        <span className="hidden h-3 w-px self-center bg-current text-border sm:inline-block" />
 
                         {/* Medicamentos */}
                         <div className="flex items-center gap-2">
-                          <span className="text-muted-foreground/70 text-[10px] font-semibold tracking-widest uppercase">
+                          <span className="font-semibold text-[10px] text-muted-foreground/70 uppercase tracking-widest">
                             Medicamentos
                           </span>
                           <div className="flex gap-1.5">
@@ -413,7 +411,7 @@ export default function Home() {
                                   borderWidth: 1,
                                   borderStyle: "solid",
                                 }}
-                                className="text-foreground inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium"
+                                className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-medium text-[11px] text-foreground"
                               >
                                 <span className="font-bold">{letter}</span>
                                 <span className="text-muted-foreground">{label}</span>
@@ -423,11 +421,11 @@ export default function Home() {
                         </div>
 
                         {/* Separador */}
-                        <span className="text-border hidden h-3 w-px self-center bg-current sm:inline-block" />
+                        <span className="hidden h-3 w-px self-center bg-current text-border sm:inline-block" />
 
                         {/* Citas y notas */}
                         <div className="flex items-center gap-2">
-                          <span className="text-muted-foreground/70 text-[10px] font-semibold tracking-widest uppercase">
+                          <span className="font-semibold text-[10px] text-muted-foreground/70 uppercase tracking-widest">
                             Otros
                           </span>
                           <div className="flex gap-2">

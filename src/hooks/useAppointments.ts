@@ -1,8 +1,7 @@
 "use client";
 
-import type { Appointment } from "@/app/types";
-
 import { useEffect, useRef, useState } from "react";
+import type { Appointment } from "@/app/types";
 
 const STORAGE_KEY = "pendingAppointments";
 

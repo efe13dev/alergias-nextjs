@@ -1,5 +1,5 @@
-import type { Appointment, DayData, Medication } from "@/app/types";
 import type React from "react";
+import type { Appointment, DayData, Medication } from "@/app/types";
 
 import { useTheme } from "@/components/theme-provider";
 import { DAY_COLORS, getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
@@ -63,6 +63,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
         {hasNotes && (
           <span className="group/note absolute top-0.5 left-0.5">
             <span
+              role="img"
               aria-label="Tiene notas"
               className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-amber-400/70 bg-amber-200 dark:border-amber-500/60 dark:bg-amber-900/45"
             >
@@ -87,7 +88,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
                 />
               </svg>
             </span>
-            <span className="bg-background/95 border-border/70 text-foreground pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border p-2 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/note:visible group-focus-within/note:opacity-100 group-hover/note:visible group-hover/note:opacity-100">
+            <span className="pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border border-border/70 bg-background/95 p-2 text-left text-foreground text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/note:visible group-focus-within/note:opacity-100 group-hover/note:visible group-hover/note:opacity-100">
               <span className="block font-semibold text-amber-700 dark:text-amber-300">Nota:</span>
               <span className="block whitespace-pre-line">{noteText}</span>
             </span>
@@ -97,6 +98,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
         {hasAppointment && (
           <span className="group/appointment absolute top-0.5 right-0.5">
             <span
+              role="img"
               aria-label="Cita pendiente"
               className={`inline-flex h-4 w-4 items-center justify-center rounded-full border ${
                 isPendingAppointment
@@ -117,7 +119,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
                 <rect x="3" y="5" width="18" height="16" rx="2" ry="2" />
               </svg>
             </span>
-            <span className="bg-background/95 border-border/70 text-foreground pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border p-2 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/appointment:visible group-focus-within/appointment:opacity-100 group-hover/appointment:visible group-hover/appointment:opacity-100">
+            <span className="pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border border-border/70 bg-background/95 p-2 text-left text-foreground text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/appointment:visible group-focus-within/appointment:opacity-100 group-hover/appointment:visible group-hover/appointment:opacity-100">
               <span
                 className={`block font-semibold ${
                   isPendingAppointment
@@ -135,9 +137,9 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
         {dayMeds.length > 0 && (
           <div className="z-10 flex flex-col items-center justify-center gap-0.5">
             {/* Dividir los medicamentos en dos filas de máximo 2 elementos cada una */}
-            {[dayMeds.slice(0, 2), dayMeds.slice(2, 4)].map((row, rowIdx) =>
+            {[dayMeds.slice(0, 2), dayMeds.slice(2, 4)].map((row) =>
               row.length > 0 ? (
-                <div key={rowIdx} className="flex justify-center gap-1">
+                <div key={row.join("-")} className="flex justify-center gap-1">
                   {row.map((med) => (
                     <span key={med} className={MED_CLASS[med]} title={med}>
                       {med[0]}

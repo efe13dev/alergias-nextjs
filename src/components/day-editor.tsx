@@ -1,8 +1,7 @@
 "use client";
 
-import type { Appointment, DayData, Medication, SymptomLevel } from "@/app/types";
-
 import { useEffect, useState } from "react";
+import type { Appointment, DayData, Medication, SymptomLevel } from "@/app/types";
 
 import { Button } from "@/components/ui/button";
 
@@ -46,7 +45,7 @@ export default function DayEditor({
     setAppointmentDescription(appointment?.description ?? "");
     setIsAppointmentExpanded(Boolean(appointment));
     setIsNotesExpanded(Boolean(initialData?.notes?.trim()));
-  }, [initialData, appointment, date]);
+  }, [initialData, appointment]);
 
   const handleMedicationToggle = (medication: Medication) => {
     setMedications((prev) =>
@@ -125,7 +124,7 @@ export default function DayEditor({
     <div className="space-y-5 py-1">
       {/* Nivel de síntomas */}
       <fieldset className="space-y-2">
-        <legend className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+        <legend className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
           Nivel de síntomas
         </legend>
         <div className="grid grid-cols-3 gap-2">
@@ -142,7 +141,7 @@ export default function DayEditor({
               />
               <label
                 htmlFor={value}
-                className={`border-border/50 peer-focus-visible:outline-ring flex w-full cursor-pointer flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-sm leading-none font-medium transition-all select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 ${
+                className={`flex w-full cursor-pointer select-none flex-col items-center gap-1.5 rounded-lg border border-border/50 px-2 py-3 font-medium text-sm leading-none transition-all peer-focus-visible:outline-2 peer-focus-visible:outline-ring peer-focus-visible:outline-offset-2 ${
                   symptomLevel === value
                     ? `${borderClass} ${activeBg} font-medium ring-1 ring-inset ${borderClass}`
                     : "hover:bg-muted/40"
@@ -158,7 +157,7 @@ export default function DayEditor({
           <button
             type="button"
             onClick={() => setSymptomLevel(null)}
-            className="text-muted-foreground hover:text-foreground text-xs underline-offset-2 hover:underline"
+            className="text-muted-foreground text-xs underline-offset-2 hover:text-foreground hover:underline"
           >
             Quitar selección
           </button>
@@ -167,7 +166,7 @@ export default function DayEditor({
 
       {/* Medicamentos */}
       <div className="space-y-2">
-        <p className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
+        <p className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
           Medicamentos tomados
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -186,7 +185,7 @@ export default function DayEditor({
                 id={id}
                 checked={medications.includes(id)}
                 onChange={() => handleMedicationToggle(id)}
-                className="accent-primary focus-visible:outline-ring size-4 shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="size-4 shrink-0 cursor-pointer accent-primary focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
               />
               <span>{label}</span>
             </label>
@@ -195,17 +194,17 @@ export default function DayEditor({
       </div>
 
       {/* Notas del día */}
-      <div className="border-border/40 rounded-lg border">
+      <div className="rounded-lg border border-border/40">
         <button
           type="button"
-          className="hover:bg-muted/40 flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors"
+          className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/40"
           onClick={() => setIsNotesExpanded((prev) => !prev)}
           aria-expanded={isNotesExpanded}
         >
           <span className="flex items-center gap-2">
-            <span className="text-sm font-medium">Notas del día</span>
+            <span className="font-medium text-sm">Notas del día</span>
             {hasNotes && (
-              <span className="rounded border border-amber-200/70 bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:border-amber-500/30 dark:bg-amber-900/20 dark:text-amber-300">
+              <span className="rounded border border-amber-200/70 bg-amber-50 px-1.5 py-0.5 font-medium text-[10px] text-amber-700 dark:border-amber-500/30 dark:bg-amber-900/20 dark:text-amber-300">
                 con notas
               </span>
             )}
@@ -223,7 +222,7 @@ export default function DayEditor({
             <div className="px-3 pb-3">
               <textarea
                 name="dayNotes"
-                className="border-border/60 bg-muted/20 focus:border-border focus:ring-ring/20 min-h-20 w-full rounded-md border px-2.5 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+                className="min-h-20 w-full rounded-md border border-border/60 bg-muted/20 px-2.5 py-2 text-sm transition-colors focus:border-border focus:outline-none focus:ring-2 focus:ring-ring/20"
                 placeholder="Ej: Ese día había mucho polvo en el ambiente…"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -234,18 +233,18 @@ export default function DayEditor({
       </div>
 
       {/* Cita del día */}
-      <div className="border-border/40 rounded-lg border">
+      <div className="rounded-lg border border-border/40">
         <button
           type="button"
-          className="hover:bg-muted/40 flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors"
+          className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/40"
           onClick={() => setIsAppointmentExpanded((prev) => !prev)}
           aria-expanded={isAppointmentExpanded}
         >
           <span className="flex items-center gap-2">
-            <span className="text-sm font-medium">Cita del día</span>
+            <span className="font-medium text-sm">Cita del día</span>
             {hasAppointment && (
               <span
-                className={`rounded border px-1.5 py-0.5 text-[10px] font-medium ${
+                className={`rounded border px-1.5 py-0.5 font-medium text-[10px] ${
                   isPendingAppointment
                     ? "border-sky-200/70 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-900/20 dark:text-sky-300"
                     : "border-emerald-200/70 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-900/20 dark:text-emerald-300"
@@ -268,7 +267,7 @@ export default function DayEditor({
             <div className="space-y-2.5 px-3 pb-3">
               <textarea
                 name="appointmentDescription"
-                className="border-border/60 bg-muted/20 focus:border-border focus:ring-ring/20 min-h-20 w-full rounded-md border px-2.5 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
+                className="min-h-20 w-full rounded-md border border-border/60 bg-muted/20 px-2.5 py-2 text-sm transition-colors focus:border-border focus:outline-none focus:ring-2 focus:ring-ring/20"
                 placeholder="Ej: Revisión con alergólogo a las 10:00"
                 value={appointmentDescription}
                 onChange={(e) => setAppointmentDescription(e.target.value)}
@@ -308,7 +307,7 @@ export default function DayEditor({
         </div>
       </div>
 
-      <div className="border-border/40 flex justify-end border-t pt-4">
+      <div className="flex justify-end border-border/40 border-t pt-4">
         <Button onClick={handleSave} size="sm" className="px-5">
           Guardar
         </Button>

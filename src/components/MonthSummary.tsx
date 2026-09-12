@@ -42,13 +42,13 @@ export function MonthSummary({ month, dayData }: Props) {
   const medsUsed = (Object.keys(MED_COLORS) as Medication[]).filter((med) => medCounts[med]);
 
   return (
-    <div className="border-border/30 mt-4 border-t pt-3">
+    <div className="mt-4 border-border/30 border-t pt-3">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <span className="text-muted-foreground/70 text-[10px] font-semibold tracking-widest uppercase">
+        <span className="font-semibold text-[10px] text-muted-foreground/70 uppercase tracking-widest">
           Resumen
         </span>
         {registered === 0 ? (
-          <span className="text-muted-foreground text-[11px]">Sin datos este mes</span>
+          <span className="text-[11px] text-muted-foreground">Sin datos este mes</span>
         ) : (
           <>
             <span
@@ -67,12 +67,12 @@ export function MonthSummary({ month, dayData }: Props) {
                 ) : null,
               )}
             </span>
-            <span className="text-muted-foreground text-[11px]">
+            <span className="text-[11px] text-muted-foreground">
               {LEVELS.filter(({ value }) => levelCounts[value] > 0)
                 .map(({ value, label }) => `${levelCounts[value]} ${label}`)
                 .join(" · ")}
             </span>
-            <span className="text-muted-foreground text-[11px]">
+            <span className="text-[11px] text-muted-foreground">
               {registered} de {daysInMonth} días
             </span>
             {medsUsed.length > 0 && (
@@ -81,7 +81,7 @@ export function MonthSummary({ month, dayData }: Props) {
                   <span
                     key={med}
                     style={{ borderColor: MED_COLORS[med] }}
-                    className="text-muted-foreground inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium"
+                    className="inline-flex items-center gap-1 rounded border px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground"
                   >
                     <span className="font-bold">{med[0]}</span>×{medCounts[med]}
                   </span>

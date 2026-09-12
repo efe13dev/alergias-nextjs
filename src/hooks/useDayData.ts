@@ -1,8 +1,7 @@
 "use client";
 
-import type { DayData, Medication, SymptomLevel } from "@/app/types";
-
 import { useEffect, useRef, useState } from "react";
+import type { DayData, Medication, SymptomLevel } from "@/app/types";
 
 const STORAGE_KEY = "allergyTrackerData";
 

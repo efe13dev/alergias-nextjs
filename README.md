@@ -44,6 +44,7 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la 
 - React
 - TypeScript
 - Tailwind CSS
+- [Biome](https://biomejs.dev/) (lint y formato)
 
 ## Uso rápido
 
@@ -83,11 +84,14 @@ npm run build
 # Servir build de producción
 npm run start
 
-# Lint
+# Lint (Biome: lint + formato + orden de imports/clases)
 npm run lint
 
 # Lint con autofix
 npm run lint:fix
+
+# Formatear con Biome
+npm run format
 ```
 
 ## Estructura del proyecto (resumen)
