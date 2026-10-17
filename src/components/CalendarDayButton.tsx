@@ -1,5 +1,5 @@
 import type React from "react";
-import type { Appointment, DayData, Medication } from "@/app/types";
+import { type Appointment, type DayData, MED_CODE, type Medication } from "@/app/types";
 
 import { useTheme } from "@/components/theme-provider";
 import { DAY_COLORS, getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
@@ -9,10 +9,14 @@ const MED_CLASS: Record<Medication, string> = {
     "text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-[10px] font-semibold dark:border-sky-500/80 dark:bg-sky-900/50",
   Relvar:
     "text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-[10px] font-semibold dark:border-violet-500/80 dark:bg-violet-900/50",
+  "Relvar 92":
+    "text-foreground rounded-sm border border-indigo-300 bg-indigo-200 px-1 text-[10px] font-semibold dark:border-indigo-500/80 dark:bg-indigo-900/50",
   Ventolin:
     "text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-[10px] font-semibold dark:border-teal-500/80 dark:bg-teal-900/50",
   Dymista:
     "text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-[10px] font-semibold dark:border-rose-500/80 dark:bg-rose-900/50",
+  Rhinomur:
+    "text-foreground rounded-sm border border-fuchsia-300 bg-fuchsia-200 px-1 text-[10px] font-semibold dark:border-fuchsia-500/80 dark:bg-fuchsia-900/50",
 };
 
 type Props = {
@@ -142,7 +146,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
                 <div key={row.join("-")} className="flex justify-center gap-1">
                   {row.map((med) => (
                     <span key={med} className={MED_CLASS[med]} title={med}>
-                      {med[0]}
+                      {MED_CODE[med]}
                     </span>
                   ))}
                 </div>

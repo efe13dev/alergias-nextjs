@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Appointment, DayData, Medication, SymptomLevel } from "@/app/types";
+import {
+  type Appointment,
+  type DayData,
+  type Medication,
+  type SymptomLevel,
+  TREATMENT_CHANGE_DATE,
+} from "@/app/types";
 
 import { Button } from "@/components/ui/button";
 
@@ -97,6 +103,10 @@ export default function DayEditor({
     },
   ];
 
+  const isNewTreatment = date >= TREATMENT_CHANGE_DATE;
+  const relvarId: Medication = isNewTreatment ? "Relvar 92" : "Relvar";
+  const nasalId: Medication = isNewTreatment ? "Rhinomur" : "Dymista";
+
   const medicationOptions: { id: Medication; label: string; color: string }[] = [
     {
       id: "Bilaxten",
@@ -104,9 +114,11 @@ export default function DayEditor({
       color: "border-sky-200/80 bg-sky-50/60 dark:border-sky-500/30 dark:bg-sky-900/15",
     },
     {
-      id: "Relvar",
-      label: "Relvar",
-      color: "border-violet-200/80 bg-violet-50/60 dark:border-violet-500/30 dark:bg-violet-900/15",
+      id: relvarId,
+      label: relvarId,
+      color: isNewTreatment
+        ? "border-indigo-200/80 bg-indigo-50/60 dark:border-indigo-500/30 dark:bg-indigo-900/15"
+        : "border-violet-200/80 bg-violet-50/60 dark:border-violet-500/30 dark:bg-violet-900/15",
     },
     {
       id: "Ventolin",
@@ -114,9 +126,11 @@ export default function DayEditor({
       color: "border-teal-200/80 bg-teal-50/60 dark:border-teal-500/30 dark:bg-teal-900/15",
     },
     {
-      id: "Dymista",
-      label: "Dymista",
-      color: "border-rose-200/80 bg-rose-50/60 dark:border-rose-500/30 dark:bg-rose-900/15",
+      id: nasalId,
+      label: nasalId,
+      color: isNewTreatment
+        ? "border-fuchsia-200/80 bg-fuchsia-50/60 dark:border-fuchsia-500/30 dark:bg-fuchsia-900/15"
+        : "border-rose-200/80 bg-rose-50/60 dark:border-rose-500/30 dark:bg-rose-900/15",
     },
   ];
 

@@ -193,6 +193,12 @@ export default function Home() {
                     label: "Relvar",
                   },
                   {
+                    letter: "R92",
+                    color:
+                      "border-indigo-300/60 bg-indigo-50 dark:border-indigo-600/40 dark:bg-indigo-900/20",
+                    label: "Relvar 92",
+                  },
+                  {
                     letter: "V",
                     color:
                       "border-teal-300/60 bg-teal-50 dark:border-teal-600/40 dark:bg-teal-900/20",
@@ -203,6 +209,12 @@ export default function Home() {
                     color:
                       "border-rose-300/60 bg-rose-50 dark:border-rose-600/40 dark:bg-rose-900/20",
                     label: "Dymista",
+                  },
+                  {
+                    letter: "Rh",
+                    color:
+                      "border-fuchsia-300/60 bg-fuchsia-50 dark:border-fuchsia-600/40 dark:bg-fuchsia-900/20",
+                    label: "Rhinomur",
                   },
                 ].map(({ letter, color, label }) => (
                   <span

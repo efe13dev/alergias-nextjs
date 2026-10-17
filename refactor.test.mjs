@@ -132,3 +132,31 @@ test("editar cita sustituye el día duplicado sin cambiar identidad ni orden", (
     }
   }
 });
+
+test("migra Relvar y Dymista desde el 29 de septiembre de 2026 sin alterar días previos", () => {
+  const TREATMENT_CHANGE_DATE = new Date(2026, 8, 29);
+  const migrate = handler("./src/hooks/useDayData.ts", "migrateDayData", {
+    TREATMENT_CHANGE_DATE,
+  });
+
+  const result = migrate([
+    {
+      date: new Date(2026, 8, 28).toISOString(),
+      symptomLevel: "green",
+      medications: ["Relvar", "Dymista"],
+    },
+    {
+      date: new Date(2026, 8, 29).toISOString(),
+      symptomLevel: "yellow",
+      medications: ["Bilaxten", "Relvar", "Dymista"],
+    },
+  ]);
+
+  assert.equal(
+    JSON.stringify(result.map((r) => r.medications)),
+    JSON.stringify([
+      ["Relvar", "Dymista"],
+      ["Bilaxten", "Relvar 92", "Rhinomur"],
+    ]),
+  );
+});

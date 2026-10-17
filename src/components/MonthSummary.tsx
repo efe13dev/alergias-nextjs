@@ -1,4 +1,4 @@
-import type { DayData, Medication, SymptomLevel } from "@/app/types";
+import { type DayData, MED_CODE, type Medication, type SymptomLevel } from "@/app/types";
 import { useTheme } from "@/components/theme-provider";
 
 type LevelValue = NonNullable<SymptomLevel>;
@@ -25,6 +25,10 @@ const MED_BADGE: Record<
     light: { bg: "#ddd6fe", border: "#c4b5fd" },
     dark: { bg: "rgba(76, 29, 149, 0.55)", border: "#8b5cf6" },
   },
+  "Relvar 92": {
+    light: { bg: "#e0e7ff", border: "#a5b4fc" },
+    dark: { bg: "rgba(49, 46, 129, 0.55)", border: "#6366f1" },
+  },
   Ventolin: {
     light: { bg: "#99f6e4", border: "#5eead4" },
     dark: { bg: "rgba(19, 78, 74, 0.55)", border: "#14b8a6" },
@@ -32,6 +36,10 @@ const MED_BADGE: Record<
   Dymista: {
     light: { bg: "#fecdd3", border: "#fda4af" },
     dark: { bg: "rgba(136, 19, 55, 0.5)", border: "#f43f5e" },
+  },
+  Rhinomur: {
+    light: { bg: "#f5d0fe", border: "#f0abfc" },
+    dark: { bg: "rgba(112, 26, 117, 0.5)", border: "#d946ef" },
   },
 };
 
@@ -252,10 +260,10 @@ export function MonthSummary({ month, dayData }: Props) {
                   style={{ borderColor: t.border, backgroundColor: t.chip }}
                 >
                   <span
-                    className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border font-bold text-[10px]"
+                    className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded border px-1 font-bold text-[10px]"
                     style={{ backgroundColor: badge.bg, borderColor: badge.border, color: t.text }}
                   >
-                    {med[0]}
+                    {MED_CODE[med]}
                   </span>
                   <span className="truncate font-medium text-xs" style={{ color: t.text }}>
                     {med}
