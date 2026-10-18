@@ -12,11 +12,14 @@ const STORAGE_KEY = "allergyTrackerData";
 
 const migrateDayData = (entries: DayData[]): DayData[] =>
   entries.map((entry) => {
-    if (new Date(entry.date) < TREATMENT_CHANGE_DATE) return entry;
-
-    const medications = entry.medications.map((med) =>
-      med === "Relvar" ? "Relvar 92" : med === "Dymista" ? "Rhinomur" : med,
-    );
+    const isNewTreatment = new Date(entry.date) >= TREATMENT_CHANGE_DATE;
+    const medications = entry.medications.map((med: string) => {
+      if (med === "Relvar" || med === "Relvar 184") {
+        return isNewTreatment ? "Relvar 92" : "Relvar 184";
+      }
+      if ((med === "Dymista" && isNewTreatment) || med === "Rhinomur") return "Rinoduo";
+      return med as Medication;
+    });
 
     return { ...entry, medications: [...new Set(medications)] };
   });

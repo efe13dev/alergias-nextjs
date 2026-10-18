@@ -1,14 +1,20 @@
 export type SymptomLevel = "green" | "yellow" | "orange" | null;
 
-export type Medication = "Bilaxten" | "Relvar" | "Relvar 92" | "Ventolin" | "Dymista" | "Rhinomur";
+export type Medication =
+  | "Bilaxten"
+  | "Relvar 184"
+  | "Relvar 92"
+  | "Ventolin"
+  | "Dymista"
+  | "Rinoduo";
 
 export const MED_CODE: Record<Medication, string> = {
   Bilaxten: "B",
-  Relvar: "R",
+  "Relvar 184": "R184",
   "Relvar 92": "R92",
   Ventolin: "V",
   Dymista: "D",
-  Rhinomur: "Rh",
+  Rinoduo: "Ri",
 };
 
 export const TREATMENT_CHANGE_DATE = new Date(2026, 8, 29);

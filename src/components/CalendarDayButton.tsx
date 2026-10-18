@@ -7,7 +7,7 @@ import { DAY_COLORS, getDayAccentBySymptomLevel, getDayColorBySymptomLevel } fro
 const MED_CLASS: Record<Medication, string> = {
   Bilaxten:
     "text-foreground rounded-sm border border-sky-300 bg-sky-200 px-1 text-[10px] font-semibold dark:border-sky-500/80 dark:bg-sky-900/50",
-  Relvar:
+  "Relvar 184":
     "text-foreground rounded-sm border border-violet-300 bg-violet-200 px-1 text-[10px] font-semibold dark:border-violet-500/80 dark:bg-violet-900/50",
   "Relvar 92":
     "text-foreground rounded-sm border border-indigo-300 bg-indigo-200 px-1 text-[10px] font-semibold dark:border-indigo-500/80 dark:bg-indigo-900/50",
@@ -15,7 +15,7 @@ const MED_CLASS: Record<Medication, string> = {
     "text-foreground rounded-sm border border-teal-300 bg-teal-200 px-1 text-[10px] font-semibold dark:border-teal-500/80 dark:bg-teal-900/50",
   Dymista:
     "text-foreground rounded-sm border border-rose-300 bg-rose-200 px-1 text-[10px] font-semibold dark:border-rose-500/80 dark:bg-rose-900/50",
-  Rhinomur:
+  Rinoduo:
     "text-foreground rounded-sm border border-fuchsia-300 bg-fuchsia-200 px-1 text-[10px] font-semibold dark:border-fuchsia-500/80 dark:bg-fuchsia-900/50",
 };
 

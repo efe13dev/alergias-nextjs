@@ -155,8 +155,8 @@ test("migra Relvar y Dymista desde el 29 de septiembre de 2026 sin alterar días
   assert.equal(
     JSON.stringify(result.map((r) => r.medications)),
     JSON.stringify([
-      ["Relvar", "Dymista"],
-      ["Bilaxten", "Relvar 92", "Rhinomur"],
+      ["Relvar 184", "Dymista"],
+      ["Bilaxten", "Relvar 92", "Rinoduo"],
     ]),
   );
 });

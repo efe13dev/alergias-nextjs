@@ -104,8 +104,8 @@ export default function DayEditor({
   ];
 
   const isNewTreatment = date >= TREATMENT_CHANGE_DATE;
-  const relvarId: Medication = isNewTreatment ? "Relvar 92" : "Relvar";
-  const nasalId: Medication = isNewTreatment ? "Rhinomur" : "Dymista";
+  const relvarId: Medication = isNewTreatment ? "Relvar 92" : "Relvar 184";
+  const nasalId: Medication = isNewTreatment ? "Rinoduo" : "Dymista";
 
   const medicationOptions: { id: Medication; label: string; color: string }[] = [
     {

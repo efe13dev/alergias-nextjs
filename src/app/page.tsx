@@ -187,10 +187,10 @@ export default function Home() {
                     label: "Bilaxten",
                   },
                   {
-                    letter: "R",
+                    letter: "R184",
                     color:
                       "border-violet-300/60 bg-violet-50 dark:border-violet-600/40 dark:bg-violet-900/20",
-                    label: "Relvar",
+                    label: "Relvar 184",
                   },
                   {
                     letter: "R92",
@@ -211,10 +211,10 @@ export default function Home() {
                     label: "Dymista",
                   },
                   {
-                    letter: "Rh",
+                    letter: "Ri",
                     color:
                       "border-fuchsia-300/60 bg-fuchsia-50 dark:border-fuchsia-600/40 dark:bg-fuchsia-900/20",
-                    label: "Rhinomur",
+                    label: "Rinoduo",
                   },
                 ].map(({ letter, color, label }) => (
                   <span
