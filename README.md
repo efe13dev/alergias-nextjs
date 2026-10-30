@@ -10,7 +10,7 @@ Esta aplicación te ayuda a llevar un registro diario de síntomas de alergia y 
 - Gestión de citas pendientes con modal dedicado.
 - Modo claro/oscuro con conmutador junto al título y persistencia de preferencia.
 - Exporta la vista como JPG del mes activo con un clic.
-- Datos almacenados en localStorage (sin backend).
+- Datos sincronizados en Neon (PostgreSQL), con acceso protegido por contraseña.
 - Interfaz moderna, accesible y responsiva.
 
 ![Vista previa de la app](./src/assets/alergias.jpg)
@@ -30,7 +30,9 @@ cd alergias-nextjs
 npm install
 ```
 
-3. Ejecuta la aplicación en modo desarrollo:
+3. Configura Neon y las variables de entorno siguiendo la sección «Persistencia de datos».
+
+4. Ejecuta la aplicación en modo desarrollo:
 
 ```bash
 npm run dev
@@ -50,7 +52,7 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la 
 
 - Haz clic en un día del calendario para abrir el editor.
 - Selecciona el nivel de síntomas (verde/amarillo/naranja/rojo) y marca los medicamentos tomados.
-- Los cambios se guardan automáticamente en tu navegador.
+- Los cambios se guardan automáticamente en Neon.
 - Usa el botón “Citas pendientes” para gestionar recordatorios de citas.
 - Pulsa “Exportar como JPG” para guardar una imagen del calendario del mes activo.
 
@@ -62,10 +64,32 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la 
 
 ## Persistencia de datos
 
-- Se utilizan las claves de localStorage:
-  - `allergyTrackerData` (datos de días: síntomas y medicación)
-  - `pendingAppointments` (citas pendientes)
-- Para restablecer la app, borra estas claves desde las herramientas del navegador.
+1. Crea un proyecto gratuito en [Neon](https://neon.com/) y ejecuta el contenido de
+   `schema.sql` en su editor SQL.
+2. Copia la cadena de conexión de Neon en `.env.local` como `DATABASE_URL`.
+3. Genera una contraseña larga y aleatoria, por ejemplo con `openssl rand -hex 32`,
+   y guárdala en `.env.local` como `APP_PASSWORD`. Debe tener al menos 32 caracteres
+   ASCII sin espacios. El usuario de acceso es `usuario`.
+4. Añade ambas variables también en la configuración del proyecto de Vercel y
+   vuelve a desplegar. No las publiques ni las añadas al repositorio.
+
+Abre la aplicación **primero en el navegador que contiene tus datos anteriores**.
+Si la base está vacía, se importan las claves `allergyTrackerData` y
+`pendingAppointments` de ese navegador. Las claves originales no se borran.
+Comprueba los datos importados antes de usar otros dispositivos; si ya hay datos en
+Neon, no se sobrescriben automáticamente con los del navegador. Si tienes datos
+diferentes en varios navegadores, la importación no los fusiona.
+
+La app muestra los errores de guardado y permite descargar una copia de los datos
+visibles. Si dos dispositivos modifican los mismos datos a la vez, se avisa de un
+conflicto en lugar de sobrescribir los cambios: descarga la copia antes de recargar.
+Haz copias de seguridad independientes; `localStorage` conserva únicamente los
+datos anteriores a la migración, no una copia actualizada.
+
+La contraseña protege la web y la API mediante HTTP Basic. Usa HTTPS fuera de
+localhost y una contraseña aleatoria fuerte: esta protección no incluye limitación
+de intentos. Los datos de salud requieren especial cuidado; quien conozca la
+contraseña podrá verlos y modificarlos.
 
 ## Exportar como JPG
 
@@ -114,7 +138,7 @@ src/
 
 - Puerto ocupado: ejecuta con otro puerto `PORT=3001 npm run dev` y abre `http://localhost:3001`.
 - Estilos: asegúrate de haber instalado dependencias y reinicia `npm run dev`.
-- Datos corruptos: borra las claves `allergyTrackerData` y `pendingAppointments` en localStorage.
+- Si la importación falla, conserva las claves de localStorage y revisa sus datos antes de modificarlas.
 - Exportación JPG: si no funciona en móvil, prueba en escritorio y con permisos de descarga.
 
 ## Contribuir

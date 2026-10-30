@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import html2canvaspro from "html2canvas-pro";
 import { CalendarDays, Download } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MonthSummary } from "@/components/MonthSummary";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Calendar } from "@/components/ui/calendar";
@@ -18,7 +18,14 @@ import { CalendarDayButton } from "../components/CalendarDayButton";
 import DayEditor from "../components/day-editor";
 
 export default function Home() {
-  const { dayData, getDayData, updateDayData } = useDayData();
+  const {
+    dayData,
+    getDayData,
+    updateDayData,
+    status: dayStatus,
+    retry: retryDays,
+    loaded: daysLoaded,
+  } = useDayData();
   const {
     appointments: pendingAppointments,
     setAppointments: setPendingAppointments,
@@ -26,12 +33,29 @@ export default function Home() {
     upsertAppointment: upsertAppointmentForDate,
     removeAppointment: removeAppointmentForDate,
     completeAppointment: completeAppointmentForDate,
+    status: appointmentsStatus,
+    retry: retryAppointments,
+    loaded: appointmentsLoaded,
   } = useAppointments();
 
   // Estado para mostrar solo las citas pendientes
   const [showPendingAppointments, setShowPendingAppointments] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const warn = (event: BeforeUnloadEvent) => {
+      if (
+        [dayStatus, appointmentsStatus].some((status) =>
+          ["saving", "error", "conflict"].includes(status),
+        )
+      ) {
+        event.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dayStatus, appointmentsStatus]);
 
   const getMonthKey = (date: Date) => format(date, "yyyy-MM");
 
@@ -127,8 +151,88 @@ export default function Home() {
     link.click();
   };
 
+  const statuses = [dayStatus, appointmentsStatus];
+  const hasError = statuses.includes("error");
+  const hasConflict = statuses.includes("conflict");
+  const exportData = () => {
+    const blob = new Blob(
+      [JSON.stringify({ dayData, appointments: pendingAppointments }, null, 2)],
+      {
+        type: "application/json",
+      },
+    );
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "alergias-respaldo.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  if (!daysLoaded || !appointmentsLoaded) {
+    return (
+      <main className="mx-auto max-w-6xl px-4 py-8" role="status">
+        {hasError ? (
+          <div>
+            <p>
+              No se pudieron cargar los datos. Los datos originales del navegador no se han borrado.
+            </p>
+            <button
+              type="button"
+              className="mt-2 underline"
+              onClick={() => {
+                if (dayStatus === "error") retryDays();
+                if (appointmentsStatus === "error") retryAppointments();
+              }}
+            >
+              Reintentar
+            </button>
+          </div>
+        ) : (
+          <p>Cargando datos...</p>
+        )}
+      </main>
+    );
+  }
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      {(hasError || hasConflict || statuses.includes("saving")) && (
+        <div role="status" className="mb-4 rounded-md border border-border p-4 text-sm">
+          {hasConflict ? (
+            <p>
+              Los datos cambiaron en otro dispositivo. Descarga una copia antes de recargar para no
+              perder tus cambios.
+            </p>
+          ) : hasError ? (
+            <p>
+              No se pudieron guardar todos los cambios. Mantén esta página abierta y vuelve a
+              intentarlo.
+            </p>
+          ) : (
+            <p>Guardando datos...</p>
+          )}
+          {(hasError || hasConflict) && (
+            <div className="mt-2 flex gap-4">
+              {hasError && (
+                <button
+                  type="button"
+                  className="underline"
+                  onClick={() => {
+                    if (dayStatus === "error") retryDays();
+                    if (appointmentsStatus === "error") retryAppointments();
+                  }}
+                >
+                  Reintentar
+                </button>
+              )}
+              <button type="button" className="underline" onClick={exportData}>
+                Descargar copia
+              </button>
+            </div>
+          )}
+        </div>
+      )}
       <Card className="mb-6 overflow-hidden border border-border/40 shadow-sm">
         <CardHeader className="border-border/40 border-b px-6 py-5">
           <div className="flex items-center justify-between gap-4">

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import {
   type DayData,
   type Medication,
   type SymptomLevel,
   TREATMENT_CHANGE_DATE,
 } from "@/app/types";
+import { useStoredData } from "@/hooks/useStoredData";
 
 const STORAGE_KEY = "allergyTrackerData";
 
@@ -25,25 +25,13 @@ const migrateDayData = (entries: DayData[]): DayData[] =>
   });
 
 export function useDayData() {
-  const [dayData, setDayData] = useState<DayData[]>([]);
-  const initialized = useRef(false);
-
-  // Cargar desde localStorage al montar
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-
-    if (saved) {
-      setDayData(migrateDayData(JSON.parse(saved) as DayData[]));
-    }
-    initialized.current = true;
-  }, []);
-
-  // Persistir en localStorage cuando cambian los datos
-  useEffect(() => {
-    if (initialized.current) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(dayData));
-    }
-  }, [dayData]);
+  const {
+    value: dayData,
+    setValue: setDayData,
+    status,
+    retry,
+    loaded,
+  } = useStoredData(STORAGE_KEY, migrateDayData);
 
   const getDayData = (date: Date): DayData | undefined =>
     dayData.find((item) => new Date(item.date).toDateString() === date.toDateString());
@@ -79,5 +67,5 @@ export function useDayData() {
     });
   };
 
-  return { dayData, getDayData, updateDayData };
+  return { dayData, getDayData, updateDayData, status, retry, loaded };
 }

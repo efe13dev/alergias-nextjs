@@ -1,30 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import type { Appointment } from "@/app/types";
+import { useStoredData } from "@/hooks/useStoredData";
 
 const STORAGE_KEY = "pendingAppointments";
 
 export function useAppointments() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const initialized = useRef(false);
-
-  // Cargar desde localStorage al montar
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-
-    if (saved) {
-      setAppointments(JSON.parse(saved) as Appointment[]);
-    }
-    initialized.current = true;
-  }, []);
-
-  // Persistir en localStorage cuando cambian los datos
-  useEffect(() => {
-    if (initialized.current) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
-    }
-  }, [appointments]);
+  const {
+    value: appointments,
+    setValue: setAppointments,
+    status,
+    retry,
+    loaded,
+  } = useStoredData<Appointment>(STORAGE_KEY);
 
   const getAppointmentByDate = (date: Date): Appointment | undefined => {
     const forDate = appointments.filter(
@@ -92,5 +80,8 @@ export function useAppointments() {
     upsertAppointment,
     removeAppointment,
     completeAppointment,
+    status,
+    retry,
+    loaded,
   };
 }
