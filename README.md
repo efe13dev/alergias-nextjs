@@ -91,6 +91,11 @@ localhost y una contraseña aleatoria fuerte: esta protección no incluye limita
 de intentos. Los datos de salud requieren especial cuidado; quien conozca la
 contraseña podrá verlos y modificarlos.
 
+En modo desarrollo no se pide contraseña; `npm run dev` limita el servidor a
+`127.0.0.1`. Los datos de ejemplo se cargan desde `src/app/api/data/dev-data.json`
+sin conectar con Neon. Los cambios se guardan en memoria y se pierden al reiniciar
+el servidor o recargar el módulo. No expongas el servidor de desarrollo a la red.
+
 ## Exportar como JPG
 
 - Botón “Exportar como JPG” en la tarjeta superior.

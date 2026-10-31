@@ -1,0 +1,102 @@
+{
+  "allergyTrackerData": [
+    {
+      "date": "2026-09-24T12:00:00.000Z",
+      "symptomLevel": "green",
+      "medications": ["Bilaxten", "Relvar 184"],
+      "notes": "Día tranquilo (ejemplo)."
+    },
+    {
+      "date": "2026-09-28T12:00:00.000Z",
+      "symptomLevel": "orange",
+      "medications": ["Relvar 184", "Ventolin"],
+      "notes": "Síntomas más intensos (ejemplo)."
+    },
+    {
+      "date": "2026-10-02T12:00:00.000Z",
+      "symptomLevel": "yellow",
+      "medications": ["Relvar 92", "Rinoduo"],
+      "notes": "Molestias leves (ejemplo)."
+    },
+    {
+      "date": "2026-10-05T12:00:00.000Z",
+      "symptomLevel": "green",
+      "medications": ["Bilaxten"],
+      "notes": "Sin molestias destacables (ejemplo)."
+    },
+    {
+      "date": "2026-10-09T12:00:00.000Z",
+      "symptomLevel": "orange",
+      "medications": ["Relvar 92", "Ventolin"],
+      "notes": "Día con más síntomas (ejemplo)."
+    },
+    {
+      "date": "2026-10-14T12:00:00.000Z",
+      "symptomLevel": "green",
+      "medications": ["Bilaxten", "Relvar 92"],
+      "notes": "Ejemplo de seguimiento."
+    },
+    {
+      "date": "2026-10-21T12:00:00.000Z",
+      "symptomLevel": "yellow",
+      "medications": ["Rinoduo"],
+      "notes": "Ejemplo de síntomas leves."
+    },
+    {
+      "date": "2026-10-25T12:00:00.000Z",
+      "symptomLevel": null,
+      "medications": [],
+      "notes": "Nota sin valoración (ejemplo)."
+    },
+    {
+      "date": "2026-10-29T12:00:00.000Z",
+      "symptomLevel": "green",
+      "medications": ["Bilaxten", "Rinoduo"],
+      "notes": "Seguimiento habitual (ejemplo)."
+    },
+    {
+      "date": "2026-11-02T12:00:00.000Z",
+      "symptomLevel": "yellow",
+      "medications": ["Relvar 92"],
+      "notes": "Registro de otro mes (ejemplo)."
+    }
+  ],
+  "pendingAppointments": [
+    {
+      "id": "ejemplo-analisis",
+      "date": "2026-08-12T12:00:00.000Z",
+      "description": "Análisis de sangre (ejemplo)",
+      "status": "completada"
+    },
+    {
+      "id": "ejemplo-espirometria",
+      "date": "2026-09-18T12:00:00.000Z",
+      "description": "Espirometría y revisión respiratoria (ejemplo)",
+      "status": "completada"
+    },
+    {
+      "id": "ejemplo-completada",
+      "date": "2026-10-15T12:00:00.000Z",
+      "description": "Prueba de alergia (ejemplo)",
+      "status": "completada"
+    },
+    {
+      "id": "ejemplo-resultados",
+      "date": "2026-10-28T12:00:00.000Z",
+      "description": "Consulta de resultados de las pruebas (ejemplo)",
+      "status": "completada"
+    },
+    {
+      "id": "ejemplo-pendiente",
+      "date": "2026-11-15T12:00:00.000Z",
+      "description": "Revisión de alergia (ejemplo)",
+      "status": "pendiente"
+    },
+    {
+      "id": "ejemplo-seguimiento",
+      "date": "2026-12-03T12:00:00.000Z",
+      "description": "Seguimiento con especialista (ejemplo)",
+      "status": "pendiente"
+    }
+  ]
+}

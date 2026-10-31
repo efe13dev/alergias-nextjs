@@ -3,7 +3,10 @@ import { isAuthorized } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const password = process.env.APP_PASSWORD;
-  if (!password || !/^[\x21-\x7e]{32,}$/.test(password)) {
+  if (
+    process.env.NODE_ENV !== "development" &&
+    (!password || !/^[\x21-\x7e]{32,}$/.test(password))
+  ) {
     return new NextResponse(
       "Configura APP_PASSWORD con al menos 32 caracteres ASCII sin espacios.",
       {

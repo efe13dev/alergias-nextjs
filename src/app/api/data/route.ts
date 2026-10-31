@@ -1,9 +1,13 @@
 import { neon } from "@neondatabase/serverless";
 import { isAuthorized } from "@/lib/auth";
+import devData from "./dev-data.json";
 
 export const dynamic = "force-dynamic";
 
 const keys = ["allergyTrackerData", "pendingAppointments"];
+const developmentData: Record<string, { data: unknown[]; revision: number }> = Object.fromEntries(
+  Object.entries(devData).map(([key, data]) => [key, { data, revision: 1 }]),
+);
 
 function validData(key: string, data: unknown[]): boolean {
   return data.every((item) => {
@@ -34,6 +38,9 @@ export async function GET(request: Request) {
   if (!(await authorized(request))) return new Response("No autorizado", { status: 401 });
   const key = new URL(request.url).searchParams.get("key");
   if (!key || !keys.includes(key)) return new Response("Clave inválida", { status: 400 });
+  if (process.env.NODE_ENV === "development") {
+    return Response.json(developmentData[key], { headers: { "Cache-Control": "no-store" } });
+  }
   if (!process.env.DATABASE_URL) return new Response("Falta DATABASE_URL", { status: 503 });
 
   try {
@@ -47,10 +54,21 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   if (!(await authorized(request))) return new Response("No autorizado", { status: 401 });
-  if (request.headers.get("origin") !== new URL(request.url).origin) {
+  const origin = request.headers.get("origin");
+  const url = new URL(request.url);
+  if (
+    origin !== url.origin &&
+    !(
+      process.env.NODE_ENV === "development" &&
+      url.hostname === "localhost" &&
+      origin === url.origin.replace("://localhost", "://127.0.0.1")
+    )
+  ) {
     return new Response("Origen inválido", { status: 403 });
   }
-  if (!process.env.DATABASE_URL) return new Response("Falta DATABASE_URL", { status: 503 });
+  if (process.env.NODE_ENV !== "development" && !process.env.DATABASE_URL) {
+    return new Response("Falta DATABASE_URL", { status: 503 });
+  }
 
   let body: { key?: unknown; data?: unknown; revision?: unknown };
   try {
@@ -70,6 +88,17 @@ export async function PUT(request: Request) {
   } catch {
     return new Response("Datos inválidos", { status: 400 });
   }
+
+  if (process.env.NODE_ENV === "development") {
+    const row = developmentData[body.key as string];
+    if (row.revision !== body.revision) {
+      return new Response("Los datos han cambiado en otro dispositivo", { status: 409 });
+    }
+    row.data = body.data as unknown[];
+    row.revision += 1;
+    return Response.json({ revision: row.revision }, { headers: { "Cache-Control": "no-store" } });
+  }
+  if (!process.env.DATABASE_URL) return new Response("Falta DATABASE_URL", { status: 503 });
 
   try {
     const sql = neon(process.env.DATABASE_URL);

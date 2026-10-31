@@ -162,6 +162,83 @@ test("migra Relvar y Dymista desde el 29 de septiembre de 2026 sin alterar días
   );
 });
 
+test("desarrollo permite acceso sin contraseña, producción mantiene la protección", async () => {
+  const env = { NODE_ENV: "production", DATABASE_URL: "postgres://test" };
+  const devData = JSON.parse(
+    readFileSync(new URL("./src/app/api/data/dev-data.json", import.meta.url)),
+  );
+  class NextResponse extends Response {
+    static next() {
+      return new Response(null, { status: 200 });
+    }
+  }
+  const loadModule = (file, require) => {
+    const source = readFileSync(new URL(file, import.meta.url), "utf8");
+    const code = ts.transpile(source, {
+      target: ts.ScriptTarget.ES2022,
+      module: ts.ModuleKind.CommonJS,
+    });
+    const exports = {};
+    runInNewContext(code, {
+      crypto: webcrypto,
+      TextEncoder,
+      atob,
+      Request,
+      Response,
+      URL,
+      exports,
+      require,
+      process: { env },
+    });
+    return exports;
+  };
+  const auth = loadModule("./src/lib/auth.ts", () => {});
+  const middleware = loadModule("./src/middleware.ts", (name) =>
+    name === "@/lib/auth" ? auth : { NextResponse },
+  ).middleware;
+  const api = loadModule("./src/app/api/data/route.ts", (name) => {
+    if (name === "@/lib/auth") return auth;
+    if (name === "./dev-data.json") return { default: devData };
+    return { neon: () => assert.fail("Desarrollo no debe conectar con Neon") };
+  });
+  const page = (authorization) =>
+    new Request("http://localhost/", { headers: authorization ? { authorization } : {} });
+  const get = () => api.GET(new Request("http://localhost/api/data?key=pendingAppointments"));
+  const put = (origin, revision = 1) =>
+    api.PUT(
+      new Request("http://localhost/api/data", {
+        method: "PUT",
+        headers: { origin },
+        body: JSON.stringify({ key: "pendingAppointments", data: [], revision }),
+      }),
+    );
+
+  assert.equal((await middleware(page())).status, 503);
+  assert.equal((await get()).status, 401);
+  env.APP_PASSWORD = "a".repeat(32);
+  assert.equal((await middleware(page())).status, 401);
+  assert.equal(
+    (await middleware(page(`Basic ${btoa(`usuario:${env.APP_PASSWORD}`)}`))).status,
+    200,
+  );
+
+  env.NODE_ENV = "development";
+  delete env.APP_PASSWORD;
+  assert.equal((await middleware(page())).status, 200);
+  const appointments = await (await get()).json();
+  assert.deepEqual(appointments.data, devData.pendingAppointments);
+  assert.equal(appointments.revision, 1);
+  delete env.DATABASE_URL;
+  const days = await api.GET(new Request("http://localhost/api/data?key=allergyTrackerData"));
+  assert.deepEqual((await days.json()).data, devData.allergyTrackerData);
+  assert.equal((await put("http://other.example")).status, 403);
+  assert.equal((await put("http://127.0.0.1")).status, 200);
+  assert.equal((await put("http://localhost")).status, 409);
+  assert.equal((await put("http://localhost", 2)).status, 200);
+  assert.deepEqual(await (await get()).json(), { data: [], revision: 3 });
+  assert.equal((await put("http://localhost", null)).status, 409);
+});
+
 test("la API protege los datos y rechaza escrituras antiguas o inválidas", async () => {
   const password = "a".repeat(32);
   const globals = { crypto: webcrypto, TextEncoder, atob, Request, Response, URL };
@@ -200,9 +277,17 @@ test("la API protege los datos y rechaza escrituras antiguas o inválidas", asyn
     rows.set(key, { data: JSON.parse(data), revision: revision + 1 });
     return [{ revision: revision + 1 }];
   };
-  const api = loadModule("./src/app/api/data/route.ts", (name) =>
-    name === "@/lib/auth" ? auth : { neon: () => sql },
-  );
+  const api = loadModule("./src/app/api/data/route.ts", (name) => {
+    if (name === "@/lib/auth") return auth;
+    if (name === "./dev-data.json") {
+      return {
+        default: JSON.parse(
+          readFileSync(new URL("./src/app/api/data/dev-data.json", import.meta.url)),
+        ),
+      };
+    }
+    return { neon: () => sql };
+  });
   const authorization = `Basic ${btoa(`usuario:${password}`)}`;
   const key = "pendingAppointments";
   const data = [{ id: "1", date: "2026-10-30", description: "Cita", status: "pendiente" }];
