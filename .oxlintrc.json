@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "nextjs"],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "serviceworker": true
+  },
+  "ignorePatterns": ["node_modules", ".next", "out", "coverage", ".idea"],
+  "rules": {
+    "no-array-constructor": "error",
+    "no-console": ["warn", { "allow": ["error"] }],
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "after-used",
+        "argsIgnorePattern": "^_.*?$",
+        "caughtErrorsIgnorePattern": "^_.*?$"
+      }
+    ],
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-unsafe-function-type": "error",
+    "nextjs/google-font-display": "warn",
+    "nextjs/google-font-preconnect": "warn",
+    "nextjs/next-script-for-ga": "warn",
+    "nextjs/no-async-client-component": "warn",
+    "nextjs/no-before-interactive-script-outside-document": "warn",
+    "nextjs/no-css-tags": "warn",
+    "nextjs/no-head-element": "warn",
+    "nextjs/no-img-element": "warn",
+    "nextjs/no-page-custom-font": "warn",
+    "nextjs/no-styled-jsx-in-document": "warn",
+    "nextjs/no-title-in-document-head": "warn",
+    "nextjs/no-typos": "warn",
+    "nextjs/no-unwanted-polyfillio": "warn"
+  }
+}

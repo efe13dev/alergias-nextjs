@@ -1,6 +1,6 @@
 import type React from "react";
-import { type Appointment, type DayData, MED_CODE, type Medication } from "@/app/types";
 
+import { type Appointment, type DayData, MED_CODE, type Medication } from "@/app/types";
 import { useTheme } from "@/components/theme-provider";
 import { DAY_COLORS, getDayAccentBySymptomLevel, getDayColorBySymptomLevel } from "@/lib/utils";
 
@@ -92,7 +92,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
                 />
               </svg>
             </span>
-            <span className="pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border border-border/70 bg-background/95 p-2 text-left text-foreground text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/note:visible group-focus-within/note:opacity-100 group-hover/note:visible group-hover/note:opacity-100">
+            <span className="border-border/70 bg-background/95 text-foreground pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border p-2 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/note:visible group-focus-within/note:opacity-100 group-hover/note:visible group-hover/note:opacity-100">
               <span className="block font-semibold text-amber-700 dark:text-amber-300">Nota:</span>
               <span className="block whitespace-pre-line">{noteText}</span>
             </span>
@@ -123,7 +123,7 @@ export const CalendarDayButton: React.FC<Props> = ({ date, dayData, onClick, app
                 <rect x="3" y="5" width="18" height="16" rx="2" ry="2" />
               </svg>
             </span>
-            <span className="pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border border-border/70 bg-background/95 p-2 text-left text-foreground text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/appointment:visible group-focus-within/appointment:opacity-100 group-hover/appointment:visible group-hover/appointment:opacity-100">
+            <span className="border-border/70 bg-background/95 text-foreground pointer-events-none invisible absolute bottom-[calc(100%+6px)] left-0 z-30 w-44 rounded-lg border p-2 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-focus-within/appointment:visible group-focus-within/appointment:opacity-100 group-hover/appointment:visible group-hover/appointment:opacity-100">
               <span
                 className={`block font-semibold ${
                   isPendingAppointment

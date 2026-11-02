@@ -1,6 +1,7 @@
 "use client";
 
 import type { Appointment } from "@/app/types";
+
 import { useStoredData } from "@/hooks/useStoredData";
 
 const STORAGE_KEY = "pendingAppointments";

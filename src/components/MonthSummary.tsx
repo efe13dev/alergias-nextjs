@@ -142,7 +142,7 @@ export function MonthSummary({ month, dayData }: Props) {
         <h3 className="font-serif text-base tracking-tight" style={{ color: t.text }}>
           Resumen del mes
         </h3>
-        <span className="text-[10px] uppercase tracking-widest" style={{ color: t.muted }}>
+        <span className="text-[10px] tracking-widest uppercase" style={{ color: t.muted }}>
           {registered}/{daysInMonth} días
         </span>
       </header>
@@ -196,7 +196,7 @@ export function MonthSummary({ month, dayData }: Props) {
             <span className="font-serif text-3xl leading-none" style={{ color: t.text }}>
               {registered}
             </span>
-            <span className="mt-1 text-[10px] uppercase tracking-widest" style={{ color: t.muted }}>
+            <span className="mt-1 text-[10px] tracking-widest uppercase" style={{ color: t.muted }}>
               días
             </span>
           </div>
@@ -212,7 +212,7 @@ export function MonthSummary({ month, dayData }: Props) {
                   className="h-2.5 w-2.5 shrink-0 rounded-full"
                   style={{ backgroundColor: levelColor(value) }}
                 />
-                <span className="font-medium text-xs" style={{ color: t.text }}>
+                <span className="text-xs font-medium" style={{ color: t.text }}>
                   {LEVEL_META[value].label}
                 </span>
                 <span className="ml-auto text-xs tabular-nums" style={{ color: t.muted }}>
@@ -243,7 +243,7 @@ export function MonthSummary({ month, dayData }: Props) {
 
       <div className="border-t pt-3" style={{ borderColor: t.border }}>
         <span
-          className="font-semibold text-[10px] uppercase tracking-widest"
+          className="text-[10px] font-semibold tracking-widest uppercase"
           style={{ color: t.muted }}
         >
           Medicamentos
@@ -260,12 +260,12 @@ export function MonthSummary({ month, dayData }: Props) {
                   style={{ borderColor: t.border, backgroundColor: t.chip }}
                 >
                   <span
-                    className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded border px-1 font-bold text-[10px]"
+                    className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded border px-1 text-[10px] font-bold"
                     style={{ backgroundColor: badge.bg, borderColor: badge.border, color: t.text }}
                   >
                     {MED_CODE[med]}
                   </span>
-                  <span className="truncate font-medium text-xs" style={{ color: t.text }}>
+                  <span className="truncate text-xs font-medium" style={{ color: t.text }}>
                     {med}
                   </span>
                   <span className="ml-auto text-[11px] tabular-nums" style={{ color: t.muted }}>
@@ -284,7 +284,7 @@ export function MonthSummary({ month, dayData }: Props) {
 
       <div className="mt-auto border-t pt-3" style={{ borderColor: t.border }}>
         <span
-          className="font-semibold text-[10px] uppercase tracking-widest"
+          className="text-[10px] font-semibold tracking-widest uppercase"
           style={{ color: t.muted }}
         >
           Día a día

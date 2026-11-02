@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+
 import { isAuthorized } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {

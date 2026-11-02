@@ -5,6 +5,7 @@ import { es } from "date-fns/locale";
 import html2canvaspro from "html2canvas-pro";
 import { CalendarDays, Download } from "lucide-react";
 import { useEffect, useState } from "react";
+
 import { MonthSummary } from "@/components/MonthSummary";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Calendar } from "@/components/ui/calendar";
@@ -13,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppointments } from "@/hooks/useAppointments";
 import { useDayData } from "@/hooks/useDayData";
+
 import AppointmentManager from "../components/AppointmentManager";
 import { CalendarDayButton } from "../components/CalendarDayButton";
 import DayEditor from "../components/day-editor";
@@ -197,43 +199,33 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      {(hasError || hasConflict || statuses.includes("saving")) && (
-        <div role="status" className="mb-4 rounded-md border border-border p-4 text-sm">
-          {hasConflict ? (
-            <p>
-              Los datos cambiaron en otro dispositivo. Descarga una copia antes de recargar para no
-              perder tus cambios.
-            </p>
-          ) : hasError ? (
-            <p>
-              No se pudieron guardar todos los cambios. Mantén esta página abierta y vuelve a
-              intentarlo.
-            </p>
-          ) : (
-            <p>Guardando datos...</p>
-          )}
-          {(hasError || hasConflict) && (
-            <div className="mt-2 flex gap-4">
-              {hasError && (
-                <button
-                  type="button"
-                  className="underline"
-                  onClick={() => {
-                    if (dayStatus === "error") retryDays();
-                    if (appointmentsStatus === "error") retryAppointments();
-                  }}
-                >
-                  Reintentar
-                </button>
-              )}
-              <button type="button" className="underline" onClick={exportData}>
-                Descargar copia
+      {(hasError || hasConflict) && (
+        <div role="status" className="border-border mb-4 rounded-md border p-4 text-sm">
+          <p>
+            {hasConflict
+              ? "Los datos cambiaron en otro dispositivo. Descarga una copia antes de recargar para no perder tus cambios."
+              : "No se pudieron guardar todos los cambios. Mantén esta página abierta y vuelve a intentarlo."}
+          </p>
+          <div className="mt-2 flex gap-4">
+            {hasError && (
+              <button
+                type="button"
+                className="underline"
+                onClick={() => {
+                  if (dayStatus === "error") retryDays();
+                  if (appointmentsStatus === "error") retryAppointments();
+                }}
+              >
+                Reintentar
               </button>
-            </div>
-          )}
+            )}
+            <button type="button" className="underline" onClick={exportData}>
+              Descargar copia
+            </button>
+          </div>
         </div>
       )}
-      <Card className="mb-6 overflow-hidden border border-border/40 shadow-sm">
+      <Card className="border-border/40 mb-6 overflow-hidden border shadow-sm">
         <CardHeader className="border-border/40 border-b px-6 py-5">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -248,7 +240,7 @@ export default function Home() {
               <button
                 onClick={handleExportJPG}
                 type="button"
-                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-border/60 bg-transparent px-3 py-1.5 font-medium text-muted-foreground text-xs transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
+                className="border-border/60 text-muted-foreground hover:border-border hover:bg-muted/50 hover:text-foreground inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors"
               >
                 <Download className="h-3.5 w-3.5" aria-hidden="true" />
                 Exportar
@@ -261,7 +253,7 @@ export default function Home() {
           {/* Leyenda compacta en una sola fila */}
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <span className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
+              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
                 Síntomas
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -272,15 +264,15 @@ export default function Home() {
                 ].map(({ dot, label }) => (
                   <span
                     key={label}
-                    className="flex items-center gap-1 text-muted-foreground text-xs"
+                    className="text-muted-foreground flex items-center gap-1 text-xs"
                   >
                     <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
                     {label}
                   </span>
                 ))}
               </div>
-              <span className="hidden h-3 w-px bg-current text-border sm:inline-block" />
-              <span className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
+              <span className="text-border hidden h-3 w-px bg-current sm:inline-block" />
+              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
                 Medicamentos
               </span>
               <div className="flex flex-wrap items-center gap-1.5">
@@ -323,15 +315,15 @@ export default function Home() {
                 ].map(({ letter, color, label }) => (
                   <span
                     key={label}
-                    className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground ${color}`}
+                    className={`text-muted-foreground inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium ${color}`}
                   >
                     <span className="font-bold">{letter}</span>
                     <span>{label}</span>
                   </span>
                 ))}
               </div>
-              <span className="hidden h-3 w-px bg-current text-border sm:inline-block" />
-              <span className="font-semibold text-[11px] text-muted-foreground uppercase tracking-widest">
+              <span className="text-border hidden h-3 w-px bg-current sm:inline-block" />
+              <span className="text-muted-foreground text-[11px] font-semibold tracking-widest uppercase">
                 Citas y notas
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -341,7 +333,7 @@ export default function Home() {
                 ].map(({ dot, label }) => (
                   <span
                     key={label}
-                    className="flex items-center gap-1 text-muted-foreground text-xs"
+                    className="text-muted-foreground flex items-center gap-1 text-xs"
                   >
                     <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
                     {label}
@@ -352,7 +344,7 @@ export default function Home() {
             <button
               onClick={() => setShowPendingAppointments(true)}
               type="button"
-              className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-transparent px-3 py-1.5 font-medium text-muted-foreground text-xs transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
+              className="border-border/60 text-muted-foreground hover:border-border hover:bg-muted/50 hover:text-foreground inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs font-medium transition-colors"
             >
               <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
               Citas
@@ -367,7 +359,7 @@ export default function Home() {
                   key={year}
                   type="button"
                   onClick={() => handleYearSelect(year)}
-                  className={`rounded-md px-3 py-1 font-semibold text-sm transition-all duration-150 ${
+                  className={`rounded-md px-3 py-1 text-sm font-semibold transition-all duration-150 ${
                     selectedYear === year
                       ? "bg-foreground/10 text-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -379,7 +371,7 @@ export default function Home() {
             </div>
 
             {/* Tabs de meses */}
-            <TabsList className="mb-5 flex h-auto w-full justify-start gap-1 overflow-x-auto rounded-lg border border-border/40 bg-muted/30 p-1">
+            <TabsList className="border-border/40 bg-muted/30 mb-5 flex h-auto w-full justify-start gap-1 overflow-x-auto rounded-lg border p-1">
               {selectedYearMonths.map((month) => (
                 <TabsTrigger
                   key={month.toISOString()}
@@ -393,13 +385,13 @@ export default function Home() {
 
             {months.map((month) => (
               <TabsContent key={month.toISOString()} value={getMonthKey(month)} className="mt-0">
-                <Card className="calendar-export-card border border-border/30 shadow-none">
+                <Card className="calendar-export-card border-border/30 border shadow-none">
                   <CardHeader className="px-5 pt-4 pb-2">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="font-serif text-lg capitalize tracking-tight">
+                      <CardTitle className="font-serif text-lg tracking-tight capitalize">
                         {format(month, "MMMM yyyy", { locale: es })}
                       </CardTitle>
-                      <span className="text-[10px] text-muted-foreground/60 uppercase tracking-widest">
+                      <span className="text-muted-foreground/60 text-[10px] tracking-widest uppercase">
                         Seguimiento de Alergia
                       </span>
                     </div>
@@ -472,7 +464,10 @@ export default function Home() {
 
       {selectedDate && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-md md:max-h-none md:overflow-visible">
+          <DialogContent
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            className="max-h-[85dvh] overflow-y-auto sm:max-w-md md:max-h-none md:overflow-visible"
+          >
             <DialogHeader>
               <DialogTitle className="font-serif text-xl tracking-tight">
                 {selectedDate

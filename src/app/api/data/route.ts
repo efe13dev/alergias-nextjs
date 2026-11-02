@@ -1,5 +1,7 @@
 import { neon } from "@neondatabase/serverless";
+
 import { isAuthorized } from "@/lib/auth";
+
 import devData from "./dev-data.json";
 
 export const dynamic = "force-dynamic";

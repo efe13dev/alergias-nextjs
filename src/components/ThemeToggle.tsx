@@ -11,7 +11,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/80 bg-muted/50 text-foreground shadow-sm transition-all duration-200 hover:bg-muted hover:shadow dark:border-primary/20 dark:bg-card dark:hover:bg-primary/10"
+      className="border-border/80 bg-muted/50 text-foreground hover:bg-muted dark:border-primary/20 dark:bg-card dark:hover:bg-primary/10 inline-flex h-9 w-9 items-center justify-center rounded-lg border shadow-sm transition-all duration-200 hover:shadow"
       title={theme === "dark" ? "Cambiar a claro" : "Cambiar a oscuro"}
       aria-label="Alternar tema"
     >

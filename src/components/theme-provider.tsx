@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 export type Theme = "light" | "dark";
@@ -48,7 +49,6 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     try {
       localStorage.setItem("theme", t);
       // Sincroniza cookie (1 año)
-      // biome-ignore lint/suspicious/noDocumentCookie: la cookie la lee de forma síncrona el script de pre-paint del SSR; la Cookie Store API es asíncrona
       document.cookie = `theme=${encodeURIComponent(t)}; path=/; max-age=${60 * 60 * 24 * 365}`;
     } catch {}
     applyThemeClass(t);

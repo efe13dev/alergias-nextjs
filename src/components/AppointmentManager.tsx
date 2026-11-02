@@ -1,6 +1,7 @@
-import type React from "react";
-import { useState } from "react";
 import type { Appointment } from "@/app/types";
+import type React from "react";
+
+import { useState } from "react";
 
 interface Props {
   appointments: Appointment[];
@@ -108,13 +109,13 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
         {appointments.map((app, idx) => (
           <li
             key={app.id}
-            className={`relative flex flex-col gap-1.5 rounded-xl border border-sky-300/40 bg-sky-50/80 p-3.5 text-foreground transition-all dark:border-sky-500/20 dark:bg-sky-900/15 ${
+            className={`text-foreground relative flex flex-col gap-1.5 rounded-xl border border-sky-300/40 bg-sky-50/80 p-3.5 transition-all dark:border-sky-500/20 dark:bg-sky-900/15 ${
               app.status === "completada" ? "opacity-80" : ""
             }`}
           >
             <div className="flex items-center justify-between">
               <span
-                className={`font-semibold ${app.status === "completada" ? "line-through decoration-foreground/60" : ""}`}
+                className={`font-semibold ${app.status === "completada" ? "decoration-foreground/60 line-through" : ""}`}
               >
                 {new Date(app.date).toLocaleDateString()} - {app.description}
               </span>
@@ -123,7 +124,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                   <>
                     <button
                       type="button"
-                      className="rounded-lg border border-emerald-300/50 bg-emerald-100/80 px-2.5 py-1 text-foreground text-xs transition-colors hover:bg-emerald-200 dark:border-emerald-500/30 dark:bg-emerald-900/25 dark:hover:bg-emerald-900/40"
+                      className="text-foreground rounded-lg border border-emerald-300/50 bg-emerald-100/80 px-2.5 py-1 text-xs transition-colors hover:bg-emerald-200 dark:border-emerald-500/30 dark:bg-emerald-900/25 dark:hover:bg-emerald-900/40"
                       onClick={() => handleComplete(idx)}
                       title="Marcar como completada"
                     >
@@ -131,7 +132,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                     </button>
                     <button
                       type="button"
-                      className="rounded-lg border border-amber-300/50 bg-amber-100/80 px-2.5 py-1 text-foreground text-xs transition-colors hover:bg-amber-200 dark:border-amber-500/30 dark:bg-amber-900/25 dark:hover:bg-amber-900/40"
+                      className="text-foreground rounded-lg border border-amber-300/50 bg-amber-100/80 px-2.5 py-1 text-xs transition-colors hover:bg-amber-200 dark:border-amber-500/30 dark:bg-amber-900/25 dark:hover:bg-amber-900/40"
                       onClick={() => handleEdit(idx)}
                       title="Editar"
                     >
@@ -141,7 +142,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
                 )}
                 <button
                   type="button"
-                  className="rounded-lg border border-rose-300/50 bg-rose-100/80 px-2.5 py-1 text-foreground text-xs transition-colors hover:bg-rose-200 dark:border-rose-500/30 dark:bg-rose-900/25 dark:hover:bg-rose-900/40"
+                  className="text-foreground rounded-lg border border-rose-300/50 bg-rose-100/80 px-2.5 py-1 text-xs transition-colors hover:bg-rose-200 dark:border-rose-500/30 dark:bg-rose-900/25 dark:hover:bg-rose-900/40"
                   onClick={() => handleDelete(idx)}
                   title="Eliminar"
                 >
@@ -154,7 +155,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
         ))}
       </ul>
 
-      <div className="mt-4 border-border/50 border-t pt-4">
+      <div className="border-border/50 mt-4 border-t pt-4">
         <h4 className="mb-3 font-serif text-base tracking-tight">
           {editingIndex !== null ? "Editar cita" : "Nueva cita"}
         </h4>
@@ -162,13 +163,13 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
           <input
             type="date"
             name="date"
-            className="rounded-lg border border-border/80 bg-muted/30 px-3 py-2 text-sm transition-colors focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
             value={form.date}
             onChange={handleChange}
           />
           <textarea
             name="description"
-            className="rounded-lg border border-border/80 bg-muted/30 px-3 py-2 text-sm transition-colors focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="border-border/80 bg-muted/30 focus:border-primary/40 focus:ring-primary/20 rounded-lg border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none"
             placeholder="Descripción de la cita"
             value={form.description}
             onChange={handleChange}
@@ -178,14 +179,14 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
               <>
                 <button
                   type="button"
-                  className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm shadow-sm transition-colors hover:bg-primary/90"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-colors"
                   onClick={handleSave}
                 >
                   Guardar
                 </button>
                 <button
                   type="button"
-                  className="rounded-lg border border-border/80 bg-muted/50 px-4 py-2 font-medium text-foreground text-sm transition-colors hover:bg-muted"
+                  className="border-border/80 bg-muted/50 text-foreground hover:bg-muted rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
                   onClick={() => {
                     setEditingIndex(null);
                     setForm(emptyAppointment);
@@ -197,7 +198,7 @@ export const AppointmentManager: React.FC<Props> = ({ appointments, setAppointme
             ) : (
               <button
                 type="button"
-                className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm shadow-sm transition-colors hover:bg-primary/90"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-colors"
                 onClick={handleAdd}
               >
                 Añadir cita

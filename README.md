@@ -27,7 +27,7 @@ cd alergias-nextjs
 2. Instala las dependencias:
 
 ```bash
-npm install
+bun install
 ```
 
 3. Configura Neon y las variables de entorno siguiendo la sección «Persistencia de datos».
@@ -35,7 +35,7 @@ npm install
 4. Ejecuta la aplicación en modo desarrollo:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la app.
@@ -46,7 +46,7 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la 
 - React
 - TypeScript
 - Tailwind CSS
-- [Biome](https://biomejs.dev/) (lint y formato)
+- [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) y [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) (lint y formato)
 
 ## Uso rápido
 
@@ -91,7 +91,7 @@ localhost y una contraseña aleatoria fuerte: esta protección no incluye limita
 de intentos. Los datos de salud requieren especial cuidado; quien conozca la
 contraseña podrá verlos y modificarlos.
 
-En modo desarrollo no se pide contraseña; `npm run dev` limita el servidor a
+En modo desarrollo no se pide contraseña; `bun run dev` limita el servidor a
 `127.0.0.1`. Los datos de ejemplo se cargan desde `src/app/api/data/dev-data.json`
 sin conectar con Neon. Los cambios se guardan en memoria y se pierden al reiniciar
 el servidor o recargar el módulo. No expongas el servidor de desarrollo a la red.
@@ -105,22 +105,25 @@ el servidor o recargar el módulo. No expongas el servidor de desarrollo a la re
 
 ```bash
 # Desarrollo (Turbopack)
-npm run dev
+bun run dev
 
 # Build de producción
-npm run build
+bun run build
 
 # Servir build de producción
-npm run start
+bun run start
 
-# Lint (Biome: lint + formato + orden de imports/clases)
-npm run lint
+# Ejecutar tests
+bun test
+
+# Lint (Oxlint)
+bun run lint
 
 # Lint con autofix
-npm run lint:fix
+bun run lint:fix
 
-# Formatear con Biome
-npm run format
+# Formatear con Oxfmt (incluye orden de imports y clases Tailwind)
+bun run format
 ```
 
 ## Estructura del proyecto (resumen)
@@ -141,8 +144,8 @@ src/
 
 ## Resolución de problemas
 
-- Puerto ocupado: ejecuta con otro puerto `PORT=3001 npm run dev` y abre `http://localhost:3001`.
-- Estilos: asegúrate de haber instalado dependencias y reinicia `npm run dev`.
+- Puerto ocupado: ejecuta con otro puerto `PORT=3001 bun run dev` y abre `http://localhost:3001`.
+- Estilos: asegúrate de haber instalado dependencias y reinicia `bun run dev`.
 - Si la importación falla, conserva las claves de localStorage y revisa sus datos antes de modificarlas.
 - Exportación JPG: si no funciona en móvil, prueba en escritorio y con permisos de descarga.
 
